@@ -74,7 +74,7 @@ if(error){
 statusText.textContent=error.message;
 }else{
 
-statusText.textContent="Account Exists, check your email.";
+statusText.textContent="Account Made, check your email.";
 }
 
 }else{
