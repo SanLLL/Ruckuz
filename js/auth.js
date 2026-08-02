@@ -1,14 +1,12 @@
+import { supabase } from "./supabase.js";
 const {
-data:{session}
-}
-=
-await window.supabaseClient.auth.getSession();
-if(session){
-location.href="pages/home.html";
+    data: { session }
+} = await supabase.auth.getSession();
+if (session) {
+    location.href = "pages/home.html";
 }
 
 let registerMode = false;
-
 const username = document.getElementById("username");
 const email = document.getElementById("email");
 const password = document.getElementById("password");
