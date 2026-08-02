@@ -4,8 +4,7 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    background-image:url("../bg/paper.png");
-    background-repeat:repeat;
+    background:url("../bg/paper.png") repeat;
     background-size:512px;
     font-family:Arial, Helvetica, sans-serif;
 }
