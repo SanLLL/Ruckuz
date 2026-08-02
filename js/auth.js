@@ -64,7 +64,7 @@ updateUI();
 button.onclick=async()=>{
 statusText.textContent="";
 if(registerMode){
-const {error}=await window.supabaseClient.auth.signUp({
+const {error}=await supabase.auth.signUp({
 email:email.value,
 password:password.value,
 options:{
@@ -85,7 +85,7 @@ location.href = "pages/verify.html";
 }
 
 }else{
-const {error}=await window.supabaseClient.auth.signInWithPassword({
+const {error}=await supabase.auth.signInWithPassword({
 email:email.value,
 password:password.value
 });
