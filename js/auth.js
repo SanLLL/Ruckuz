@@ -83,9 +83,9 @@ email:email.value,
 password:password.value
 });
 if(error){
-statusText.textContent=error.message;
+statusText.textContent="Unknown Error!";
 }else{
-statusText.textContent="Welcome back!";
+location.href="pages/home.html";
 
 }
 
