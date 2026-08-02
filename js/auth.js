@@ -83,7 +83,7 @@ if(error){
 statusText.textContent=error.message;
 }else{
 
-statusText.textContent="Account Made, check your email.";
+location.href = "pages/verify.html";
 }
 
 }else{
