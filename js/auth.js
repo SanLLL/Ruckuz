@@ -1,3 +1,12 @@
+const {
+data:{session}
+}
+=
+await window.supabaseClient.auth.getSession();
+if(session){
+location.href="pages/home.html";
+}
+
 let registerMode = false;
 
 const username = document.getElementById("username");
