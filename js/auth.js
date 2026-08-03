@@ -3,7 +3,7 @@ const {
     data: { session }
 } = await supabase.auth.getSession();
 if (session) {
-    location.href = "pages/home.html";
+    location.href = "pages/chat.html";
 }
 
 let registerMode = false;
@@ -41,7 +41,6 @@ document
 
 function toggleMode(){
 registerMode=!registerMode;
-
 updateUI();
 
 }
@@ -49,14 +48,12 @@ updateUI();
 switchMode.onclick=toggleMode;
 loginTab.onclick=()=>{
 registerMode=false;
-
 updateUI();
 
 }
 
 registerTab.onclick=()=>{
 registerMode=true;
-
 updateUI();
 
 }
@@ -92,7 +89,7 @@ password:password.value
 if(error){
 statusText.textContent="Unknown Error!";
 }else{
-location.href="pages/home.html";
+location.href="pages/chat.html";
 
 }
 
