@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>RuckuZ Chat</title>
+
+<link rel="stylesheet" href="../css/main.css">
+
+<style>
+
+body{
+margin:0;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+#chat{
+
+width:900px;
+height:700px;
+background:white;
+display:flex;
+flex-direction:column;
+
+border:4px solid #6b58b8;
+
+}
+
+#messages{
+flex:1;
+overflow-y:auto;
+padding:20px;
+
+}
+
+.message{
+margin-bottom:15px;
+
+}
+
+.username{
+font-weight:bold;
+color:#6b58b8;
+
+}
+
+#bottom{
+display:flex;
+padding:15px;
+gap:10px;
+border-top:3px solid #6b58b8;
+
+}
+
+input{
+flex:1;
+padding:15px;
+font-size:18px;
+
+}
+
+button{
+
+padding:15px 30px;
+
+}
+
+</style>
+</head>
+<body>
+<div id="chat">
+<div id="messages">
+</div>
+<div id="bottom">
+
+<input
+id="messageInput"
+placeholder="Say something..."
+>
+
+<button id="send">
+
+Send
+
+</button>
+</div>
+</div>
+<script type="module" src="../js/chat.js"></script>
+</body>
+</html>
