@@ -109,6 +109,19 @@ function addMessage(message) {
 
     };
 
+    const menu = div.querySelector(".messageMenu");
+    menu.onclick = (event) => {
+        event.stopPropagation();
+        closeAllMenus();
+        const dropdown = createDropdown(message);
+        document.body.appendChild(dropdown);
+        const rect = menu.getBoundingClientRect();
+        dropdown.style.left = `${rect.left + window.scrollX}px`;
+        dropdown.style.top = `${rect.bottom + window.scrollY + 4}px`;
+        dropdown.style.display = "flex";
+    
+    };
+
     messages.appendChild(div);
 
 }
@@ -191,14 +204,80 @@ async function uploadAvatar() {
 
 }
 
+function closeAllMenus(){
+    document
+        .querySelectorAll(".messageDropdown")
+        .forEach(menu => menu.remove());
+
+}
+
+function createDropdown(message){
+    const menu = document.createElement("div");
+    menu.className = "messageDropdown";
+    if(message.user_id === session.user.id){
+        menu.innerHTML = `
+            <button class="editBtn">
+                Edit
+            </button>
+            <button class="deleteBtn">
+                Delete
+            </button>
+
+        `;
+
+        menu.querySelector(".editBtn").onclick = () => {
+            alert("Edit coming next!");
+            menu.remove();
+
+        };
+
+        menu.querySelector(".deleteBtn").onclick = () => {
+            deleteMessage(message.id);
+            
+            menu.remove();
+
+        };
+
+    }else{
+
+        menu.innerHTML = `
+            <button disabled>
+                You can't edit this
+            </button>
+
+        `;
+
+    }
+
+    return menu;
+
+}
+
+document.addEventListener("click", closeAllMenus);
+async function deleteMessage(messageId){
+    const confirmed = confirm(
+        "Delete this message?"
+    );
+
+    if(!confirmed) return;
+    const { error } = await supabase
+        .from("messages")
+        .delete()
+        .eq("id", messageId);
+    if(error){
+        console.error(error);
+
+    }
+
+}
+
 await loadProfiles();
 await loadMessages();
 supabase
 .channel("messages")
 .on(
-
+    
     "postgres_changes",
-
     {
 
         event: "INSERT",
