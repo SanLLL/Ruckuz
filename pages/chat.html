@@ -4,69 +4,84 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>RuckuZ Chat</title>
+<title>RuckuZ Test lobby</title>
 
 <link rel="stylesheet" href="../css/main.css">
 
 <style>
 
 body{
-margin:0;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
+    margin:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
 }
 
 #chat{
-
-width:900px;
-height:700px;
-background:white;
-display:flex;
-flex-direction:column;
-
-border:4px solid #6b58b8;
-
+    width:900px;
+    height:700px;
+    background:white;
+    display:flex;
+    flex-direction:column;
+    border:4px solid #6b58b8;
 }
 
 #messages{
-flex:1;
-overflow-y:auto;
-padding:20px;
-
+    flex:1;
+    overflow-y:auto;
+    padding:20px;
 }
 
 .message{
-margin-bottom:15px;
+    margin-bottom:18px;
+}
 
+.messageRow{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+}
+
+.avatar{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    object-fit:cover;
+    border:3px solid #6b58b8;
+    flex-shrink:0;
+}
+
+.messageContent{
+    flex:1;
 }
 
 .username{
-font-weight:bold;
-color:#6b58b8;
+    font-weight:bold;
+    color:#6b58b8;
+    margin-bottom:3px;
+}
 
+.text{
+    line-height:1.5;
+    word-break:break-word;
 }
 
 #bottom{
-display:flex;
-padding:15px;
-gap:10px;
-border-top:3px solid #6b58b8;
-
+    display:flex;
+    padding:15px;
+    gap:10px;
+    border-top:3px solid #6b58b8;
 }
 
 input{
-flex:1;
-padding:15px;
-font-size:18px;
-
+    flex:1;
+    padding:15px;
+    font-size:18px;
 }
 
 button{
-
-padding:15px 30px;
-
+    padding:15px 30px;
 }
 
 </style>
