@@ -19,6 +19,8 @@ createProfilePopup();
 const messages = document.getElementById("messages");
 const input = document.getElementById("messageInput");
 const send = document.getElementById("send");
+const avatarUpload = document.getElementById("avatarUpload");
+avatarUpload.onchange = uploadAvatar;
 let profiles = {};
 
 async function loadProfiles() {
@@ -135,6 +137,49 @@ async function sendMessage() {
     }
 
     input.value = "";
+
+}
+
+async function uploadAvatar() {
+    const file = avatarUpload.files[0];
+    if (!file) return;
+    const extension = file.name.split(".").pop();
+    const fileName = `${session.user.id}.${extension}`;
+    const { error: uploadError } = await supabase
+        .storage
+        .from("avatars")
+        .upload(fileName, file, {
+            upsert: true
+        });
+
+    if (uploadError) {
+        console.error(uploadError);
+        return;
+
+    }
+
+    const { data } = supabase
+        .storage
+        .from("avatars")
+        .getPublicUrl(fileName);
+
+    const avatarUrl = data.publicUrl;
+    const { error: profileError } = await supabase
+        .from("profiles")
+        .update({
+            avatar_url: avatarUrl
+
+        })
+
+        .eq("id", session.user.id);
+    if (profileError) {
+        console.error(profileError);
+        return;
+
+    }
+
+    profiles[session.user.id].avatar_url = avatarUrl;
+    alert("Avatar Changed!");
 
 }
 
