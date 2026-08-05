@@ -294,4 +294,25 @@ supabase
 
 )
 
+.on(
+    "postgres_changes",
+    {
+        event:"DELETE",
+        schema:"public",
+        table:"messages"
+    },
+    payload=>{
+
+        const element=document.querySelector(
+            `[data-id="${payload.old.id}"]`
+
+        );
+
+        if(element){
+            element.remove();
+
+        }
+
+    }
+)
 .subscribe();
