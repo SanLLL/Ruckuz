@@ -71,8 +71,16 @@ function addMessage(message) {
 
     const div = document.createElement("div");
     div.className = "message";
+    div.dataset.id = message.id;
+    div.dataset.user = message.user_id;
     div.innerHTML = `
         <div class="messageRow">
+        
+            <div class="messageMenu">
+        
+                ⋮
+        
+            </div>
 
             <img
                 class="avatar"
