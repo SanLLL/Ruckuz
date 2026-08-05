@@ -117,7 +117,7 @@ button.onclick = async () => {
                 username:
                     user.user_metadata.username ??
                     user.email.split("@")[0],
-                avatar_url: "/assets/avatars/ruckuz.png"
+                avatar_url: "../assets/avatars/ruckuz.png"
 
             });
 
