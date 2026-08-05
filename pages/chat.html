@@ -38,6 +38,22 @@ body{
     margin-bottom:18px;
 }
 
+.messageMenu{
+    width:24px;
+    opacity:0;
+    cursor:pointer;
+    user-select:none;
+    transition:.15s;
+    font-size:22px;
+    color:#666;
+
+}
+
+.message:hover .messageMenu{
+    opacity:1;
+
+}
+
 .messageRow{
     display:flex;
     gap:12px;
