@@ -17,82 +17,117 @@ const switchText = document.getElementById("switchText");
 const loginTab = document.getElementById("loginTab");
 const registerTab = document.getElementById("registerTab");
 
-function updateUI(){
-if(registerMode){
-username.style.display="block";
-button.textContent="Create Account";
-switchText.innerHTML='Already have an account? <span id="switchMode">Login</span>';
-loginTab.classList.remove("active");
-registerTab.classList.add("active");
-}else{
-username.style.display="none";
-button.textContent="Login";
-switchText.innerHTML='Don\'t have an account? <span id="switchMode">Register</span>';
-registerTab.classList.remove("active");
-loginTab.classList.add("active");
+function updateUI() {
+    if (registerMode) {
+        username.style.display = "block";
+        button.textContent = "Create Account";
+        switchText.innerHTML =
+            'Already have an account? <span id="switchMode">Login</span>';
+
+        loginTab.classList.remove("active");
+        registerTab.classList.add("active");
+
+    } else {
+
+        username.style.display = "none";
+        button.textContent = "Login";
+        switchText.innerHTML =
+            'Don\'t have an account? <span id="switchMode">Register</span>';
+
+        registerTab.classList.remove("active");
+        loginTab.classList.add("active");
+
+    }
+
+    document.querySelector("#switchMode").onclick = toggleMode;
+}
+
+function toggleMode() {
+    registerMode = !registerMode;
+    updateUI();
 
 }
 
-document
-.querySelector("#switchMode")
-.onclick=toggleMode;
+switchMode.onclick = toggleMode;
+loginTab.onclick = () => {
+    registerMode = false;
+    updateUI();
 
-}
+};
 
-function toggleMode(){
-registerMode=!registerMode;
-updateUI();
+registerTab.onclick = () => {
+    registerMode = true;
+    updateUI();
 
-}
+};
 
-switchMode.onclick=toggleMode;
-loginTab.onclick=()=>{
-registerMode=false;
-updateUI();
+button.onclick = async () => {
+    statusText.textContent = "";
+    if (registerMode) {
+        const { error } = await supabase.auth.signUp({
+            email: email.value,
+            password: password.value,
+            options: {
+                data: {
+                    username: username.value
 
-}
+                }
 
-registerTab.onclick=()=>{
-registerMode=true;
-updateUI();
+            }
 
-}
+        });
 
-button.onclick=async()=>{
-statusText.textContent="";
-if(registerMode){
-const {error}=await supabase.auth.signUp({
-email:email.value,
-password:password.value,
-options:{
-data:{
-username:username.value
+        if (error) {
+            statusText.textContent = error.message;
+            return;
 
-}
+        }
 
-}
+        location.href = "pages/verify.html";
+        return;
 
-});
+    }
 
-if(error){
-statusText.textContent=error.message;
-}else{
 
-location.href = "pages/verify.html";
-}
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.value,
+        password: password.value
 
-}else{
-const {error}=await supabase.auth.signInWithPassword({
-email:email.value,
-password:password.value
-});
-if(error){
-statusText.textContent="Unknown Error!";
-}else{
-location.href="pages/chat.html";
+    });
 
-}
+    if (error) {
+        statusText.textContent = error.message;
+        return;
 
-}
+    }
 
-}
+    const user = data.user;
+    const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .maybeSingle();
+
+    if (!profile) {
+
+        const { error: profileError } = await supabase
+            .from("profiles")
+            .insert({
+                id: user.id,
+                username:
+                    user.user_metadata.username ??
+                    user.email.split("@")[0],
+                avatar_url: "/assets/avatars/ruckuz.png"
+
+            });
+
+        if (profileError) {
+            console.error(profileError);
+
+        }
+
+    }
+
+    location.href = "pages/chat.html";
+
+};
