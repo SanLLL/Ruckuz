@@ -47,8 +47,17 @@ export async function openProfile(userId){
     const button1=document.getElementById("popupButton1");
     const button2=document.getElementById("popupButton2");
     if(userId===currentUserId){
-        button1.textContent="Change Avatar";
-        button2.textContent="Change Username";
+        button1.textContent = "Change Avatar";
+        
+        button1.onclick = () => {
+        
+            document.getElementById("avatarUpload").click();
+        
+        };
+        
+        button2.textContent = "Change Username";
+        
+        button2.onclick = null;
     }else{
 
         button1.textContent="Message";
