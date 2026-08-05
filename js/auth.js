@@ -117,7 +117,7 @@ button.onclick = async () => {
                 username:
                     user.user_metadata.username ??
                     user.email.split("@")[0],
-                avatar_url: "https://sanlll.github.io/Ruckuz/pages/chat.html"
+                avatar_url: "https://github.com/SanLLL/Ruckuz/blob/main/assets/avatars/ruckuz.png"
 
             });
 
