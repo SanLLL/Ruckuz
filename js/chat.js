@@ -65,7 +65,7 @@ async function loadMessages() {
 function addMessage(message) {
     const profile = profiles[message.user_id] || {
         username: message.username,
-        avatar_url: "/assets/avatars/ruckuz.png"
+        avatar_url: "/Ruckuz/assets/avatars/ruckuz.png"
 
     };
 
