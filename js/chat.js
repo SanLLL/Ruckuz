@@ -164,8 +164,9 @@ async function sendMessage() {
 async function uploadAvatar() {
     const file = avatarUpload.files[0];
     if (!file) return;
-    const extension = file.name.split(".").pop();
-    const fileName = `${session.user.id}.${extension}`;
+    const extension = file.name.split(".").pop().toLowerCase();
+    const fileName =
+        `${session.user.id}/${crypto.randomUUID()}.${extension}`;
     const { error: uploadError } = await supabase
         .storage
         .from("avatars")
