@@ -164,14 +164,19 @@ async function sendMessage() {
 async function uploadAvatar() {
     const file = avatarUpload.files[0];
     if (!file) return;
-    const extension = file.name.split(".").pop().toLowerCase();
+    const extension = file.type.split("/")[1] || "png";
     const fileName =
         `${session.user.id}/${crypto.randomUUID()}.${extension}`;
 
     const { error: uploadError } = await supabase
         .storage
         .from("avatars")
-        .upload(fileName, file);
+        .upload(fileName, file, {
+            contentType: file.type,
+            cacheControl: "3600",
+            upsert: false
+        });
+    
     if (uploadError) {
         console.error(uploadError);
         return;
