@@ -150,11 +150,8 @@ async function sendMessage() {
         });
 
     if (error) {
-
         console.error(error);
-
         return;
-
     }
 
     input.value = "";
@@ -377,4 +374,29 @@ themeToggle.onclick = () => {
 
     }
 
+};
+
+const logoutButton =
+    document.getElementById("logoutButton");
+
+logoutButton.onclick = async () => {
+
+    logoutButton.disabled = true;
+    logoutButton.textContent = "Logging out...";
+
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+
+        console.error(error);
+
+        logoutButton.disabled = false;
+        logoutButton.textContent = "Logout";
+
+        alert("Couldn't log out. Please try again.");
+
+        return;
+    }
+
+    location.href = "../";
 };
