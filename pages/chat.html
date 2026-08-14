@@ -177,32 +177,56 @@ body.darkMode #messageInput::placeholder {
 }
 
 .themeToggle {
-    margin: 8px 15px;
-    padding: 8px 14px;
-    border: 2px solid #6b58b8;
-    border-radius: 12px;
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 10000;
+    padding: 10px 16px;
+    border: 3px solid #6b58b8;
+    border-radius: 14px;
     background: #ffd36b;
     color: #30254f;
     font-weight: bold;
+    font-size: 15px;
     cursor: pointer;
-    align-self: flex-end;
+    box-shadow: 4px 4px 0 #6b58b8;
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.themeToggle:hover {
+    transform: translate(-2px, -2px);
+    box-shadow:
+        6px 6px 0 #6b58b8;
+}
+
+.themeToggle:active {
+    transform: translate(2px, 2px);
+    box-shadow:
+        2px 2px 0 #6b58b8;
 }
 
 body.darkMode .themeToggle {
     background: #8b6cff;
     color: white;
     border-color: #b79cff;
+    box-shadow: 4px 4px 0 #b79cff;
+}
+
+body.darkMode .themeToggle:hover {
+    box-shadow: 6px 6px 0 #b79cff;
 }
 
 </style>
 </head>
 <body>
-<div id="chat">
-<div id="messages">
-</div>
 <button id="themeToggle" class="themeToggle">
     Dark Mode
 </button>
+<div id="chat">
+<div id="messages">
+</div>
 <div id="bottom">
 
 <input
