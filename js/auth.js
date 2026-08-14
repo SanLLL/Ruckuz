@@ -68,13 +68,17 @@ button.onclick = async () => {
             email: email.value,
             password: password.value,
             options: {
+                emailRedirectTo:
+                    "https://sanlll.github.io/Ruckuz/",
+        
                 data: {
+        
                     username: username.value
-
+        
                 }
-
+        
             }
-
+        
         });
 
         if (error) {
