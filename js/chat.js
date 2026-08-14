@@ -84,7 +84,7 @@ function addMessage(message) {
 
             <img
                 class="avatar"
-                src="${profile.avatar_url}"
+                src="${profile.avatar_url}?v=${Date.now()}"
                 alt="${profile.username}"
             >
 
