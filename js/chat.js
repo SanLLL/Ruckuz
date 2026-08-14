@@ -198,8 +198,26 @@ async function uploadAvatar() {
 
     }
 
+if (profiles[session.user.id]) {
     profiles[session.user.id].avatar_url = avatarUrl;
-    alert("Avatar Changed!");
+
+}
+
+document
+    .querySelectorAll(".avatar")
+    .forEach(avatar => {
+        const message = avatar.closest(".message");
+        if (!message) return;
+        if (
+            
+            message.dataset.user === session.user.id
+        ) {
+            
+            avatar.src = avatarUrl;
+        }
+    });
+
+alert("PFP changed!");
 
 }
 
