@@ -178,11 +178,15 @@ async function uploadAvatar() {
 
     }
 
-    const { data } = supabase
+    const { data: publicUrlData } = supabase
         .storage
         .from("avatars")
         .getPublicUrl(fileName);
-    const avatarUrl = data.publicUrl;
+    
+    const avatarUrl = publicUrlData.publicUrl;
+    
+    console.log("Avatar file:", fileName);
+    console.log("Avatar URL:", avatarUrl);
     
     const { error: profileError } = await supabase
         .from("profiles")
