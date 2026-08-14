@@ -131,12 +131,71 @@ button{
     padding:15px 30px;
 }
 
+body.darkMode {
+    background-image: none;
+    background-color: #252238;
+}
+
+body.darkMode #chat {
+    background: #302b48;
+    border-color: #8b6cff;
+    color: #f5f0ff;
+}
+
+body.darkMode #messages {
+    background: #302b48;
+}
+
+body.darkMode .username {
+    color: #b79cff;
+}
+
+body.darkMode .text {
+    color: #f5f0ff;
+}
+
+body.darkMode #bottom {
+    background: #26223a;
+    border-top-color: #8b6cff;
+}
+
+body.darkMode #messageInput {
+    background: #1f1c30;
+    color: #ffffff;
+    border: 2px solid #8b6cff;
+}
+
+body.darkMode #messageInput::placeholder {
+    color: #aaa2bd;
+}
+
+.themeToggle {
+    margin: 8px 15px;
+    padding: 8px 14px;
+    border: 2px solid #6b58b8;
+    border-radius: 12px;
+    background: #ffd36b;
+    color: #30254f;
+    font-weight: bold;
+    cursor: pointer;
+    align-self: flex-end;
+}
+
+body.darkMode .themeToggle {
+    background: #8b6cff;
+    color: white;
+    border-color: #b79cff;
+}
+
 </style>
 </head>
 <body>
 <div id="chat">
 <div id="messages">
 </div>
+<button id="themeToggle" class="themeToggle">
+    Dark Mode
+</button>
 <div id="bottom">
 
 <input
