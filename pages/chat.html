@@ -218,11 +218,63 @@ body.darkMode .themeToggle:hover {
     box-shadow: 6px 6px 0 #b79cff;
 }
 
+.logoutButton {
+    position: fixed;
+
+    top: 18px;
+    right: 160px;
+
+    z-index: 10000;
+
+    padding: 10px 16px;
+
+    border: 3px solid #b84f4f;
+    border-radius: 14px;
+
+    background: #ff8585;
+    color: #4a2020;
+
+    font-weight: bold;
+    font-size: 15px;
+
+    cursor: pointer;
+
+    box-shadow: 4px 4px 0 #b84f4f;
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.logoutButton:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 #b84f4f;
+}
+
+.logoutButton:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 #b84f4f;
+}
+
+body.darkMode .logoutButton {
+    background: #d96666;
+    color: #fff4f4;
+    border-color: #a94444;
+    box-shadow: 4px 4px 0 #a94444;
+}
+
+body.darkMode .logoutButton:hover {
+    box-shadow: 6px 6px 0 #a94444;
+}
+
 </style>
 </head>
 <body>
 <button id="themeToggle" class="themeToggle">
     Dark Mode
+</button>
+<button id="logoutButton" class="logoutButton">
+    Logout
 </button>
 <div id="chat">
 <div id="messages">
