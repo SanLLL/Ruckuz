@@ -342,3 +342,39 @@ supabase
     }
 )
 .subscribe();
+
+const themeToggle = document.getElementById("themeToggle");
+
+if (localStorage.getItem("ruckuz-theme") === "dark") {
+    document.body.classList.add("darkMode");
+    themeToggle.textContent = "Light Mode";
+}
+
+themeToggle.onclick = () => {
+
+    document.body.classList.toggle("darkMode");
+
+    const darkMode =
+        document.body.classList.contains("darkMode");
+
+    if (darkMode) {
+
+        themeToggle.textContent = "Light Mode";
+
+        localStorage.setItem(
+            "ruckuz-theme",
+            "dark"
+        );
+
+    } else {
+
+        themeToggle.textContent = "Dark Mode";
+
+        localStorage.setItem(
+            "ruckuz-theme",
+            "light"
+        );
+
+    }
+
+};
