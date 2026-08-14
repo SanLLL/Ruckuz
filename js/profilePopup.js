@@ -42,12 +42,12 @@ export async function openProfile(userId){
     document.getElementById("popupAvatar").src=profile.avatar_url;
     document.getElementById("popupName").textContent=profile.username;
     document.getElementById("popupJoined").textContent=
-        "Joined RuckuZ";
+        "RuckuZ Member";
 
     const button1=document.getElementById("popupButton1");
     const button2=document.getElementById("popupButton2");
     if(userId===currentUserId){
-        button1.textContent = "Change Avatar";
+        button1.textContent = "Change PFP";
         
         button1.onclick = () => {
         
