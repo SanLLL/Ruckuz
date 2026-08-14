@@ -167,13 +167,11 @@ async function uploadAvatar() {
     const extension = file.name.split(".").pop().toLowerCase();
     const fileName =
         `${session.user.id}/${crypto.randomUUID()}.${extension}`;
+
     const { error: uploadError } = await supabase
         .storage
         .from("avatars")
-        .upload(fileName, file, {
-            upsert: true
-        });
-
+        .upload(fileName, file);
     if (uploadError) {
         console.error(uploadError);
         return;
@@ -184,8 +182,8 @@ async function uploadAvatar() {
         .storage
         .from("avatars")
         .getPublicUrl(fileName);
-
     const avatarUrl = data.publicUrl;
+    
     const { error: profileError } = await supabase
         .from("profiles")
         .update({
