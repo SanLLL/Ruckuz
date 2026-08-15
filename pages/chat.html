@@ -423,6 +423,97 @@ body.darkMode .friendRequest {
     border-color: #7563a8;
 }
 
+#friendsButton {
+    position: fixed;
+    top: 20px;
+    right: 180px;
+    padding: 10px 18px;
+    border: 2px solid #6b58b8;
+    border-radius: 10px;
+    background: white;
+    color: #6b58b8;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+#friendsCount {
+    margin-left: 5px;
+    font-size: 13px;
+}
+
+#friendsPanel {
+    display: none;
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    width: 320px;
+    max-height: 500px;
+    background: white;
+    border: 3px solid #6b58b8;
+    border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    z-index: 2000;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#friendsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 2px solid #6b58b8;
+}
+
+#friendsHeader h2 {
+    margin: 0;
+    color: #6b58b8;
+}
+
+#closeFriends {
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+#friendsList {
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.friendItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.friendItem:hover {
+    background: #f0ebff;
+}
+
+.friendItemAvatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #6b58b8;
+}
+
+.friendItemName {
+    font-weight: bold;
+    color: #6b58b8;
+}
+
+.noFriends {
+    text-align: center;
+    padding: 20px;
+}
+    
 </style>
 </head>
 <body>
@@ -446,6 +537,26 @@ body.darkMode .friendRequest {
     <div id="friendRequestsList">
         <p class="noRequests">
             No friend requests yet!
+        </p>
+    </div>
+</div>
+<button id="friendsButton">
+    Friends
+    <span id="friendsCount">0</span>
+</button>
+<div id="friendsPanel">
+    <div id="friendsHeader">
+        <h2>Friends</h2>
+
+        <button id="closeFriends">
+            ✕
+        </button>
+
+    </div>
+    <div id="friendsList">
+
+        <p class="noFriends">
+            You don't have any friends yet!
         </p>
     </div>
 </div>
