@@ -176,11 +176,19 @@ body.darkMode #messageInput::placeholder {
     color: #aaa2bd;
 }
 
-.themeToggle {
+#topBar {
     position: fixed;
     top: 18px;
     right: 18px;
     z-index: 10000;
+
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+    
+.themeToggle {
+    position: static;
     padding: 10px 16px;
     border: 3px solid #6b58b8;
     border-radius: 14px;
@@ -219,12 +227,7 @@ body.darkMode .themeToggle:hover {
 }
 
 .logoutButton {
-    position: fixed;
-
-    top: 18px;
-    right: 160px;
-
-    z-index: 10000;
+    position: static;
 
     padding: 10px 16px;
 
@@ -268,10 +271,7 @@ body.darkMode .logoutButton:hover {
 }
 
 .friendRequestsButton {
-    position: fixed;
-    top: 18px;
-    right: 310px;
-    z-index: 10000;
+    position: static;
     padding: 10px 16px;
     border: 3px solid #6b58b8;
     border-radius: 14px;
@@ -424,9 +424,7 @@ body.darkMode .friendRequest {
 }
 
 #friendsButton {
-    position: fixed;
-    top: 20px;
-    right: 180px;
+    position: static;
     padding: 10px 18px;
     border: 2px solid #6b58b8;
     border-radius: 10px;
@@ -434,7 +432,6 @@ body.darkMode .friendRequest {
     color: #6b58b8;
     font-weight: bold;
     cursor: pointer;
-    z-index: 1000;
 }
 
 #friendsCount {
@@ -517,16 +514,22 @@ body.darkMode .friendRequest {
 </style>
 </head>
 <body>
-<button id="themeToggle" class="themeToggle">
-    Dark Mode
-</button>
-<button id="logoutButton" class="logoutButton">
-    Logout
-</button>
-<button id="friendRequestsButton" class="friendRequestsButton">
-    Requests
-    <span id="friendRequestCount">0</span>
-</button>
+<div id="topBar">
+    <button id="friendRequestsButton" class="friendRequestsButton">
+        Requests
+        <span id="friendRequestCount">0</span>
+    </button>
+    <button id="friendsButton">
+        Friends
+        <span id="friendsCount">0</span>
+    </button>
+    <button id="logoutButton" class="logoutButton">
+        Logout
+    </button>
+    <button id="themeToggle" class="themeToggle">
+        Dark Mode
+    </button>
+</div>
 <div id="friendRequestsPanel" class="friendRequestsPanel">
     <div class="friendRequestsHeader">
         <h2>Friend Requests</h2>
