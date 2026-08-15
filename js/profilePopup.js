@@ -58,12 +58,70 @@ export async function openProfile(userId){
         button2.textContent = "Change Username";
         
         button2.onclick = null;
-    }else{
+}else{
 
-        button1.textContent="Message";
-        button2.textContent="Add Friend";
+    button1.textContent = "Message";
+    button2.textContent = "Add Friend";
+    button2.disabled = false;
+    const { data: existingRequest, error: requestError } =
+        await supabase
+            .from("friend_requests")
+            .select("id, sender_id, receiver_id, status")
+            .or(
+                `and(sender_id.eq.${currentUserId},receiver_id.eq.${userId}),and(sender_id.eq.${userId},receiver_id.eq.${currentUserId})`
+            )
+            .eq("status", "pending")
+            .maybeSingle();
+
+    if (requestError) {
+        console.error(requestError);
 
     }
+
+    if (existingRequest) {
+        if (existingRequest.sender_id === currentUserId) {
+            button2.textContent = "Request Sent";
+            button2.disabled = true;
+
+        } else {
+
+            button2.textContent = "Wants to be Friends!";
+            button2.disabled = true;
+
+        }
+
+    }
+
+    button2.onclick = async () => {
+        button2.disabled = true;
+        button2.textContent = "Sending...";
+        const { error } = await supabase
+            .from("friend_requests")
+            .insert({
+                sender_id: currentUserId,
+                receiver_id: userId
+            });
+
+        if (error) {
+            console.error(error);
+            button2.disabled = false;
+            if (error.code === "23505") {
+                button2.textContent = "Request Sent";
+
+            } else {
+
+                button2.textContent = "Couldn't Send";
+
+            }
+
+            return;
+        }
+
+        button2.textContent = "Request Sent";
+
+    };
+
+}
 
     overlay.style.display="flex";
 
