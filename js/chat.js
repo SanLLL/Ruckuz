@@ -400,3 +400,248 @@ logoutButton.onclick = async () => {
 
     location.href = "../";
 };
+
+const friendRequestsButton =
+    document.getElementById("friendRequestsButton");
+const friendRequestsPanel =
+    document.getElementById("friendRequestsPanel");
+const closeFriendRequests =
+    document.getElementById("closeFriendRequests");
+const friendRequestsList =
+    document.getElementById("friendRequestsList");
+const friendRequestCount =
+    document.getElementById("friendRequestCount");
+
+
+friendRequestsButton.onclick = async () => {
+    const isOpen =
+        friendRequestsPanel.style.display === "flex";
+    if (isOpen) {
+        friendRequestsPanel.style.display = "none";
+
+    } else {
+
+        friendRequestsPanel.style.display = "flex";
+        await loadFriendRequests();
+
+    }
+
+};
+
+
+closeFriendRequests.onclick = () => {
+    friendRequestsPanel.style.display = "none";
+
+};
+
+
+async function loadFriendRequests() {
+    const { data, error } = await supabase
+        .from("friend_requests")
+        .select(`
+            id,
+            sender_id,
+            status,
+            profiles:sender_id (
+                id,
+                username,
+                avatar_url
+            )
+        `)
+
+        .eq("receiver_id", session.user.id)
+        .eq("status", "pending")
+        .order("created_at", {
+            ascending: false
+        });
+
+
+    if (error) {
+        console.error(error);
+        return;
+
+    }
+
+
+    friendRequestsList.innerHTML = "";
+    friendRequestCount.textContent =
+        data.length;
+
+
+    if (data.length === 0) {
+        friendRequestsList.innerHTML = `
+            <p class="noRequests">
+                No friend requests yet!
+            </p>
+        `;
+
+        return;
+
+    }
+
+
+    for (const request of data) {
+
+        createFriendRequestElement(request);
+
+    }
+
+}
+
+
+function createFriendRequestElement(request) {
+    const profile = request.profiles;
+    const div =
+        document.createElement("div");
+    div.className = "friendRequest";
+    div.dataset.requestId =
+        request.id;
+    const avatar =
+        profile?.avatar_url ||
+        "/Ruckuz/assets/avatars/ruckuz.png";
+    div.innerHTML = `
+        <img
+            class="friendRequestAvatar"
+            src="${avatar}?v=${Date.now()}"
+            alt="Avatar"
+        >
+
+        <div class="friendRequestInfo">
+            <div class="friendRequestName">
+                ${profile?.username || "Unknown User"}
+            </div>
+            <div class="friendRequestButtons">
+                <button class="acceptRequest">
+                    Accept
+                </button>
+                <button class="declineRequest">
+                    Decline
+                </button>
+            </div>
+        </div>
+    `;
+
+
+    div
+        .querySelector(".acceptRequest")
+        .onclick = () => {
+            respondToFriendRequest(
+                request.id,
+                "accepted",
+                div
+            );
+
+        };
+
+
+    div
+        .querySelector(".declineRequest")
+        .onclick = () => {
+            respondToFriendRequest(
+                request.id,
+                "declined",
+                div
+            );
+
+        };
+
+
+    friendRequestsList.appendChild(div);
+
+}
+
+async function respondToFriendRequest(
+    requestId,
+    newStatus,
+    element
+) {
+
+    const buttons =
+        element.querySelectorAll("button");
+    buttons.forEach(button => {
+        button.disabled = true;
+
+    });
+    const { error } =
+        await supabase
+            .from("friend_requests")
+            .update({
+                status: newStatus
+            })
+            .eq("id", requestId);
+
+
+    if (error) {
+        console.error(error);
+        buttons.forEach(button => {
+            button.disabled = false;
+
+        });
+
+        return;
+
+    }
+
+
+    element.remove();
+    const remaining =
+        document.querySelectorAll(
+            ".friendRequest"
+        ).length;
+    friendRequestCount.textContent =
+        remaining;
+    if (remaining === 0) {
+        friendRequestsList.innerHTML = `
+            <p class="noRequests">
+                No friend requests yet! ✨
+            </p>
+        `;
+
+    }
+
+}
+
+async function refreshFriendRequestCount() {
+    const { count, error } =
+        await supabase
+            .from("friend_requests")
+            .select("*", {
+                count: "exact",
+                head: true
+            })
+            .eq("receiver_id", session.user.id)
+            .eq("status", "pending");
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    friendRequestCount.textContent =
+        count ?? 0;
+
+}
+
+await refreshFriendRequestCount();
+supabase
+    .channel("friend-requests")
+    .on(
+        "postgres_changes",
+        {
+            event: "INSERT",
+            schema: "public",
+            table: "friend_requests",
+            filter:
+                `receiver_id=eq.${session.user.id}`
+        },
+        async () => {
+            await refreshFriendRequestCount();
+            if (
+                friendRequestsPanel.style.display === "flex"
+            ) {
+
+                await loadFriendRequests();
+            }
+        }
+    )
+
+    .subscribe();
