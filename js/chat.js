@@ -436,53 +436,67 @@ closeFriendRequests.onclick = () => {
 
 
 async function loadFriendRequests() {
+
     const { data, error } = await supabase
         .from("friend_requests")
-        .select(`
-            id,
-            sender_id,
-            status,
-            profiles:sender_id (
-                id,
-                username,
-                avatar_url
-            )
-        `)
-
+        .select("*")
         .eq("receiver_id", session.user.id)
         .eq("status", "pending")
         .order("created_at", {
             ascending: false
         });
 
-
     if (error) {
-        console.error(error);
-        return;
 
-    }
+        console.error("Friend request loading error:", error);
 
-
-    friendRequestsList.innerHTML = "";
-    friendRequestCount.textContent =
-        data.length;
-
-
-    if (data.length === 0) {
         friendRequestsList.innerHTML = `
             <p class="noRequests">
-                No friend requests yet!
+                Couldn't load requests. 😭
             </p>
         `;
 
         return;
-
     }
 
+    friendRequestsList.innerHTML = "";
+    friendRequestCount.textContent =
+        data.length;
+    if (data.length === 0) {
+        friendRequestsList.innerHTML = `
+            <p class="noRequests">
+                No friend requests yet! ✨
+            </p>
+        `;
+
+        return;
+    }
 
     for (const request of data) {
 
-        createFriendRequestElement(request);
+        const {
+            data: profile,
+            error: profileError
+        } = await supabase
+            .from("profiles")
+            .select("id, username, avatar_url")
+            .eq("id", request.sender_id)
+            .single();
+
+        if (profileError) {
+
+            console.error(
+                "Profile loading error:",
+                profileError
+            );
+
+            continue;
+        }
+
+        createFriendRequestElement({
+            ...request,
+            profiles: profile
+        });
 
     }
 
@@ -555,6 +569,109 @@ async function respondToFriendRequest(
     newStatus,
     element
 ) {
+
+    const buttons =
+        element.querySelectorAll("button");
+
+    buttons.forEach(button => {
+        button.disabled = true;
+    });
+
+    const {
+        data: request,
+        error: requestError
+    } = await supabase
+        .from("friend_requests")
+        .select("sender_id, receiver_id")
+        .eq("id", requestId)
+        .single();
+
+
+    if (requestError) {
+
+        console.error(requestError);
+
+        buttons.forEach(button => {
+            button.disabled = false;
+        });
+
+        return;
+    }
+
+    if (newStatus === "accepted") {
+
+        const { error: friendError } =
+            await supabase
+                .from("friends")
+                .insert({
+                    user_id: request.sender_id,
+                    friend_id: request.receiver_id
+                });
+
+
+        if (friendError) {
+
+            console.error(
+                "Friend creation error:",
+                friendError
+            );
+
+            buttons.forEach(button => {
+                button.disabled = false;
+            });
+
+            return;
+        }
+
+    }
+
+    const { error } =
+        await supabase
+            .from("friend_requests")
+            .update({
+                status: newStatus
+            })
+            .eq("id", requestId);
+
+
+    if (error) {
+
+        console.error(
+            "Request update error:",
+            error
+        );
+
+        buttons.forEach(button => {
+            button.disabled = false;
+        });
+
+        return;
+    }
+
+    element.remove();
+
+
+    const remaining =
+        document.querySelectorAll(
+            ".friendRequest"
+        ).length;
+
+
+    friendRequestCount.textContent =
+        remaining;
+
+
+    if (remaining === 0) {
+
+        friendRequestsList.innerHTML = `
+            <p class="noRequests">
+                No friend requests yet! ✨
+            </p>
+        `;
+
+    }
+
+}
 
     const buttons =
         element.querySelectorAll("button");
