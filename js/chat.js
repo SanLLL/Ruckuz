@@ -650,6 +650,7 @@ async function respondToFriendRequest(
 
     element.remove();
 
+    await loadFriends();
 
     const remaining =
         document.querySelectorAll(
@@ -694,6 +695,7 @@ async function refreshFriendRequestCount() {
 }
 
 await refreshFriendRequestCount();
+await loadFriends();
 supabase
     .channel("friend-requests")
     .on(
@@ -717,3 +719,198 @@ supabase
     )
 
     .subscribe();
+
+const friendsButton =
+    document.getElementById("friendsButton");
+
+const friendsPanel =
+    document.getElementById("friendsPanel");
+
+const closeFriends =
+    document.getElementById("closeFriends");
+
+const friendsList =
+    document.getElementById("friendsList");
+
+const friendsCount =
+    document.getElementById("friendsCount");
+
+
+friendsButton.onclick = async () => {
+
+    const isOpen =
+        friendsPanel.style.display === "flex";
+
+    if (isOpen) {
+
+        friendsPanel.style.display = "none";
+
+    } else {
+
+        friendsPanel.style.display = "flex";
+
+        await loadFriends();
+
+    }
+
+};
+
+
+closeFriends.onclick = () => {
+
+    friendsPanel.style.display = "none";
+
+};
+
+
+async function loadFriends() {
+
+    const { data, error } = await supabase
+        .from("friends")
+        .select("*")
+        .or(
+            `user_id.eq.${session.user.id},friend_id.eq.${session.user.id}`
+        );
+
+    if (error) {
+
+        console.error(
+            "Friends loading error:",
+            error
+        );
+
+        friendsList.innerHTML = `
+            <p class="noFriends">
+                Couldn't load your friends.
+            </p>
+        `;
+
+        return;
+    }
+
+
+    friendsList.innerHTML = "";
+
+
+    if (!data || data.length === 0) {
+
+        friendsCount.textContent = "0";
+
+        friendsList.innerHTML = `
+            <p class="noFriends">
+                You don't have any friends yet!
+            </p>
+        `;
+
+        return;
+    }
+
+
+    const friendIds = data.map(friend => {
+
+        if (friend.user_id === session.user.id) {
+
+            return friend.friend_id;
+
+        }
+
+        return friend.user_id;
+
+    });
+
+
+    const uniqueFriendIds =
+        [...new Set(friendIds)];
+
+
+    friendsCount.textContent =
+        uniqueFriendIds.length;
+
+
+    const {
+        data: profilesData,
+        error: profilesError
+    } = await supabase
+        .from("profiles")
+        .select("id, username, avatar_url")
+        .in("id", uniqueFriendIds);
+
+
+    if (profilesError) {
+
+        console.error(
+            "Friend profiles loading error:",
+            profilesError
+        );
+
+        friendsList.innerHTML = `
+            <p class="noFriends">
+                Couldn't load friend profiles.
+            </p>
+        `;
+
+        return;
+    }
+
+
+    const profileMap = {};
+
+    for (const profile of profilesData) {
+
+        profileMap[profile.id] =
+            profile;
+
+    }
+
+
+    for (const friendId of uniqueFriendIds) {
+
+        const profile =
+            profileMap[friendId];
+
+        if (!profile) continue;
+
+
+        createFriendElement(profile);
+
+    }
+
+}
+
+
+function createFriendElement(profile) {
+
+    const div =
+        document.createElement("div");
+
+    div.className = "friendItem";
+
+
+    const avatar =
+        profile.avatar_url ||
+        "/Ruckuz/assets/avatars/ruckuz.png";
+
+
+    div.innerHTML = `
+        <img
+            class="friendItemAvatar"
+            src="${avatar}?v=${Date.now()}"
+            alt="${profile.username}"
+        >
+
+        <div class="friendItemName">
+            ${profile.username}
+        </div>
+    `;
+
+
+    div.onclick = () => {
+
+        openProfile(profile.id);
+
+    };
+
+
+    friendsList.appendChild(div);
+
+}
