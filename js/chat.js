@@ -665,52 +665,7 @@ async function respondToFriendRequest(
 
         friendRequestsList.innerHTML = `
             <p class="noRequests">
-                No friend requests yet! ✨
-            </p>
-        `;
-
-    }
-
-}
-
-    const buttons =
-        element.querySelectorAll("button");
-    buttons.forEach(button => {
-        button.disabled = true;
-
-    });
-    const { error } =
-        await supabase
-            .from("friend_requests")
-            .update({
-                status: newStatus
-            })
-            .eq("id", requestId);
-
-
-    if (error) {
-        console.error(error);
-        buttons.forEach(button => {
-            button.disabled = false;
-
-        });
-
-        return;
-
-    }
-
-
-    element.remove();
-    const remaining =
-        document.querySelectorAll(
-            ".friendRequest"
-        ).length;
-    friendRequestCount.textContent =
-        remaining;
-    if (remaining === 0) {
-        friendRequestsList.innerHTML = `
-            <p class="noRequests">
-                No friend requests yet! ✨
+                No friend requests yet!
             </p>
         `;
 
