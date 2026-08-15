@@ -695,7 +695,6 @@ async function refreshFriendRequestCount() {
 }
 
 await refreshFriendRequestCount();
-await loadFriends();
 supabase
     .channel("friend-requests")
     .on(
@@ -914,3 +913,5 @@ function createFriendElement(profile) {
     friendsList.appendChild(div);
 
 }
+
+await loadFriends();
