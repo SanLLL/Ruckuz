@@ -267,6 +267,162 @@ body.darkMode .logoutButton:hover {
     box-shadow: 6px 6px 0 #a94444;
 }
 
+.friendRequestsButton {
+    position: fixed;
+    top: 18px;
+    right: 310px;
+    z-index: 10000;
+    padding: 10px 16px;
+    border: 3px solid #6b58b8;
+    border-radius: 14px;
+    background: #ffd36b;
+    color: #30254f;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 #6b58b8;
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.friendRequestsButton:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 #6b58b8;
+}
+
+#friendRequestCount {
+    display: inline-flex;
+    min-width: 20px;
+    height: 20px;
+    margin-left: 5px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #ff6868;
+    color: white;
+    font-size: 12px;
+}
+
+.friendRequestsPanel {
+    position: fixed;
+    top: 75px;
+    right: 20px;
+    width: 340px;
+    max-height: 500px;
+    z-index: 9999;
+    display: none;
+    flex-direction: column;
+    background: #fff8df;
+    border: 4px solid #6b58b8;
+    border-radius: 18px;
+    box-shadow: 8px 8px 0 #6b58b8;
+    overflow: hidden;
+}
+
+.friendRequestsHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-bottom: 3px dashed #6b58b8;
+}
+
+.friendRequestsHeader h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+#closeFriendRequests {
+    border: 0;
+    background: transparent;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+#friendRequestsList {
+    padding: 12px;
+    overflow-y: auto;
+}
+
+.friendRequest {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 2px solid #c7b8ed;
+    border-radius: 12px;
+    background: white;
+}
+
+.friendRequestAvatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #6b58b8;
+}
+
+.friendRequestInfo {
+    flex: 1;
+    min-width: 0;
+}
+
+.friendRequestName {
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.friendRequestButtons {
+    display: flex;
+    gap: 5px;
+    margin-top: 6px;
+}
+
+.friendRequestButtons button {
+    padding: 5px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.acceptRequest {
+    border: 2px solid #4e9c65;
+    background: #8ee6a5;
+}
+
+.declineRequest {
+    border: 2px solid #c65353;
+    background: #ff9292;
+}
+
+.noRequests {
+    text-align: center;
+    padding: 20px;
+    margin: 0;
+    opacity: 0.7;
+}
+
+body.darkMode .friendRequestsPanel {
+    background: #302b48;
+    color: #f5f0ff;
+    border-color: #8b6cff;
+    box-shadow: 8px 8px 0 #8b6cff;
+}
+
+body.darkMode .friendRequestsHeader {
+    border-color: #8b6cff;
+}
+
+body.darkMode .friendRequest {
+    background: #242038;
+
+    border-color: #7563a8;
+}
+
 </style>
 </head>
 <body>
@@ -276,6 +432,23 @@ body.darkMode .logoutButton:hover {
 <button id="logoutButton" class="logoutButton">
     Logout
 </button>
+<button id="friendRequestsButton" class="friendRequestsButton">
+    Requests
+    <span id="friendRequestCount">0</span>
+</button>
+<div id="friendRequestsPanel" class="friendRequestsPanel">
+    <div class="friendRequestsHeader">
+        <h2>Friend Requests</h2>
+        <button id="closeFriendRequests">
+            ✕
+        </button>
+    </div>
+    <div id="friendRequestsList">
+        <p class="noRequests">
+            No friend requests yet!
+        </p>
+    </div>
+</div>
 <div id="chat">
 <div id="messages">
 </div>
