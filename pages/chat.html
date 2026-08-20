@@ -510,6 +510,123 @@ body.darkMode .friendRequest {
     text-align: center;
     padding: 20px;
 }
+
+#fileButton {
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    border: 3px solid #6b58b8;
+    border-radius: 14px;
+    background: #ffd36b;
+    color: #30254f;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 4px 4px 0 #6b58b8;
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+#fileButton:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 #6b58b8;
+}
+
+#fileButton:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 #6b58b8;
+}
+
+body.darkMode #fileButton {
+    background: #8b6cff;
+    color: white;
+    border-color: #b79cff;
+    box-shadow: 4px 4px 0 #b79cff;
+}
+
+.messageFile {
+    margin-top: 10px;
+    max-width: 500px;
+}
+
+.messageFile img,
+.messageFile video {
+    display: block;
+    max-width: 100%;
+    max-height: 450px;
+    border-radius: 12px;
+    border: 3px solid #6b58b8;
+}
+
+.messageFile video {
+    background: black;
+}
+
+.fileAttachment {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border: 3px solid #6b58b8;
+    border-radius: 12px;
+    background: #fff8df;
+    color: #30254f;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.uploadingFile {
+    position: relative;
+    display: inline-block;
+    max-width: 500px;
+    margin-top: 10px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.uploadingFile img,
+.uploadingFile video {
+    display: block;
+    max-width: 100%;
+    max-height: 450px;
+    border-radius: 12px;
+    filter: brightness(35%);
+}
+
+.uploadingOverlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.25);
+}
+
+.uploadSpinner {
+    width: 42px;
+    height: 42px;
+    border: 5px solid rgba(255,255,255,0.35);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: uploadSpin 0.8s linear infinite;
+}
+
+@keyframes uploadSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+body.darkMode .fileAttachment {
+    background: #242038;
+    color: #f5f0ff;
+    border-color: #8b6cff;
+}
     
 </style>
 </head>
