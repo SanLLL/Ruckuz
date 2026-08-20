@@ -853,19 +853,20 @@ body.darkMode .messageGif img {
     }
 
     #chat {
-        width: 100vw;
-        height: 100dvh;
-
-        margin-top: 68px;
-
-        border: none;
-        border-radius: 0;
+    width: 100vw;
+    height: calc(100dvh - 68px);
+    margin-top: 68px;
+    border: none;
+    border-radius: 0;
+    box-sizing: border-box;
     }
 
     #messages {
-        padding: 14px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
     }
-
+    
     .avatar {
         width: 42px;
         height: 42px;
@@ -895,29 +896,23 @@ body.darkMode .messageGif img {
     }
 
     #bottom {
-        padding: 10px;
-        gap: 8px;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    width: 100%;
     }
 
     #messageInput {
-        min-width: 0;
-        font-size: 16px;
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
     }
 
     #send {
-        padding: 12px 18px;
-        font-size: 15px;
+    flex-shrink: 0;
     }
 
     #fileButton {
-        width: 48px;
-        height: 48px;
-
-        padding: 0;
-
-        flex-shrink: 0;
-
-        font-size: 26px;
+    flex-shrink: 0;
     }
 
     #friendsPanel,
