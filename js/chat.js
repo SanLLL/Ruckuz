@@ -43,6 +43,7 @@ async function loadProfiles() {
     }
 
 }
+
 async function loadMessages() {
     const { data, error } = await supabase
         .from("messages")
@@ -127,7 +128,7 @@ function addMessage(message) {
                     ${profile.username}
                 </div>
                 <div class="text">
-                    ${message.content || ""}
+                    ${escapeHTML(message.content || "")}
                 </div>
                 ${fileHTML}
             </div>
@@ -161,24 +162,103 @@ input.addEventListener("keydown", e => {
     }
 
 });
+
 async function sendMessage() {
     const text = input.value.trim();
     if (text === "") return;
-    const { error } = await supabase
-        .from("messages")
-        .insert({
-            user_id: session.user.id,
+    const tempId =
+        `local-${crypto.randomUUID()}`;
+    const localMessage =
+        createLocalMessage(text, tempId);
+    messages.appendChild(localMessage);
+    messages.scrollTop =
+        messages.scrollHeight;
+    input.value = "";
+    try {
+        const { error } =
+            await supabase
+                .from("messages")
+                .insert({
+                    user_id:
+                        session.user.id,
+                    username:
+                        session.user.user_metadata.username ??
+                        session.user.email,
+                    content:
+                        text
+                });
+        if (error) {
+            throw error;
+        }
+        localMessage.remove();
+    } catch (error) {
+        console.error(
+            "Message sending error:",
+            error
+        );
+        const status =
+            localMessage.querySelector(
+                ".localMessageStatus"
+            );
+        if (status) {
+            status.textContent =
+                "Failed to send";
+            status.classList.add(
+                "messageFailed"
+            );
+        }
+    }
+}
+
+function createLocalMessage(text, tempId) {
+    const profile =
+        profiles[session.user.id] || {
             username:
                 session.user.user_metadata.username ??
                 session.user.email,
-            content: text
-        });
-    if (error) {
-        console.error(error);
-        return;
-    }
-    input.value = "";
+            avatar_url:
+                "/Ruckuz/assets/avatars/ruckuz.png"
+        };
+    const div =
+        document.createElement("div");
+    div.className =
+        "message localMessage";
+    div.dataset.localId =
+        tempId;
+    div.innerHTML = `
+        <div class="messageRow">
+            <div class="messageMenu">
+            </div>
+            <img
+                class="avatar"
+                src="${profile.avatar_url}?v=${Date.now()}"
+                alt="${profile.username}"
+            >
+            <div class="messageContent">
+                <div class="username">
+                    ${profile.username}
+                </div>
+                <div class="text">
+                    ${escapeHTML(text)}
+                </div>
+                <div class="localMessageStatus">
+                    <span class="messageSpinner"></span>
+                    Sending...
+                </div>
+            </div>
+        </div>
+    `;
+    return div;
 }
+
+function escapeHTML(text) {
+    const div =
+        document.createElement("div");
+    div.textContent =
+        text;
+    return div.innerHTML;
+}
+
 async function uploadChatFile() {
     const file = fileUpload.files[0];
     if (!file) return;
@@ -263,6 +343,7 @@ async function uploadChatFile() {
     }
     fileUpload.value = "";
 }
+
 function createUploadingPreview(file, previewId) {
     const div =
         document.createElement("div");
@@ -626,7 +707,7 @@ async function loadFriendRequests() {
 
         friendRequestsList.innerHTML = `
             <p class="noRequests">
-                Couldn't load requests. 😭
+                Couldn't load requests. 
             </p>
         `;
 
@@ -676,7 +757,6 @@ async function loadFriendRequests() {
 
 }
 
-
 function createFriendRequestElement(request) {
     const profile = request.profiles;
     const div =
@@ -708,7 +788,6 @@ function createFriendRequestElement(request) {
             </div>
         </div>
     `;
-
 
     div
         .querySelector(".acceptRequest")
