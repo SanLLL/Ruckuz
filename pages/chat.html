@@ -703,6 +703,95 @@ body.darkMode .audioFileName {
 body.darkMode .messageGif img {
     border: 2px solid #7563a8;
 }
+
+@media (max-width: 768px) {
+
+    body{
+        align-items:flex-start;
+        justify-content:flex-start;
+        height:100dvh;
+        overflow:hidden;
+    }
+    #topBar{
+        position:fixed;
+        top:8px;
+        left:8px;
+        right:8px;
+        gap:8px;
+        justify-content:space-between;
+        flex-wrap:wrap;
+    }
+
+    #topBar button{
+        flex:1;
+        min-width:72px;
+        padding:10px 8px;
+        font-size:14px;
+    }
+
+    #chat{
+        width:100vw;
+        height:100dvh;
+        margin-top:68px;
+        border:none;
+        border-radius:0;
+    }
+    #messages{
+        padding:14px;
+    }
+
+    .avatar{
+        width:42px;
+        height:42px;
+    }
+
+    .username{
+        font-size:18px;
+    }
+
+    .text{
+        font-size:16px;
+    }
+    .messageFile img,
+    .messageFile video{
+        max-width:100%;
+        border-radius:14px;
+    }
+    #bottom{
+        padding:10px;
+        gap:8px;
+    }
+
+    #messageInput{
+        font-size:16px;
+        min-width:0;
+    }
+
+    #send{
+        padding:12px 18px;
+        font-size:15px;
+    }
+
+    #fileButton{
+        width:48px;
+        height:48px;
+        font-size:26px;
+        flex-shrink:0;
+    }
+
+    #friendsPanel,
+    .friendRequestsPanel{
+        top:120px;
+        left:10px;
+        right:10px;
+        width:auto;
+        max-height:65dvh;
+    }
+
+    #profileCard{
+        width:92vw;
+    }
+}
     
 </style>
 </head>
