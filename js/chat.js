@@ -78,13 +78,13 @@ function addMessage(message) {
                 <div class="messageFile">
                     <img
                         src="${message.file_url}"
-                        alt="${message.file_name || "Uploaded image"}"
+                        alt="${escapeHTML(
+                            message.file_name || "Uploaded image"
+                        )}"
                     >
                 </div>
             `;
-
         } else if (fileType.startsWith("video/")) {
-
             fileHTML = `
                 <div class="messageFile">
                     <video
@@ -94,9 +94,22 @@ function addMessage(message) {
                     ></video>
                 </div>
             `;
-
+        } else if (fileType.startsWith("audio/")) {
+            fileHTML = `
+                <div class="messageFile">
+                    <audio
+                        src="${message.file_url}"
+                        controls
+                        preload="metadata"
+                    ></audio>
+                    <div class="audioFileName">
+                        ${escapeHTML(
+                            message.file_name || "Audio"
+                        )}
+                    </div>
+                </div>
+            `;
         } else {
-
             fileHTML = `
                 <div class="messageFile">
                     <a
