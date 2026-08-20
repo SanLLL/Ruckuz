@@ -733,7 +733,7 @@ async function loadFriendRequests() {
     if (data.length === 0) {
         friendRequestsList.innerHTML = `
             <p class="noRequests">
-                No friend requests yet! ✨
+                No friend requests yet!
             </p>
         `;
 
