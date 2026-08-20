@@ -704,92 +704,241 @@ body.darkMode .messageGif img {
     border: 2px solid #7563a8;
 }
 
+#mobileMenuButton,
+#mobileMenu {
+    display: none;
+}
+
 @media (max-width: 768px) {
 
-    body{
-        align-items:flex-start;
-        justify-content:flex-start;
-        height:100dvh;
-        overflow:hidden;
-    }
-    #topBar{
-        position:fixed;
-        top:8px;
-        left:8px;
-        right:8px;
-        gap:8px;
-        justify-content:space-between;
-        flex-wrap:wrap;
+    body {
+        align-items: flex-start;
+        justify-content: flex-start;
+        height: 100dvh;
+        overflow: hidden;
     }
 
-    #topBar button{
-        flex:1;
-        min-width:72px;
-        padding:10px 8px;
-        font-size:14px;
+    #topBar {
+        position: fixed;
+        top: 8px;
+        left: 8px;
+        right: 8px;
+
+        z-index: 10000;
+
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
     }
 
-    #chat{
-        width:100vw;
-        height:100dvh;
-        margin-top:68px;
-        border:none;
-        border-radius:0;
-    }
-    #messages{
-        padding:14px;
+    #desktopTopButtons {
+        display: none;
     }
 
-    .avatar{
-        width:42px;
-        height:42px;
+    #mobileMenuButton {
+        display: flex;
+
+        width: 50px;
+        height: 50px;
+
+        align-items: center;
+        justify-content: center;
+
+        padding: 0;
+
+        border: 3px solid #6b58b8;
+        border-radius: 14px;
+
+        background: #ffd36b;
+        color: #30254f;
+
+        font-size: 27px;
+        font-weight: bold;
+
+        cursor: pointer;
+
+        box-shadow: 4px 4px 0 #6b58b8;
     }
 
-    .username{
-        font-size:18px;
+    #mobileMenuButton:active {
+        transform: translate(2px, 2px);
+        box-shadow: 2px 2px 0 #6b58b8;
     }
 
-    .text{
-        font-size:16px;
+    body.darkMode #mobileMenuButton {
+        background: #8b6cff;
+        color: white;
+        border-color: #b79cff;
+        box-shadow: 4px 4px 0 #b79cff;
     }
+
+    #mobileMenu {
+        position: fixed;
+
+        top: 68px;
+        left: 10px;
+
+        width: 220px;
+
+        z-index: 11000;
+
+        padding: 10px;
+
+        flex-direction: column;
+        gap: 8px;
+
+        background: white;
+
+        border: 3px solid #6b58b8;
+        border-radius: 16px;
+
+        box-shadow: 6px 6px 0 #6b58b8;
+    }
+
+    #mobileMenu.open {
+        display: flex;
+    }
+
+    #mobileMenu button {
+        width: 100%;
+
+        padding: 13px;
+
+        border: 2px solid #6b58b8;
+        border-radius: 11px;
+
+        background: #fff8df;
+        color: #30254f;
+
+        font-size: 16px;
+        font-weight: bold;
+
+        cursor: pointer;
+    }
+
+    #mobileMenu button:active {
+        transform: translate(1px, 1px);
+    }
+
+    #mobileRequestCount,
+    #mobileFriendsCount {
+        display: inline-flex;
+
+        min-width: 20px;
+        height: 20px;
+
+        margin-left: 5px;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        background: #ff6868;
+        color: white;
+
+        font-size: 12px;
+    }
+
+    body.darkMode #mobileMenu {
+        background: #302b48;
+        border-color: #8b6cff;
+        box-shadow: 6px 6px 0 #8b6cff;
+    }
+
+    body.darkMode #mobileMenu button {
+        background: #242038;
+        color: #f5f0ff;
+        border-color: #8b6cff;
+    }
+
+    #chat {
+        width: 100vw;
+        height: 100dvh;
+
+        margin-top: 68px;
+
+        border: none;
+        border-radius: 0;
+    }
+
+    #messages {
+        padding: 14px;
+    }
+
+    .avatar {
+        width: 42px;
+        height: 42px;
+    }
+
+    .username {
+        font-size: 17px;
+    }
+
+    .text {
+        font-size: 16px;
+    }
+
+    .messageRow {
+        gap: 9px;
+    }
+
     .messageFile img,
-    .messageFile video{
-        max-width:100%;
-        border-radius:14px;
-    }
-    #bottom{
-        padding:10px;
-        gap:8px;
+    .messageFile video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 14px;
     }
 
-    #messageInput{
-        font-size:16px;
-        min-width:0;
+    .messageFile audio {
+        max-width: 100%;
     }
 
-    #send{
-        padding:12px 18px;
-        font-size:15px;
+    #bottom {
+        padding: 10px;
+        gap: 8px;
     }
 
-    #fileButton{
-        width:48px;
-        height:48px;
-        font-size:26px;
-        flex-shrink:0;
+    #messageInput {
+        min-width: 0;
+        font-size: 16px;
+    }
+
+    #send {
+        padding: 12px 18px;
+        font-size: 15px;
+    }
+
+    #fileButton {
+        width: 48px;
+        height: 48px;
+
+        padding: 0;
+
+        flex-shrink: 0;
+
+        font-size: 26px;
     }
 
     #friendsPanel,
-    .friendRequestsPanel{
-        top:120px;
-        left:10px;
-        right:10px;
-        width:auto;
-        max-height:65dvh;
+    .friendRequestsPanel {
+        top: 70px;
+        left: 10px;
+        right: 10px;
+        width: auto;
+        max-height: 70dvh;
+    }
+    .messageDropdown {
+        min-width: 180px;
     }
 
-    #profileCard{
-        width:92vw;
+    .messageDropdown button {
+        padding: 14px;
+        font-size: 16px;
+    }
+
+    .messageMenu {
+        display: none;
     }
 }
     
@@ -797,21 +946,42 @@ body.darkMode .messageGif img {
 </head>
 <body>
 <div id="topBar">
-    <button id="friendRequestsButton" class="friendRequestsButton">
+    <button id="mobileMenuButton" class="mobileMenuButton">
+        ☰
+    </button>
+    <div id="desktopTopButtons">
+        <button id="friendRequestsButton" class="friendRequestsButton">
+            Requests
+            <span id="friendRequestCount">0</span>
+        </button>
+        <button id="friendsButton">
+            Friends
+            <span id="friendsCount">0</span>
+        </button>
+        <button id="logoutButton" class="logoutButton">
+            Logout
+        </button>
+        <button id="themeToggle" class="themeToggle">
+            Dark Mode
+        </button>
+    </div>
+</div>
+    <div id="mobileMenu">
+    <button id="mobileRequestsButton">
         Requests
-        <span id="friendRequestCount">0</span>
+        <span id="mobileRequestCount">0</span>
     </button>
-    <button id="friendsButton">
+    <button id="mobileFriendsButton">
         Friends
-        <span id="friendsCount">0</span>
+        <span id="mobileFriendsCount">0</span>
     </button>
-    <button id="logoutButton" class="logoutButton">
+    <button id="mobileLogoutButton">
         Logout
     </button>
-    <button id="themeToggle" class="themeToggle">
+    <button id="mobileThemeButton">
         Dark Mode
     </button>
-</div>
+    </div>
 <div id="friendRequestsPanel" class="friendRequestsPanel">
     <div class="friendRequestsHeader">
         <h2>Friend Requests</h2>
