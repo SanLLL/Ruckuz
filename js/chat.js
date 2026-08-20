@@ -61,6 +61,68 @@ async function loadMessages() {
 
 }
 
+function getGifEmbedUrl(text) {
+    if (!text) return null;
+    const trimmed = text.trim();
+    if (!/^https?:\/\/\S+$/i.test(trimmed)) {
+        return null;
+    }
+
+    try {
+        const url = new URL(trimmed);
+        const hostname = url.hostname.toLowerCase();
+
+        if (
+            url.pathname.toLowerCase().endsWith(".gif") ||
+            url.pathname.toLowerCase().includes(".gif/")
+        ) {
+            return trimmed;
+        }
+
+        if (
+            hostname === "giphy.com" ||
+            hostname.endsWith(".giphy.com")
+        ) {
+            return trimmed;
+        }
+
+        if (
+            hostname === "tenor.com" ||
+            hostname.endsWith(".tenor.com")
+        ) {
+            return trimmed;
+        }
+
+        if (
+            hostname === "cdn.discordapp.com" ||
+            hostname === "media.discordapp.net"
+        ) {
+            if (
+                url.pathname.toLowerCase().includes(".gif")
+            ) {
+                return trimmed;
+            }
+        }
+
+    } catch (error) {
+        return null;
+    }
+
+    return null;
+}
+
+function createGifHTML(url) {
+    return `
+        <div class="messageGif">
+            <img
+                src="${escapeHTML(url)}"
+                alt="GIF"
+                loading="lazy"
+            >
+        </div>
+    `;
+}
+
 function addMessage(message) {
     const profile = profiles[message.user_id] || {
         username: message.username,
@@ -70,6 +132,18 @@ function addMessage(message) {
     div.className = "message";
     div.dataset.id = message.id;
     div.dataset.user = message.user_id;
+    let textHTML = "";
+    let gifHTML = "";
+    const gifUrl = getGifEmbedUrl(message.content);
+    if (gifUrl) {
+        gifHTML = createGifHTML(gifUrl);
+    } else {
+        textHTML = `
+            <div class="text">
+                ${escapeHTML(message.content || "")}
+            </div>
+        `;
+    }
     let fileHTML = "";
     if (message.file_url) {
         const fileType = message.file_type || "";
@@ -77,20 +151,23 @@ function addMessage(message) {
             fileHTML = `
                 <div class="messageFile">
                     <img
-                        src="${message.file_url}"
+                        src="${escapeHTML(message.file_url)}"
                         alt="${escapeHTML(
                             message.file_name || "Uploaded image"
                         )}"
+                        loading="lazy"
                     >
                 </div>
             `;
         } else if (fileType.startsWith("video/")) {
+
             fileHTML = `
                 <div class="messageFile">
                     <video
-                        src="${message.file_url}"
+                        src="${escapeHTML(message.file_url)}"
                         controls
                         preload="metadata"
+                        playsinline
                     ></video>
                 </div>
             `;
@@ -98,7 +175,7 @@ function addMessage(message) {
             fileHTML = `
                 <div class="messageFile">
                     <audio
-                        src="${message.file_url}"
+                        src="${escapeHTML(message.file_url)}"
                         controls
                         preload="metadata"
                     ></audio>
@@ -109,17 +186,22 @@ function addMessage(message) {
                     </div>
                 </div>
             `;
+
         } else {
+
             fileHTML = `
                 <div class="messageFile">
+
                     <a
                         class="fileAttachment"
-                        href="${message.file_url}"
+                        href="${escapeHTML(message.file_url)}"
                         target="_blank"
                         rel="noopener"
                         download
                     >
-                        📎 ${message.file_name || "Download file"}
+                        📎 ${escapeHTML(
+                            message.file_name || "Download file"
+                        )}
                     </a>
                 </div>
             `;
@@ -133,16 +215,15 @@ function addMessage(message) {
             </div>
             <img
                 class="avatar"
-                src="${profile.avatar_url}?v=${Date.now()}"
-                alt="${profile.username}"
+                src="${escapeHTML(profile.avatar_url)}?v=${Date.now()}"
+                alt="${escapeHTML(profile.username)}"
             >
             <div class="messageContent">
                 <div class="username">
-                    ${profile.username}
+                    ${escapeHTML(profile.username)}
                 </div>
-                <div class="text">
-                    ${escapeHTML(message.content || "")}
-                </div>
+                ${textHTML}
+                ${gifHTML}
                 ${fileHTML}
             </div>
         </div>
@@ -165,7 +246,6 @@ function addMessage(message) {
             `${rect.bottom + window.scrollY + 4}px`;
         dropdown.style.display = "flex";
     };
-
     messages.appendChild(div);
 }
 send.onclick = sendMessage;
