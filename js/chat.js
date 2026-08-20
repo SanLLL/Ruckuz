@@ -21,43 +21,41 @@ const input = document.getElementById("messageInput");
 const send = document.getElementById("send");
 const avatarUpload = document.getElementById("avatarUpload");
 avatarUpload.onchange = uploadAvatar;
+const fileButton = document.getElementById("fileButton");
+const fileUpload = document.getElementById("fileUpload");
+fileButton.onclick = () => {
+    fileUpload.click();
+};
+
+fileUpload.onchange = uploadChatFile;
 let profiles = {};
-
 async function loadProfiles() {
-
     const { data, error } = await supabase
         .from("profiles")
         .select("*");
-
     if (error) {
         console.error(error);
         return;
     }
-
     profiles = {};
     for (const profile of data) {
         profiles[profile.id] = profile;
     }
 
 }
-
 async function loadMessages() {
     const { data, error } = await supabase
         .from("messages")
         .select("*")
         .order("created_at", { ascending: true });
-
     if (error) {
         console.error(error);
         return;
     }
-
     messages.innerHTML = "";
-
     for (const message of data) {
         addMessage(message);
     }
-
     messages.scrollTop = messages.scrollHeight;
 
 }
@@ -66,49 +64,80 @@ function addMessage(message) {
     const profile = profiles[message.user_id] || {
         username: message.username,
         avatar_url: "/Ruckuz/assets/avatars/ruckuz.png"
-
     };
-
     const div = document.createElement("div");
     div.className = "message";
     div.dataset.id = message.id;
     div.dataset.user = message.user_id;
+    let fileHTML = "";
+    if (message.file_url) {
+        const fileType = message.file_type || "";
+        if (fileType.startsWith("image/")) {
+            fileHTML = `
+                <div class="messageFile">
+                    <img
+                        src="${message.file_url}"
+                        alt="${message.file_name || "Uploaded image"}"
+                    >
+                </div>
+            `;
+
+        } else if (fileType.startsWith("video/")) {
+
+            fileHTML = `
+                <div class="messageFile">
+                    <video
+                        src="${message.file_url}"
+                        controls
+                        preload="metadata"
+                    ></video>
+                </div>
+            `;
+
+        } else {
+
+            fileHTML = `
+                <div class="messageFile">
+                    <a
+                        class="fileAttachment"
+                        href="${message.file_url}"
+                        target="_blank"
+                        rel="noopener"
+                        download
+                    >
+                        📎 ${message.file_name || "Download file"}
+                    </a>
+                </div>
+            `;
+        }
+    }
     div.innerHTML = `
         <div class="messageRow">
-        
-            <div class="messageMenu">
-        
-                ⋮
-        
-            </div>
 
+            <div class="messageMenu">
+                ⋮
+            </div>
             <img
                 class="avatar"
                 src="${profile.avatar_url}?v=${Date.now()}"
                 alt="${profile.username}"
             >
-
             <div class="messageContent">
-
                 <div class="username">
                     ${profile.username}
                 </div>
-
                 <div class="text">
-                    ${message.content}
+                    ${message.content || ""}
                 </div>
-
+                ${fileHTML}
             </div>
-
         </div>
     `;
 
     const avatar = div.querySelector(".avatar");
     avatar.onclick = () => {
         openProfile(message.user_id);
-
     };
-
     const menu = div.querySelector(".messageMenu");
     menu.onclick = (event) => {
         event.stopPropagation();
@@ -116,25 +145,22 @@ function addMessage(message) {
         const dropdown = createDropdown(message);
         document.body.appendChild(dropdown);
         const rect = menu.getBoundingClientRect();
-        dropdown.style.left = `${rect.left + window.scrollX}px`;
-        dropdown.style.top = `${rect.bottom + window.scrollY + 4}px`;
+        dropdown.style.left =
+            `${rect.left + window.scrollX}px`;
+        dropdown.style.top =
+            `${rect.bottom + window.scrollY + 4}px`;
         dropdown.style.display = "flex";
-    
     };
 
     messages.appendChild(div);
-
 }
-
 send.onclick = sendMessage;
 input.addEventListener("keydown", e => {
     if (e.key === "Enter") {
         sendMessage();
-
     }
 
 });
-
 async function sendMessage() {
     const text = input.value.trim();
     if (text === "") return;
@@ -146,16 +172,164 @@ async function sendMessage() {
                 session.user.user_metadata.username ??
                 session.user.email,
             content: text
-
         });
-
     if (error) {
         console.error(error);
         return;
     }
-
     input.value = "";
+}
+async function uploadChatFile() {
+    const file = fileUpload.files[0];
+    if (!file) return;
+    const maxSize = 50 * 1024 * 1024;
+    if (file.size > maxSize) {
+        alert("That file is too large. Maximum size is 50 MB.");
+        fileUpload.value = "";
+        return;
+    }
+    const previewId =
+        `upload-${crypto.randomUUID()}`;
+    const preview =
+        createUploadingPreview(file, previewId);
+    messages.appendChild(preview);
+    messages.scrollTop =
+        messages.scrollHeight;
+    try {
+        const extension =
+            file.name.includes(".")
+                ? file.name.split(".").pop()
+                : "file";
+        const fileName =
+            `${session.user.id}/${crypto.randomUUID()}.${extension}`;
 
+        const {
+            error: uploadError
+        } = await supabase
+            .storage
+            .from("chat-files")
+            .upload(
+                fileName,
+                file,
+                {
+                    contentType:
+                        file.type || "application/octet-stream",
+                    cacheControl: "3600",
+                    upsert: false
+                }
+            );
+        if (uploadError) {
+            throw uploadError;
+        }
+        const {
+            data: publicUrlData
+        } = supabase
+            .storage
+            .from("chat-files")
+            .getPublicUrl(fileName);
+        const fileUrl =
+            publicUrlData.publicUrl;
+        const {
+            error: messageError
+        } = await supabase
+            .from("messages")
+            .insert({
+                user_id:
+                    session.user.id,
+                username:
+                    session.user.user_metadata.username ??
+                    session.user.email,
+                content: "",
+                file_url:
+                    fileUrl,
+                file_type:
+                    file.type || "application/octet-stream",
+                file_name:
+                    file.name
+            });
+        if (messageError) {
+            throw messageError;
+        }
+        preview.remove();
+    } catch (error) {
+        console.error(
+            "File upload failed:",
+            error
+        );
+        preview.remove();
+        alert(
+            "The file couldn't be uploaded. Please try again."
+        );
+    }
+    fileUpload.value = "";
+}
+function createUploadingPreview(file, previewId) {
+    const div =
+        document.createElement("div");
+    div.className = "message";
+    div.dataset.uploadId =
+        previewId;
+    div.innerHTML = `
+        <div class="messageRow">
+            <div class="messageMenu">
+            </div>
+            <img
+                class="avatar"
+                src="${
+                    profiles[session.user.id]?.avatar_url ||
+                    "/Ruckuz/assets/avatars/ruckuz.png"
+                }"
+                alt="You"
+            >
+            <div class="messageContent">
+                <div class="username">
+                    ${
+                        profiles[session.user.id]?.username ||
+                        session.user.email
+                    }
+                </div>
+                <div class="uploadingFile">
+                    <div class="uploadPreview"></div>
+                    <div class="uploadingOverlay">
+                        <div class="uploadSpinner"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    const previewContainer =
+        div.querySelector(".uploadPreview");
+    if (file.type.startsWith("image/")) {
+        const img =
+            document.createElement("img");
+        img.src =
+            URL.createObjectURL(file);
+        img.alt =
+            file.name;
+        previewContainer.appendChild(img);
+    } else if (file.type.startsWith("video/")) {
+        const video =
+            document.createElement("video");
+        video.src =
+            URL.createObjectURL(file);
+        video.muted = true;
+        video.playsInline = true;
+        previewContainer.appendChild(video);
+    } else {
+        const fileBox =
+            document.createElement("div");
+        fileBox.style.padding =
+            "25px";
+        fileBox.style.color =
+            "white";
+        fileBox.style.fontWeight =
+            "bold";
+        fileBox.textContent =
+            `📎 ${file.name}`;
+
+        previewContainer.appendChild(fileBox);
+    }
+    return div;
 }
 
 async function uploadAvatar() {
