@@ -211,7 +211,7 @@ function addMessage(message) {
         <div class="messageRow">
 
             <div class="messageMenu">
-                ⋮
+                  ⋮
             </div>
             <img
                 class="avatar"
