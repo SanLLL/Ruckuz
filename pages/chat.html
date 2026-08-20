@@ -563,24 +563,29 @@ body.darkMode .friendRequest {
 <div id="messages">
 </div>
 <div id="bottom">
+    <button id="fileButton" type="button">
+        +
+    </button>
+    <input
+        id="messageInput"
+        placeholder="Say something..."
+    >
 
-<input
-id="messageInput"
-placeholder="Say something..."
->
+    <button id="send">
+        Send
+    </button>
+    <input
+        type="file"
+        id="fileUpload"
+        style="display:none;"
+    >
 
-<button id="send">
-
-Send
-
-</button>
-    
-<input
-    type="file"
-    id="avatarUpload"
-    accept="image/png,image/jpeg,image/webp"
-    style="display:none;"
->
+    <input
+        type="file"
+        id="avatarUpload"
+        accept="image/png,image/jpeg,image/webp"
+        style="display:none;"
+    >
 </div>
 </div>
 <script type="module" src="../js/chat.js"></script>
