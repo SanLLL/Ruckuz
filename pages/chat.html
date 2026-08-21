@@ -988,6 +988,7 @@ body.darkMode .messageGif img {
     white-space: nowrap;
 }
 .mediaProgress {
+    --progress: 0%;
     flex: 1;
     min-width: 60px;
     width: 100%;
@@ -997,7 +998,14 @@ body.darkMode .messageGif img {
     -webkit-appearance: none;
     border: none;
     border-radius: 999px;
-    background: #5b5278;
+    background:
+        linear-gradient(
+            to right,
+            #8b6cff 0%,
+            #8b6cff var(--progress),
+            #5b5278 var(--progress),
+            #5b5278 100%
+        );
     cursor: pointer;
     outline: none;
 }
@@ -1006,7 +1014,7 @@ body.darkMode .messageGif img {
     width: 100%;
     height: 8px;
     border-radius: 999px;
-    background: #5b5278;
+    background: transparent;
 }
 
 .mediaProgress::-webkit-slider-thumb {
@@ -1052,6 +1060,7 @@ body.darkMode .messageGif img {
     cursor: pointer;
 }
 .mediaVolume {
+    --volume: 100%;
     width: 80px;
     height: 7px;
     margin: 0;
@@ -1059,18 +1068,23 @@ body.darkMode .messageGif img {
     -webkit-appearance: none;
     border: none;
     border-radius: 999px;
-    background: #5b5278;
+    background:
+        linear-gradient(
+            to right,
+            #8b6cff 0%,
+            #8b6cff var(--volume),
+            #5b5278 var(--volume),
+            #5b5278 100%
+        );
     cursor: pointer;
     outline: none;
 }
-
 .mediaVolume::-webkit-slider-runnable-track {
     width: 100%;
     height: 7px;
     border-radius: 999px;
-    background: #5b5278;
+    background: transparent;
 }
-
 .mediaVolume::-webkit-slider-thumb {
     appearance: none;
     -webkit-appearance: none;
@@ -1082,14 +1096,12 @@ body.darkMode .messageGif img {
     background: #ffd36b;
     cursor: pointer;
 }
-
 .mediaVolume::-moz-range-track {
     width: 100%;
     height: 7px;
     border-radius: 999px;
     background: #5b5278;
 }
-
 .mediaVolume::-moz-range-progress {
     height: 7px;
     border-radius: 999px;
@@ -1310,6 +1322,20 @@ body.darkMode .mediaVolume {
     box-sizing: border-box;
     padding: 14px 18px;
     border-top: 2px solid #6b58b8;
+}
+
+@media (max-width: 700px) {
+    .mediaVolume {
+        width: 55px;
+    }
+    .customMediaPlayer:fullscreen .mediaControls,
+    .customMediaPlayer:-webkit-full-screen .mediaControls {
+        padding:
+            10px
+            max(10px, env(safe-area-inset-right))
+            calc(10px + env(safe-area-inset-bottom))
+            max(10px, env(safe-area-inset-left));
+    }
 }
     
 </style>
