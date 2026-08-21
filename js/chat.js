@@ -163,26 +163,139 @@ function addMessage(message) {
 
             fileHTML = `
                 <div class="messageFile">
-                    <video
-                        src="${escapeHTML(message.file_url)}"
-                        controls
-                        preload="metadata"
-                        playsinline
-                    ></video>
+                    <div class="customMediaPlayer customVideoPlayer">
+                        <video
+                            class="mediaElement"
+                            src="${message.file_url}"
+                            preload="metadata"
+                            playsinline
+                        ></video>
+
+                        <div class="mediaControls">
+
+                            <button
+                                class="mediaPlayButton"
+                                type="button"
+                                aria-label="Play"
+                            >
+                                ▶
+                            </button>
+
+                            <span class="mediaTime">
+                                0:00 / 0:00
+                            </span>
+
+                            <input
+                                class="mediaProgress"
+                                type="range"
+                                min="0"
+                                max="100"
+                                value="0"
+                                step="0.1"
+                                aria-label="Video progress"
+                            >
+
+                            <button
+                                class="mediaMuteButton"
+                                type="button"
+                                aria-label="Mute"
+                            >
+                                🔊
+                            </button>
+
+                            <input
+                                class="mediaVolume"
+                                type="range"
+                                min="0"
+                                max="1"
+                                value="1"
+                                step="0.01"
+                                aria-label="Volume"
+                            >
+
+                            <button
+                                class="mediaFullscreenButton"
+                                type="button"
+                                aria-label="Fullscreen"
+                            >
+                                ⛶
+                            </button>
+
+                        </div>
+                    </div>
                 </div>
             `;
+
         } else if (fileType.startsWith("audio/")) {
+
             fileHTML = `
                 <div class="messageFile">
-                    <audio
-                        src="${escapeHTML(message.file_url)}"
-                        controls
-                        preload="metadata"
-                    ></audio>
-                    <div class="audioFileName">
-                        ${escapeHTML(
-                            message.file_name || "Audio"
-                        )}
+                    <div class="customMediaPlayer customAudioPlayer">
+
+                        <div class="audioPlayerIcon">
+                            ♪
+                        </div>
+
+                        <div class="audioPlayerMain">
+
+                            <div class="audioFileName">
+                                ${escapeHTML(
+                                    message.file_name || "Audio"
+                                )}
+                            </div>
+
+                            <div class="audioControls">
+
+                                <button
+                                    class="mediaPlayButton"
+                                    type="button"
+                                    aria-label="Play"
+                                >
+                                    ▶
+                                </button>
+
+                                <span class="mediaTime">
+                                    0:00 / 0:00
+                                </span>
+
+                                <input
+                                    class="mediaProgress"
+                                    type="range"
+                                    min="0"
+                                    max="100"
+                                    value="0"
+                                    step="0.1"
+                                    aria-label="Audio progress"
+                                >
+
+                                <button
+                                    class="mediaMuteButton"
+                                    type="button"
+                                    aria-label="Mute"
+                                >
+                                    🔊
+                                </button>
+
+                                <input
+                                    class="mediaVolume"
+                                    type="range"
+                                    min="0"
+                                    max="1"
+                                    value="1"
+                                    step="0.01"
+                                    aria-label="Volume"
+                                >
+
+                            </div>
+
+                        </div>
+
+                        <audio
+                            class="mediaElement"
+                            src="${message.file_url}"
+                            preload="metadata"
+                        ></audio>
+
                     </div>
                 </div>
             `;
@@ -284,6 +397,7 @@ function addMessage(message) {
         }
     );
     messages.appendChild(div);
+    initializeMediaPlayers(div);
 }
 send.onclick = sendMessage;
 input.addEventListener("keydown", e => {
@@ -292,6 +406,246 @@ input.addEventListener("keydown", e => {
     }
 
 });
+
+function initializeMediaPlayers(container) {
+    const players =
+        container.querySelectorAll(".customMediaPlayer");
+    players.forEach(player => {
+        const media =
+            player.querySelector(".mediaElement");
+        const playButton =
+            player.querySelector(".mediaPlayButton");
+        const progress =
+            player.querySelector(".mediaProgress");
+        const volume =
+            player.querySelector(".mediaVolume");
+        const muteButton =
+            player.querySelector(".mediaMuteButton");
+        const fullscreenButton =
+            player.querySelector(".mediaFullscreenButton");
+        const timeDisplay =
+            player.querySelector(".mediaTime");
+        if (!media || !playButton) return;
+        function formatTime(seconds) {
+            if (!Number.isFinite(seconds)) {
+                return "0:00";
+            }
+            const minutes =
+                Math.floor(seconds / 60);
+            const remainingSeconds =
+                Math.floor(seconds % 60)
+                    .toString()
+                    .padStart(2, "0");
+            return `${minutes}:${remainingSeconds}`;
+        }
+        function updateTime() {
+            const current =
+                formatTime(media.currentTime);
+            const duration =
+                formatTime(media.duration);
+            if (timeDisplay) {
+                timeDisplay.textContent =
+                    `${current} / ${duration}`;
+            }
+
+            if (
+                progress &&
+                Number.isFinite(media.duration) &&
+                media.duration > 0
+            ) {
+
+                progress.value =
+                    (media.currentTime / media.duration) * 100;
+
+            }
+        }
+        function updatePlayButton() {
+            if (media.paused) {
+                playButton.textContent = "▶";
+                playButton.setAttribute(
+                    "aria-label",
+                    "Play"
+                );
+
+                player.classList.remove(
+                    "mediaPlaying"
+                );
+
+            } else {
+                playButton.textContent = "Ⅱ";
+                playButton.setAttribute(
+                    "aria-label",
+                    "Pause"
+                );
+
+                player.classList.add(
+                    "mediaPlaying"
+                );
+            }
+        }
+        playButton.addEventListener(
+            "click",
+            async event => {
+                event.stopPropagation();
+                if (media.paused) {
+                    try {
+                        await media.play();
+                    } catch (error) {
+                        console.error(
+                            "Media playback error:",
+                            error
+                        );
+                    }
+
+                } else {
+
+                    media.pause();
+
+                }
+
+            }
+        );
+        media.addEventListener(
+            "play",
+            updatePlayButton
+        );
+        media.addEventListener(
+            "pause",
+            updatePlayButton
+        );
+        media.addEventListener(
+            "ended",
+            () => {
+                updatePlayButton();
+
+                if (progress) {
+                    progress.value = 0;
+                }
+
+            }
+        );
+        media.addEventListener(
+            "timeupdate",
+            updateTime
+        );
+        media.addEventListener(
+            "loadedmetadata",
+            updateTime
+        );
+        if (progress) {
+            progress.addEventListener(
+                "input",
+                event => {
+                    if (
+                        !Number.isFinite(
+                            media.duration
+                        )
+                    ) return;
+                    const percentage =
+                        Number(event.target.value);
+                    media.currentTime =
+                        (percentage / 100) *
+                        media.duration;
+                }
+            );
+
+        }
+        if (volume) {
+            volume.addEventListener(
+                "input",
+                event => {
+                    media.volume =
+                        Number(event.target.value);
+                    media.muted =
+                        media.volume === 0;
+                    updateMuteButton();
+                }
+            );
+
+        }
+        function updateMuteButton() {
+            if (!muteButton) return;
+            if (
+                media.muted ||
+                media.volume === 0
+            ) {
+                muteButton.textContent = "🔇";
+            } else if (media.volume < 0.5) {
+                muteButton.textContent = "🔉";
+            } else {
+                muteButton.textContent = "🔊";
+            }
+
+        }
+        if (muteButton) {
+            muteButton.addEventListener(
+                "click",
+                event => {
+                    event.stopPropagation();
+                    media.muted =
+                        !media.muted;
+                    if (
+                        !media.muted &&
+                        media.volume === 0
+                    ) {
+                        media.volume = 1;
+
+                        if (volume) {
+                            volume.value = 1;
+                        }
+                    }
+                    updateMuteButton();
+                }
+            );
+
+        }
+        if (fullscreenButton) {
+            fullscreenButton.addEventListener(
+                "click",
+                async event => {
+                    event.stopPropagation();
+                    try {
+                        if (
+                            document.fullscreenElement
+                        ) {
+
+                            await document.exitFullscreen();
+
+                        } else if (
+                            player.requestFullscreen
+                        ) {
+                            await player.requestFullscreen();
+
+                        }
+
+                    } catch (error) {
+
+                        console.error(
+                            "Fullscreen error:",
+                            error
+                        );
+                    }
+                }
+            );
+        }
+        media.addEventListener(
+            "click",
+            () => {
+                if (media.paused) {
+                    media.play().catch(() => {});
+                } else {
+                    media.pause();
+                }
+
+            }
+        );
+
+        updatePlayButton();
+        updateMuteButton();
+        updateTime();
+
+    });
+}
 
 async function sendMessage() {
     const text = input.value.trim();
