@@ -246,6 +246,43 @@ function addMessage(message) {
             `${rect.bottom + window.scrollY + 4}px`;
         dropdown.style.display = "flex";
     };
+    let longPressTimer = null;
+    let longPressTriggered = false;
+    div.addEventListener(
+        "touchstart",
+        (event) => {
+            longPressTriggered = false;
+            longPressTimer = setTimeout(() => {
+                longPressTriggered = true;
+                event.preventDefault();
+                closeAllMenus();
+                openMobileMessageMenu(
+                    message,
+                    div
+                );
+            }, 600);
+        },
+        { passive: false }
+    );
+    div.addEventListener(
+        "touchend",
+        () => {
+            clearTimeout(longPressTimer);
+        }
+    );
+    div.addEventListener(
+        "touchmove",
+        () => {
+            clearTimeout(longPressTimer);
+        }
+    );
+    div.addEventListener(
+        "touchcancel",
+        () => {
+
+            clearTimeout(longPressTimer);
+        }
+    );
     messages.appendChild(div);
 }
 send.onclick = sendMessage;
@@ -622,6 +659,58 @@ function createDropdown(message){
 
     return menu;
 
+}
+
+function openMobileMessageMenu(message, messageElement) {
+    closeAllMenus();
+    const menu =
+        createDropdown(message);
+    menu.classList.add(
+        "mobileMessageDropdown"
+    );
+    document.body.appendChild(menu);
+    const rect =
+        messageElement.getBoundingClientRect();
+    let left =
+        rect.left + window.scrollX;
+    let top =
+        rect.bottom + window.scrollY + 8;
+    const menuWidth =
+        190;
+    const menuHeight =
+        100;
+    if (
+        left + menuWidth >
+        window.innerWidth
+    ) {
+        left =
+            window.innerWidth -
+            menuWidth -
+            12;
+    }
+    if (
+        top + menuHeight >
+        window.innerHeight +
+        window.scrollY
+    ) {
+        top =
+            rect.top +
+            window.scrollY -
+            menuHeight -
+            8;
+    }
+    if (left < 10) {
+        left = 10;
+    }
+    if (top < 10) {
+        top = 10;
+    }
+    menu.style.left =
+        `${left}px`;
+    menu.style.top =
+        `${top}px`;
+    menu.style.display =
+        "flex";
 }
 
 document.addEventListener("click", closeAllMenus);
@@ -1037,6 +1126,9 @@ async function refreshFriendRequestCount() {
 
     friendRequestCount.textContent =
         count ?? 0;
+    
+    mobileRequestCount.textContent =
+        count ?? 0;
 
 }
 
@@ -1140,6 +1232,7 @@ async function loadFriends() {
     if (!data || data.length === 0) {
 
         friendsCount.textContent = "0";
+        mobileFriendsCount.textContent = "0";
 
         friendsList.innerHTML = `
             <p class="noFriends">
@@ -1169,6 +1262,9 @@ async function loadFriends() {
 
 
     friendsCount.textContent =
+        uniqueFriendIds.length;
+    
+    mobileFriendsCount.textContent =
         uniqueFriendIds.length;
 
 
@@ -1261,3 +1357,93 @@ function createFriendElement(profile) {
 }
 
 await loadFriends();
+
+const mobileMenuButton =
+    document.getElementById("mobileMenuButton");
+const mobileMenu =
+    document.getElementById("mobileMenu");
+const mobileRequestsButton =
+    document.getElementById("mobileRequestsButton");
+const mobileFriendsButton =
+    document.getElementById("mobileFriendsButton");
+const mobileLogoutButton =
+    document.getElementById("mobileLogoutButton");
+const mobileThemeButton =
+    document.getElementById("mobileThemeButton");
+const mobileRequestCount =
+    document.getElementById("mobileRequestCount");
+const mobileFriendsCount =
+    document.getElementById("mobileFriendsCount");
+mobileMenuButton.onclick = (event) => {
+    event.stopPropagation();
+    mobileMenu.classList.toggle("open");
+
+};
+
+
+mobileRequestsButton.onclick = async () => {
+    mobileMenu.classList.remove("open");
+    const isOpen =
+        friendRequestsPanel.style.display === "flex";
+    if (isOpen) {
+        friendRequestsPanel.style.display = "none";
+    } else {
+        friendRequestsPanel.style.display = "flex";
+        await loadFriendRequests();
+
+    }
+
+};
+mobileFriendsButton.onclick = async () => {
+    mobileMenu.classList.remove("open");
+    const isOpen =
+        friendsPanel.style.display === "flex";
+    if (isOpen) {
+        friendsPanel.style.display = "none";
+    } else {
+        friendsPanel.style.display = "flex";
+        await loadFriends();
+    }
+};
+mobileLogoutButton.onclick = async () => {
+    mobileLogoutButton.disabled = true;
+    mobileLogoutButton.textContent =
+        "Logging out...";
+    const { error } =
+        await supabase.auth.signOut();
+    if (error) {
+        console.error(error);
+        mobileLogoutButton.disabled = false;
+        mobileLogoutButton.textContent =
+            "Logout";
+        alert(
+            "Couldn't log out. Please try again."
+        );
+        return;
+    }
+    location.href = "../";
+};
+mobileThemeButton.onclick = () => {
+    document.body.classList.toggle("darkMode");
+    const darkMode =
+        document.body.classList.contains("darkMode");
+    if (darkMode) {
+        mobileThemeButton.textContent =
+            "Light Mode";
+        localStorage.setItem(
+            "ruckuz-theme",
+            "dark"
+        );
+
+    } else {
+
+        mobileThemeButton.textContent =
+            "Dark Mode";
+        localStorage.setItem(
+            "ruckuz-theme",
+            "light"
+        );
+
+    }
+
+};
