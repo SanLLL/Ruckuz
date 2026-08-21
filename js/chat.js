@@ -561,7 +561,6 @@ function initializeMediaPlayers(container) {
                     updateMuteButton();
                 }
             );
-
         }
         function updateMuteButton() {
             if (!muteButton) return;
@@ -575,7 +574,6 @@ function initializeMediaPlayers(container) {
             } else {
                 muteButton.textContent = "🔊";
             }
-
         }
         if (muteButton) {
             muteButton.addEventListener(
@@ -597,7 +595,6 @@ function initializeMediaPlayers(container) {
                     updateMuteButton();
                 }
             );
-
         }
         if (fullscreenButton) {
             fullscreenButton.addEventListener(
@@ -605,28 +602,35 @@ function initializeMediaPlayers(container) {
                 async event => {
                     event.stopPropagation();
                     try {
-                        if (
-                            document.fullscreenElement
-                        ) {
-
+                        if (document.fullscreenElement) {
                             await document.exitFullscreen();
-
-                        } else if (
-                            player.requestFullscreen
-                        ) {
-                            await player.requestFullscreen();
-
+                            return;
                         }
-
+                        if (
+                            media.tagName === "VIDEO" &&
+                            typeof media.webkitEnterFullscreen === "function"
+                        ) {
+                            media.webkitEnterFullscreen();
+                            return;
+                        }
+                        if (player.requestFullscreen) {
+                            await player.requestFullscreen();
+                        } else if (player.webkitRequestFullscreen) {
+                            player.webkitRequestFullscreen();
+        
+                        }
+        
                     } catch (error) {
-
                         console.error(
                             "Fullscreen error:",
                             error
                         );
+        
                     }
+        
                 }
             );
+        
         }
         media.addEventListener(
             "click",
