@@ -987,26 +987,58 @@ body.darkMode .messageGif img {
     font-weight: bold;
     white-space: nowrap;
 }
-
 .mediaProgress {
     flex: 1;
     min-width: 60px;
-    height: 7px;
+    width: 100%;
+    height: 8px;
     margin: 0;
     appearance: none;
     -webkit-appearance: none;
+    border: none;
     border-radius: 999px;
-    background: #514875;
+    background: #5b5278;
     cursor: pointer;
+    outline: none;
+}
+
+.mediaProgress::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    background: #5b5278;
 }
 
 .mediaProgress::-webkit-slider-thumb {
     appearance: none;
     -webkit-appearance: none;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
+    width: 17px;
+    height: 17px;
+    margin-top: -4.5px;
     border: 2px solid #6b58b8;
+    border-radius: 50%;
+    background: #ffd36b;
+    cursor: pointer;
+}
+
+.mediaProgress::-moz-range-track {
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    background: #5b5278;
+}
+
+.mediaProgress::-moz-range-progress {
+    height: 8px;
+    border-radius: 999px;
+    background: #8b6cff;
+}
+
+.mediaProgress::-moz-range-thumb {
+    width: 17px;
+    height: 17px;
+    border: 2px solid #6b58b8;
+    border-radius: 50%;
     background: #ffd36b;
     cursor: pointer;
 }
@@ -1019,36 +1051,60 @@ body.darkMode .messageGif img {
     background: #ffd36b;
     cursor: pointer;
 }
-
 .mediaVolume {
     width: 80px;
-    height: 6px;
+    height: 7px;
+    margin: 0;
     appearance: none;
     -webkit-appearance: none;
+    border: none;
     border-radius: 999px;
-    background: #514875;
+    background: #5b5278;
     cursor: pointer;
+    outline: none;
+}
+
+.mediaVolume::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 7px;
+    border-radius: 999px;
+    background: #5b5278;
 }
 
 .mediaVolume::-webkit-slider-thumb {
     appearance: none;
     -webkit-appearance: none;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    margin-top: -4px;
     border: 2px solid #6b58b8;
+    border-radius: 50%;
     background: #ffd36b;
     cursor: pointer;
 }
 
+.mediaVolume::-moz-range-track {
+    width: 100%;
+    height: 7px;
+    border-radius: 999px;
+    background: #5b5278;
+}
+
+.mediaVolume::-moz-range-progress {
+    height: 7px;
+    border-radius: 999px;
+    background: #8b6cff;
+}
+
 .mediaVolume::-moz-range-thumb {
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
+    width: 15px;
+    height: 15px;
     border: 2px solid #6b58b8;
+    border-radius: 50%;
     background: #ffd36b;
     cursor: pointer;
 }
+
 .customAudioPlayer {
     display: flex;
     align-items: center;
@@ -1190,6 +1246,70 @@ body.darkMode .mediaVolume {
         font-size: 13px;
     }
 
+}
+
+.customMediaPlayer:fullscreen {
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.customMediaPlayer:-webkit-full-screen {
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.customMediaPlayer:fullscreen .mediaElement {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    object-fit: contain;
+    background: #000;
+    flex: 1;
+}
+
+.customMediaPlayer:-webkit-full-screen .mediaElement {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    object-fit: contain;
+    background: #000;
+    flex: 1;
+}
+
+.customMediaPlayer:fullscreen .mediaControls {
+    flex-shrink: 0;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 18px;
+    border-top: 2px solid #6b58b8;
+}
+
+.customMediaPlayer:-webkit-full-screen .mediaControls {
+    flex-shrink: 0;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 18px;
+    border-top: 2px solid #6b58b8;
 }
     
 </style>
