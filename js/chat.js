@@ -426,6 +426,7 @@ function initializeMediaPlayers(container) {
         const timeDisplay =
             player.querySelector(".mediaTime");
         if (!media || !playButton) return;
+        
         function formatTime(seconds) {
             if (!Number.isFinite(seconds)) {
                 return "0:00";
@@ -558,11 +559,26 @@ function initializeMediaPlayers(container) {
                 event => {
                     media.volume =
                         Number(event.target.value);
+                    volume.style.setProperty(
+                        "--volume",
+                        `${media.volume * 100}%`
+                    );
                     media.muted =
                         media.volume === 0;
                     updateMuteButton();
                 }
             );
+        }
+
+        if (volume) {
+        
+            volume.value = media.volume;
+        
+            volume.style.setProperty(
+                "--volume",
+                `${media.volume * 100}%`
+            );
+        
         }
         function updateMuteButton() {
             if (!muteButton) return;
