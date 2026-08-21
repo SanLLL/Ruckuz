@@ -447,16 +447,18 @@ function initializeMediaPlayers(container) {
                 timeDisplay.textContent =
                     `${current} / ${duration}`;
             }
-
             if (
                 progress &&
                 Number.isFinite(media.duration) &&
                 media.duration > 0
             ) {
-
-                progress.value =
+                const percentage =
                     (media.currentTime / media.duration) * 100;
-
+                progress.value = percentage;
+                progress.style.setProperty(
+                    "--progress",
+                    `${percentage}%`
+                );
             }
         }
         function updatePlayButton() {
