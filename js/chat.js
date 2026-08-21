@@ -1109,6 +1109,23 @@ async function respondToFriendRequest(
 
 }
 
+const mobileMenuButton =
+    document.getElementById("mobileMenuButton");
+const mobileMenu =
+    document.getElementById("mobileMenu");
+const mobileRequestsButton =
+    document.getElementById("mobileRequestsButton");
+const mobileFriendsButton =
+    document.getElementById("mobileFriendsButton");
+const mobileLogoutButton =
+    document.getElementById("mobileLogoutButton");
+const mobileThemeButton =
+    document.getElementById("mobileThemeButton");
+const mobileRequestCount =
+    document.getElementById("mobileRequestCount");
+const mobileFriendsCount =
+    document.getElementById("mobileFriendsCount");
+
 async function refreshFriendRequestCount() {
     const { count, error } =
         await supabase
@@ -1129,7 +1146,6 @@ async function refreshFriendRequestCount() {
     
     mobileRequestCount.textContent =
         count ?? 0;
-
 }
 
 await refreshFriendRequestCount();
@@ -1159,49 +1175,30 @@ supabase
 
 const friendsButton =
     document.getElementById("friendsButton");
-
 const friendsPanel =
     document.getElementById("friendsPanel");
-
 const closeFriends =
     document.getElementById("closeFriends");
-
 const friendsList =
     document.getElementById("friendsList");
-
 const friendsCount =
     document.getElementById("friendsCount");
 
-
 friendsButton.onclick = async () => {
-
     const isOpen =
         friendsPanel.style.display === "flex";
-
     if (isOpen) {
-
         friendsPanel.style.display = "none";
-
     } else {
-
         friendsPanel.style.display = "flex";
-
         await loadFriends();
-
     }
-
 };
-
-
 closeFriends.onclick = () => {
-
     friendsPanel.style.display = "none";
-
 };
-
 
 async function loadFriends() {
-
     const { data, error } = await supabase
         .from("friends")
         .select("*")
@@ -1357,23 +1354,6 @@ function createFriendElement(profile) {
 }
 
 await loadFriends();
-
-const mobileMenuButton =
-    document.getElementById("mobileMenuButton");
-const mobileMenu =
-    document.getElementById("mobileMenu");
-const mobileRequestsButton =
-    document.getElementById("mobileRequestsButton");
-const mobileFriendsButton =
-    document.getElementById("mobileFriendsButton");
-const mobileLogoutButton =
-    document.getElementById("mobileLogoutButton");
-const mobileThemeButton =
-    document.getElementById("mobileThemeButton");
-const mobileRequestCount =
-    document.getElementById("mobileRequestCount");
-const mobileFriendsCount =
-    document.getElementById("mobileFriendsCount");
 mobileMenuButton.onclick = (event) => {
     event.stopPropagation();
     mobileMenu.classList.toggle("open");
