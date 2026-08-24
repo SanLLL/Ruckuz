@@ -54,10 +54,10 @@ export function createProfilePopup(){
     overlay.onclick=e=>{
         if(e.target===overlay){
             overlay.style.display="none";
+            currentProfileId = null;
         }
     };
     document.body.appendChild(overlay);
-
 }
 
 export async function openProfile(userId){
