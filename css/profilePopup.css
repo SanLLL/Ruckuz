@@ -80,3 +80,20 @@
 .profileStatus.isOffline {
     color: #817a91;
 }
+
+body.darkMode .profileStatus.isOnline {
+    color: #73e696;
+}
+
+body.darkMode .profileStatus.isOffline {
+    color: #aaa2bd;
+}
+
+body.darkMode .profileStatusDot.online {
+    background: #73e696;
+    box-shadow: 0 0 0 2px rgba(115, 230, 150, 0.2);
+}
+
+body.darkMode .profileStatusDot.offline {
+    background: #756f88;
+}
