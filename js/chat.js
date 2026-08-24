@@ -520,11 +520,13 @@ function initializeMediaPlayers(container) {
             "ended",
             () => {
                 updatePlayButton();
-
                 if (progress) {
                     progress.value = 0;
+                    progress.style.setProperty(
+                        "--progress",
+                        "0%"
+                    );
                 }
-
             }
         );
         media.addEventListener(
