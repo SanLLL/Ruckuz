@@ -47,3 +47,36 @@
     padding:12px;
     cursor:pointer;
 }
+.profileStatus {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 5px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.profileStatusDot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.profileStatusDot.online {
+    background: #55c878;
+    box-shadow: 0 0 0 2px rgba(85, 200, 120, 0.2);
+}
+
+.profileStatusDot.offline {
+    background: #9b94a8;
+}
+
+.profileStatus.isOnline {
+    color: #3da95f;
+}
+
+.profileStatus.isOffline {
+    color: #817a91;
+}
