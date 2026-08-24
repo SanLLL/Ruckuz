@@ -2,7 +2,8 @@ import { supabase } from "./supabase.js";
 import {
     createProfilePopup,
     openProfile,
-    setCurrentUser
+    setCurrentUser,
+    setOnlineUsers
 } from "./profilePopup.js";
 
 const {
@@ -15,6 +16,50 @@ if (!session) {
 
 setCurrentUser(session.user.id);
 createProfilePopup();
+
+const presenceChannel = supabase.channel("ruckuz-presence", {
+    config: {
+        presence: {
+            key: session.user.id
+        }
+    }
+});
+presenceChannel
+    .on("presence", { event: "sync" }, () => {
+        updateOnlineUsers();
+    })
+    .on("presence", { event: "join" }, () => {
+        updateOnlineUsers();
+    })
+    .on("presence", { event: "leave" }, () => {
+        updateOnlineUsers();
+    })
+    .subscribe(async status => {
+        if (status !== "SUBSCRIBED") {
+            return;
+        }
+        await presenceChannel.track({
+            user_id: session.user.id,
+            online_at: new Date().toISOString()
+        });
+        updateOnlineUsers();
+    });
+function updateOnlineUsers() {
+    const state =
+        presenceChannel.presenceState();
+    const onlineUsers = new Set();
+    for (const key in state) {
+        const presences = state[key];
+        for (const presence of presences) {
+            if (presence.user_id) {
+                onlineUsers.add(
+                    presence.user_id
+                );
+            }
+        }
+    }
+    setOnlineUsers(onlineUsers);
+}
 
 const messages = document.getElementById("messages");
 const input = document.getElementById("messageInput");
