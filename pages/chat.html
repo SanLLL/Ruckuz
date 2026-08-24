@@ -989,10 +989,11 @@ body.darkMode .messageGif img {
 }
 .mediaProgress {
     --progress: 0%;
-    flex: 1;
+    flex: 1 1 auto;
     min-width: 60px;
-    width: 100%;
+    width: auto;
     height: 8px;
+    padding: 0;
     margin: 0;
     appearance: none;
     -webkit-appearance: none;
@@ -1061,8 +1062,10 @@ body.darkMode .messageGif img {
 }
 .mediaVolume {
     --volume: 100%;
+    flex: 0 0 80px;
     width: 80px;
     height: 7px;
+    padding: 0;
     margin: 0;
     appearance: none;
     -webkit-appearance: none;
@@ -1187,9 +1190,26 @@ body:not(.darkMode) .customAudioPlayer .audioFileName {
     color: #30254f;
 }
 
-body:not(.darkMode) .mediaProgress,
+body:not(.darkMode) .mediaProgress {
+    background:
+        linear-gradient(
+            to right,
+            #6b58b8 0%,
+            #6b58b8 var(--progress),
+            #c7b8ed var(--progress),
+            #c7b8ed 100%
+        );
+}
+
 body:not(.darkMode) .mediaVolume {
-    background: #c7b8ed;
+    background:
+        linear-gradient(
+            to right,
+            #6b58b8 0%,
+            #6b58b8 var(--volume),
+            #c7b8ed var(--volume),
+            #c7b8ed 100%
+        );
 }
 
 body.darkMode .customMediaPlayer {
@@ -1211,9 +1231,26 @@ body.darkMode .mediaFullscreenButton {
     background: #6b58b8;
 }
 
-body.darkMode .mediaProgress,
+body.darkMode .mediaProgress {
+    background:
+        linear-gradient(
+            to right,
+            #8b6cff 0%,
+            #8b6cff var(--progress),
+            #514875 var(--progress),
+            #514875 100%
+        );
+}
+
 body.darkMode .mediaVolume {
-    background: #514875;
+    background:
+        linear-gradient(
+            to right,
+            #8b6cff 0%,
+            #8b6cff var(--volume),
+            #514875 var(--volume),
+            #514875 100%
+        );
 }
 
 @media (max-width: 700px) {
