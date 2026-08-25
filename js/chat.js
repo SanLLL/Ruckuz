@@ -72,6 +72,7 @@ const messages = document.getElementById("messages");
 const input = document.getElementById("messageInput");
 const send = document.getElementById("send");
 const memberList = document.getElementById("memberList");
+const mobileMemberList = document.getElementById("mobileMemberList");
 let memberProfiles = {};
 let currentOnlineUsers = new Set();
 const avatarUpload = document.getElementById("avatarUpload");
@@ -173,15 +174,16 @@ async function loadMemberProfiles() {
 }
 
 function renderMemberList() {
-    if (!memberList) {
-        return;
+    if (memberList) {
+        memberList.innerHTML = "";
     }
-    memberList.innerHTML = "";
+    if (mobileMemberList) {
+        mobileMemberList.innerHTML = "";
+    }
     const profiles =
         Object.values(
             memberProfiles
         );
-
     profiles.sort((a, b) => {
         const aOnline =
             currentOnlineUsers.has(a.id);
@@ -190,29 +192,41 @@ function renderMemberList() {
         if (
             aOnline &&
             !bOnline
-        ) {
-            return -1;
-        }
+        ) return -1;
         if (
             !aOnline &&
             bOnline
-        ) {
-            return 1;
-        }
+        ) return 1;
         return a.username.localeCompare(
             b.username
         );
     });
     for (const profile of profiles) {
-        createMemberElement(
-            profile
-        );
+        if (memberList) {
+            memberList.appendChild(
+                createMemberElement(
+                    profile
+                )
+            );
+        }
+        if (mobileMemberList) {
+            mobileMemberList.appendChild(
+                createMemberElement(
+                    profile
+                )
+            );
+        }
     }
 }
 
-function createMemberElement(profile) {
+function createMemberElement(
+    profile,
+    mobile = false
+) {
     const div =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
     div.className =
         "memberItem";
     const isOnline =
@@ -261,9 +275,7 @@ function createMemberElement(profile) {
             profile.id
         );
     };
-    memberList.appendChild(
-        div
-    );
+    return div;
 }
 
 async function loadMessages() {
@@ -1726,22 +1738,92 @@ async function respondToFriendRequest(
 
 }
 
-const mobileMenuButton =
-    document.getElementById("mobileMenuButton");
-const mobileMenu =
-    document.getElementById("mobileMenu");
-const mobileRequestsButton =
-    document.getElementById("mobileRequestsButton");
-const mobileFriendsButton =
-    document.getElementById("mobileFriendsButton");
-const mobileLogoutButton =
-    document.getElementById("mobileLogoutButton");
-const mobileThemeButton =
-    document.getElementById("mobileThemeButton");
-const mobileRequestCount =
-    document.getElementById("mobileRequestCount");
-const mobileFriendsCount =
-    document.getElementById("mobileFriendsCount");
+const mobileMenuButton = document.getElementById("mobileMenuButton");
+const mobileMenu = document.getElementById("mobileMenu");
+const mobileRequestsButton = document.getElementById("mobileRequestsButton");
+const mobileFriendsButton = document.getElementById("mobileFriendsButton");
+const mobileLogoutButton = document.getElementById("mobileLogoutButton");
+const mobileThemeButton = document.getElementById("mobileThemeButton");
+const mobileRequestCount = document.getElementById("mobileRequestCount");
+const mobileFriendsCount = document.getElementById("mobileFriendsCount");
+const mobileChannelsButton = document.getElementById("mobileChannelsButton");
+const mobileMembersButton = document.getElementById("mobileMembersButton");
+const mobileChannelsPanel = document.getElementById("mobileChannelsPanel");
+const mobileMembersPanel = document.getElementById("mobileMembersPanel");
+const closeMobileChannels = document.getElementById("closeMobileChannels");
+const closeMobileMembers = document.getElementById("closeMobileMembers");
+const mobileChannelButtons = document.querySelectorAll(".mobileChannelButton");
+mobileChannelButtons.forEach(
+    button => {
+        button.onclick = async () => {
+            const channel =
+                button.dataset.channel;
+            currentChannel =
+                channel;
+            channelButtons.forEach(
+                desktopButton => {
+                    desktopButton.classList.toggle(
+                        "active",
+                        desktopButton.dataset.channel ===
+                            channel
+                    );
+
+                }
+            );
+            mobileChannelButtons.forEach(
+                mobileButton => {
+                    mobileButton.classList.toggle(
+                        "active",
+                        mobileButton.dataset.channel ===
+                            channel
+                    );
+
+                }
+            );
+            currentChannelName.textContent =
+                button.textContent
+                    .replace("#", "")
+                    .trim();
+            mobileChannelsPanel.classList.remove(
+                "open"
+            );
+            await loadMessages();
+        };
+    }
+);
+
+mobileChannelsButton.onclick = () => {
+    mobileMenu.classList.remove(
+        "open"
+    );
+    mobileMembersPanel.classList.remove(
+        "open"
+    );
+    mobileChannelsPanel.classList.toggle(
+        "open"
+    );
+};
+mobileMembersButton.onclick = () => {
+    mobileMenu.classList.remove(
+        "open"
+    );
+    mobileChannelsPanel.classList.remove(
+        "open"
+    );
+    mobileMembersPanel.classList.toggle(
+        "open"
+    );
+};
+closeMobileChannels.onclick = () => {
+    mobileChannelsPanel.classList.remove(
+        "open"
+    );
+};
+closeMobileMembers.onclick = () => {
+    mobileMembersPanel.classList.remove(
+        "open"
+    );
+};
 
 async function refreshFriendRequestCount() {
     const { count, error } =
