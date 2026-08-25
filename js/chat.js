@@ -1843,8 +1843,10 @@ async function refreshFriendRequestCount() {
     friendRequestCount.textContent =
         count ?? 0;
     
-    mobileRequestCount.textContent =
-        count ?? 0;
+    if (mobileRequestCount) {
+        mobileRequestCount.textContent =
+            count ?? 0;
+    }
 }
 
 await refreshFriendRequestCount();
@@ -1904,65 +1906,52 @@ async function loadFriends() {
         .or(
             `user_id.eq.${session.user.id},friend_id.eq.${session.user.id}`
         );
-
     if (error) {
-
         console.error(
             "Friends loading error:",
             error
         );
-
         friendsList.innerHTML = `
             <p class="noFriends">
                 Couldn't load your friends.
             </p>
         `;
-
         return;
     }
 
-
     friendsList.innerHTML = "";
-
-
     if (!data || data.length === 0) {
-
         friendsCount.textContent = "0";
-        mobileFriendsCount.textContent = "0";
-
+        if (mobileFriendsCount) {
+            mobileFriendsCount.textContent = "0";
+        }
         friendsList.innerHTML = `
             <p class="noFriends">
                 You don't have any friends yet!
             </p>
         `;
-
         return;
     }
 
-
     const friendIds = data.map(friend => {
-
         if (friend.user_id === session.user.id) {
-
             return friend.friend_id;
 
         }
-
         return friend.user_id;
 
     });
 
-
     const uniqueFriendIds =
         [...new Set(friendIds)];
-
 
     friendsCount.textContent =
         uniqueFriendIds.length;
     
-    mobileFriendsCount.textContent =
-        uniqueFriendIds.length;
-
+    if (mobileFriendsCount) {
+        mobileFriendsCount.textContent =
+            uniqueFriendIds.length;
+    }
 
     const {
         data: profilesData,
@@ -1971,7 +1960,6 @@ async function loadFriends() {
         .from("profiles")
         .select("id, username, avatar_url")
         .in("id", uniqueFriendIds);
-
 
     if (profilesError) {
 
@@ -1989,45 +1977,27 @@ async function loadFriends() {
         return;
     }
 
-
     const profileMap = {};
-
     for (const profile of profilesData) {
-
         profileMap[profile.id] =
             profile;
-
     }
-
 
     for (const friendId of uniqueFriendIds) {
-
         const profile =
             profileMap[friendId];
-
         if (!profile) continue;
-
-
         createFriendElement(profile);
-
     }
-
 }
 
-
 function createFriendElement(profile) {
-
     const div =
         document.createElement("div");
-
     div.className = "friendItem";
-
-
     const avatar =
         profile.avatar_url ||
         "/Ruckuz/assets/avatars/ruckuz.png";
-
-
     div.innerHTML = `
         <img
             class="friendItemAvatar"
@@ -2039,15 +2009,10 @@ function createFriendElement(profile) {
             ${profile.username}
         </div>
     `;
-
-
     div.onclick = () => {
 
         openProfile(profile.id);
-
     };
-
-
     friendsList.appendChild(div);
 
 }
@@ -2058,7 +2023,6 @@ mobileMenuButton.onclick = (event) => {
     mobileMenu.classList.toggle("open");
 
 };
-
 
 mobileRequestsButton.onclick = async () => {
     mobileMenu.classList.remove("open");
