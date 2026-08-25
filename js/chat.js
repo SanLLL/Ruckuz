@@ -47,9 +47,11 @@ presenceChannel
 function updateOnlineUsers() {
     const state =
         presenceChannel.presenceState();
-    const onlineUsers = new Set();
+    const onlineUsers =
+        new Set();
     for (const key in state) {
-        const presences = state[key];
+        const presences =
+            state[key];
         for (const presence of presences) {
             if (presence.user_id) {
                 onlineUsers.add(
@@ -58,12 +60,20 @@ function updateOnlineUsers() {
             }
         }
     }
-    setOnlineUsers(onlineUsers);
+    currentOnlineUsers =
+        onlineUsers;
+    setOnlineUsers(
+        onlineUsers
+    );
+    renderMemberList();
 }
 
 const messages = document.getElementById("messages");
 const input = document.getElementById("messageInput");
 const send = document.getElementById("send");
+const memberList = document.getElementById("memberList");
+let memberProfiles = {};
+let currentOnlineUsers = new Set();
 const avatarUpload = document.getElementById("avatarUpload");
 avatarUpload.onchange = uploadAvatar;
 const fileButton = document.getElementById("fileButton");
@@ -74,6 +84,49 @@ fileButton.onclick = () => {
 
 fileUpload.onchange = uploadChatFile;
 let profiles = {};
+let currentChannel = "general";
+const channelButtons =
+    document.querySelectorAll(
+        ".channelButton"
+    );
+
+const currentChannelName =
+    document.getElementById(
+        "currentChannelName"
+    );
+
+channelButtons.forEach(
+    button => {
+        button.onclick = async () => {
+            const channel =
+                button.dataset.channel;
+            if (
+                channel ===
+                currentChannel
+            ) {
+                return;
+            }
+            currentChannel =
+                channel;
+            channelButtons.forEach(
+                other => {
+                    other.classList.remove(
+                        "active"
+                    );
+                }
+            );
+            button.classList.add(
+                "active"
+            );
+            currentChannelName.textContent =
+                button.textContent
+                    .replace("#", "")
+                    .trim();
+            await loadMessages();
+        };
+    }
+);
+
 async function loadProfiles() {
     const { data, error } = await supabase
         .from("profiles")
@@ -86,24 +139,159 @@ async function loadProfiles() {
     for (const profile of data) {
         profiles[profile.id] = profile;
     }
+}
 
+async function loadMemberProfiles() {
+    const {
+        data,
+        error
+    } = await supabase
+        .from("profiles")
+        .select(
+            "id, username, avatar_url"
+        )
+        .order(
+            "username",
+            {
+                ascending: true
+            }
+        );
+    if (error) {
+        console.error(
+            "Member list loading error:",
+            error
+        );
+        return;
+    }
+    memberProfiles = {};
+    for (const profile of data) {
+        memberProfiles[
+            profile.id
+        ] = profile;
+    }
+    renderMemberList();
+}
+
+function renderMemberList() {
+    if (!memberList) {
+        return;
+    }
+    memberList.innerHTML = "";
+    const profiles =
+        Object.values(
+            memberProfiles
+        );
+
+    profiles.sort((a, b) => {
+        const aOnline =
+            currentOnlineUsers.has(a.id);
+        const bOnline =
+            currentOnlineUsers.has(b.id);
+        if (
+            aOnline &&
+            !bOnline
+        ) {
+            return -1;
+        }
+        if (
+            !aOnline &&
+            bOnline
+        ) {
+            return 1;
+        }
+        return a.username.localeCompare(
+            b.username
+        );
+    });
+    for (const profile of profiles) {
+        createMemberElement(
+            profile
+        );
+    }
+}
+
+function createMemberElement(profile) {
+    const div =
+        document.createElement("div");
+    div.className =
+        "memberItem";
+    const isOnline =
+        currentOnlineUsers.has(
+            profile.id
+        );
+    const avatar =
+        profile.avatar_url ||
+        "/Ruckuz/assets/avatars/ruckuz.png";
+    div.innerHTML = `
+        <div class="memberAvatarWrapper">
+            <img
+                class="memberAvatar"
+                src="${avatar}?v=${Date.now()}"
+                alt="${escapeHTML(profile.username)}"
+            >
+            <span
+                class="memberOnlineDot ${
+                    isOnline
+                        ? "online"
+                        : ""
+                }"
+            ></span>
+        </div>
+        <div class="memberInfo">
+            <div class="memberName">
+                ${escapeHTML(profile.username)}
+            </div>
+            <div
+                class="memberStatus ${
+                    isOnline
+                        ? "online"
+                        : ""
+                }"
+            >
+                ${
+                    isOnline
+                        ? "Online"
+                        : "offline"
+                }
+            </div>
+        </div>
+    `;
+    div.onclick = () => {
+        openProfile(
+            profile.id
+        );
+    };
+    memberList.appendChild(
+        div
+    );
 }
 
 async function loadMessages() {
-    const { data, error } = await supabase
-        .from("messages")
-        .select("*")
-        .order("created_at", { ascending: true });
+    const { data, error } =
+        await supabase
+            .from("messages")
+            .select("*")
+            .eq(
+                "channel",
+                currentChannel
+            )
+            .order(
+                "created_at",
+                {
+                    ascending: true
+                }
+            );
     if (error) {
         console.error(error);
         return;
     }
     messages.innerHTML = "";
     for (const message of data) {
-        addMessage(message);
+        addMessage(
+            message
+        );
     }
     messages.scrollTop = messages.scrollHeight;
-
 }
 
 function getGifEmbedUrl(text) {
@@ -738,7 +926,9 @@ async function sendMessage() {
                         session.user.user_metadata.username ??
                         session.user.email,
                     content:
-                        text
+                        text,
+                    channel:
+                        currentChannel
                 });
         if (error) {
             throw error;
@@ -878,7 +1068,9 @@ async function uploadChatFile() {
                 file_type:
                     file.type || "application/octet-stream",
                 file_name:
-                    file.name
+                    file.name,
+                channel:
+                    currentChannel
             });
         if (messageError) {
             throw messageError;
@@ -1141,7 +1333,6 @@ async function deleteMessage(messageId){
     const confirmed = confirm(
         "Delete this message?"
     );
-
     if(!confirmed) return;
     const { error } = await supabase
         .from("messages")
@@ -1149,32 +1340,35 @@ async function deleteMessage(messageId){
         .eq("id", messageId);
     if(error){
         console.error(error);
-
     }
-
 }
 
 await loadProfiles();
+await loadMemberProfiles();
 await loadMessages();
 supabase
 .channel("messages")
 .on(
-    
     "postgres_changes",
     {
-
         event: "INSERT",
         schema: "public",
         table: "messages"
-
     },
 
     payload => {
-        addMessage(payload.new);
-        messages.scrollTop = messages.scrollHeight;
-
+        if (
+            payload.new.channel !==
+            currentChannel
+        ) {
+            return;
+        }
+        addMessage(
+            payload.new
+        );
+        messages.scrollTop =
+            messages.scrollHeight;
     }
-
 )
 
 .on(
