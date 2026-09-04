@@ -96,6 +96,10 @@ button.onclick = async () => {
         return;
     }
 
+    rememberSession(
+        data.session
+    );
+
     const user = data.user;
     const { data: profile } = await supabase
         .from("profiles")
