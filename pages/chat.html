@@ -2558,29 +2558,60 @@ body:not(.darkMode) #settingsButton:hover {
                 ✕
             </button>
         </div>
-
-        <div class="settingsProfile">
-            <img
-                id="settingsAvatar"
-                src="/Ruckuz/assets/avatars/ruckuz.png"
-                alt="Your avatar">
-            <div class="settingsIdentity">
-                <div id="settingsUsername">
-                    Loading...
-                </div>
-                <div class="settingsIdLabel">
-                    RuckuZ ID
-                </div>
-                <div class="settingsIdRow">
-                    <code id="settingsRuckuzId">
-                        ...
-                    </code>
-                    <button id="copyRuckuzId">
-                        Copy
-                    </button>
-                </div>
-            </div>
+        
+<div class="settingsProfile">
+    <div class="settingsAvatarBlock">
+        <img
+            id="settingsAvatar"
+            src="/Ruckuz/assets/avatars/ruckuz.png"
+            alt="Your avatar">
+        
+        <button id="settingsChangeAvatar">
+            Change Picture
+        </button>
+    </div>
+    
+    <div class="settingsIdentity">
+        <div id="settingsUsername">
+            Loading...
         </div>
+        <div class="settingsIdLabel">
+            RuckuZ ID
+        </div>
+        <div class="settingsIdRow">
+            <code id="settingsRuckuzId">
+                ...
+            </code>
+            <button id="copyRuckuzId">
+                Copy
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="settingsDivider"></div>
+<div class="settingsSection">
+    <h3>
+        Username
+    </h3>
+    <p>
+        Your RuckuZ ID will not change when you change your username.
+    </p>
+    <div class="usernameEditor">
+        <input
+            id="usernameInput"
+            maxlength="32"
+            placeholder="Username">
+        <span id="usernameCharacterCount">
+            0 / 32
+        </span>
+    </div>
+    <button id="saveUsername">
+        Save Username
+    </button>
+    <div id="usernameSaveMessage">
+    </div>
+</div>
 
         <div class="settingsDivider"></div>
         <div class="settingsSection">
