@@ -72,6 +72,7 @@ function updateOnlineUsers() {
         onlineUsers
     );
     renderMemberList();
+    refreshSelfUserPanel();
 }
 
 const messages = document.getElementById("messages");
@@ -91,6 +92,226 @@ fileButton.onclick = () => {
 
 fileUpload.onchange = uploadChatFile;
 let profiles = {};
+const settingsButton =
+    document.getElementById("settingsButton");
+const mobileSettingsButton =
+    document.getElementById("mobileSettingsButton");
+const settingsOverlay =
+    document.getElementById("settingsOverlay");
+const closeSettings =
+    document.getElementById("closeSettings");
+const selfUserAvatar =
+    document.getElementById("selfUserAvatar");
+const selfUsername =
+    document.getElementById("selfUsername");
+const selfPresence =
+    document.getElementById("selfPresence");
+const selfCustomStatus =
+    document.getElementById("selfCustomStatus");
+const selfOnlineDot =
+    document.getElementById("selfOnlineDot");
+const settingsAvatar =
+    document.getElementById("settingsAvatar");
+const settingsUsername =
+    document.getElementById("settingsUsername");
+const settingsRuckuzId =
+    document.getElementById("settingsRuckuzId");
+const copyRuckuzId =
+    document.getElementById("copyRuckuzId");
+const customStatusInput =
+    document.getElementById("customStatusInput");
+const statusCharacterCount =
+    document.getElementById("statusCharacterCount");
+const saveCustomStatus =
+    document.getElementById("saveCustomStatus");
+const statusSaveMessage =
+    document.getElementById("statusSaveMessage");
+function getMyProfile() {
+    return (
+        profiles[session.user.id] ||
+        null
+    );
+}
+function refreshSelfUserPanel() {
+    const profile =
+        getMyProfile();
+    if (!profile) {
+        return;
+    }
+    selfUserAvatar.src =
+        profile.avatar_url ||
+        "/Ruckuz/assets/avatars/ruckuz.png";
+    selfUsername.textContent =
+        profile.username ||
+        session.user.email;
+    const online =
+        currentOnlineUsers.has(
+            session.user.id
+        );
+    selfPresence.textContent =
+        online
+            ? "Online"
+            : "Connecting...";
+    selfOnlineDot.classList.toggle(
+        "online",
+        online
+    );
+    const customStatus =
+        (profile.status_text || "")
+            .trim();
+    selfCustomStatus.textContent =
+        customStatus ||
+        "Set status";
+}
+
+function refreshSettingsProfile() {
+    const profile =
+        getMyProfile();
+    if (!profile) {
+        return;
+    }
+    settingsAvatar.src =
+        profile.avatar_url ||
+        "/Ruckuz/assets/avatars/ruckuz.png";
+    settingsUsername.textContent =
+        profile.username ||
+        session.user.email;
+    settingsRuckuzId.textContent =
+        profile.ruckuz_id ||
+        "ID unavailable";
+    customStatusInput.value =
+        profile.status_text ||
+        "";
+    statusCharacterCount.textContent =
+        `${customStatusInput.value.length} / 80`;
+
+}
+
+function openSettings() {
+    refreshSettingsProfile();
+    statusSaveMessage.textContent =
+        "";
+    settingsOverlay.classList.add(
+        "open"
+    );
+}
+
+function closeSettingsPanel() {
+    settingsOverlay.classList.remove(
+        "open"
+    );
+}
+
+settingsButton.onclick =
+    openSettings;
+mobileSettingsButton.onclick = () => {
+    mobileMenu.classList.remove(
+        "open"
+    );
+    openSettings();
+};
+
+closeSettings.onclick =
+    closeSettingsPanel;
+settingsOverlay.onclick =
+    event => {
+        if (
+            event.target ===
+            settingsOverlay
+        ) {
+
+            closeSettingsPanel();
+        }
+    };
+
+customStatusInput.addEventListener(
+    "input",
+    () => {
+        statusCharacterCount.textContent =
+            `${customStatusInput.value.length} / 80`;
+    }
+);
+
+saveCustomStatus.onclick =
+    async () => {
+        const newStatus =
+            customStatusInput
+                .value
+                .trim();
+        saveCustomStatus.disabled =
+            true;
+        saveCustomStatus.textContent =
+            "Saving...";
+        statusSaveMessage.textContent =
+            "";
+        const {
+            error
+        } =
+            await supabase
+                .from("profiles")
+                .update({
+                    status_text:
+                        newStatus
+                })
+                .eq(
+                    "id",
+                    session.user.id
+                );
+        saveCustomStatus.disabled =
+            false;
+        saveCustomStatus.textContent =
+            "Save Status";
+        if (error) {
+            console.error(
+                "Status update error:",
+                error
+            );
+            statusSaveMessage.textContent =
+                "Couldn't save status.";
+            return;
+        }
+        if (
+            profiles[
+                session.user.id
+            ]
+        ) {
+            profiles[
+                session.user.id
+            ].status_text =
+                newStatus;
+        }
+        refreshSelfUserPanel();
+        refreshSettingsProfile();
+        statusSaveMessage.textContent =
+            "Status saved!";
+    };
+
+copyRuckuzId.onclick =
+    async () => {
+        const id =
+            settingsRuckuzId
+                .textContent
+                .trim();
+        try {
+            await navigator.clipboard
+                .writeText(id);
+            copyRuckuzId.textContent =
+                "Copied!";
+            setTimeout(
+                () => {
+                    copyRuckuzId.textContent =
+                        "Copy";
+                },
+                1200
+            );
+        } catch (error) {
+            console.error(
+                "Copy failed:",
+                error
+            );
+        }
+    };
+
 let currentChannel = "general";
 const channelButtons =
     document.querySelectorAll(
@@ -1240,6 +1461,8 @@ document
         }
     });
 
+refreshSelfUserPanel();
+refreshSettingsProfile();
 alert("PFP changed!");
 
 }
@@ -1361,6 +1584,8 @@ async function deleteMessage(messageId){
 }
 
 await loadProfiles();
+refreshSelfUserPanel();
+refreshSettingsProfile();
 await loadMemberProfiles();
 await loadMessages();
 supabase
@@ -1811,8 +2036,6 @@ const mobileMenuButton = document.getElementById("mobileMenuButton");
 const mobileMenu = document.getElementById("mobileMenu");
 const mobileRequestsButton = document.getElementById("mobileRequestsButton");
 const mobileFriendsButton = document.getElementById("mobileFriendsButton");
-const mobileLogoutButton = document.getElementById("mobileLogoutButton");
-const mobileThemeButton = document.getElementById("mobileThemeButton");
 const mobileRequestCount = document.getElementById("mobileRequestCount");
 const mobileFriendsCount = document.getElementById("mobileFriendsCount");
 const mobileChannelsButton = document.getElementById("mobileChannelsButton");
@@ -2117,41 +2340,4 @@ mobileFriendsButton.onclick = async () => {
         friendsPanel.style.display = "flex";
         await loadFriends();
     }
-};
-
-mobileLogoutButton.onclick = async () => {
-    mobileLogoutButton.disabled = true;
-    mobileLogoutButton.textContent =
-        "Logging out...";
-    const { error } =
-        await supabase.auth.signOut();
-    if (error) {
-        console.error(error);
-        mobileLogoutButton.disabled = false;
-        mobileLogoutButton.textContent =
-            "Logout";
-        alert(
-            "Couldn't log out. Please try again."
-        );
-        return;
-    }
-    clearPersistentLogin();
-    location.href = "../";
-};
-
-mobileThemeButton.onclick = () => {
-    const nextTheme =
-        document.body.classList.contains(
-            "darkMode"
-        )
-            ? "light"
-            : "dark";
-
-    applyTheme(
-        nextTheme
-    );
-
-    mobileMenu.classList.remove(
-        "open"
-    );
 };
