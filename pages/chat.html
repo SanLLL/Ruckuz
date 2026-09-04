@@ -2403,12 +2403,9 @@ body:not(.darkMode)
 body.darkMode
 #usernameInput {
     background: #1f1c30;
-
     color: white;
-
     border-color: #8b6cff;
 }
-
 
 body.darkMode
 #settingsChangeAvatar,
@@ -2419,6 +2416,139 @@ body.darkMode
     border-color: #8b6cff;
     box-shadow:
         3px 3px 0 #8b6cff;
+}
+
+#confirmOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 40000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+    background: rgba(0, 0, 0, 0.58);
+}
+
+#confirmOverlay.open {
+    display: flex;
+}
+
+#confirmCard {
+    width: min(380px, 100%);
+    box-sizing: border-box;
+    padding: 20px;
+    border: 4px solid #6b58b8;
+    border-radius: 7px;
+    background: #fffdf6;
+    color: #30254f;
+    box-shadow:
+        8px 8px 0 #6b58b8;
+    transform: rotate(-0.3deg);
+}
+
+#confirmHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#confirmMark {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #b84f4f;
+    background: #ff8585;
+    color: #4a2020;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+#confirmTitle {
+    margin: 0;
+    color: #30254f;
+    font-size: 21px;
+}
+
+#confirmMessage {
+    margin: 16px 0 20px;
+    color: #625b70;
+    line-height: 1.45;
+}
+
+#confirmButtons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+#confirmButtons button {
+    padding: 10px 16px;
+    border: 3px solid #6b58b8;
+    border-radius: 5px;
+    background: white;
+    color: #30254f;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow:
+        3px 3px 0 #6b58b8;
+}
+
+#confirmButtons button:active {
+    transform: translate(2px, 2px);
+    box-shadow:
+        1px 1px 0 #6b58b8;
+}
+
+#confirmConfirmButton.danger {
+    background: #ff8585;
+    color: #4a2020;
+    border-color: #b84f4f;
+    box-shadow:
+        3px 3px 0 #b84f4f;
+}
+
+body.darkMode #confirmCard {
+    background: #302b48;
+    color: #f5f0ff;
+    border-color: #8b6cff;
+    box-shadow:
+        8px 8px 0 #8b6cff;
+}
+
+body.darkMode #confirmTitle {
+    color: #f5f0ff;
+}
+
+body.darkMode #confirmMessage {
+    color: #aaa2bd;
+}
+
+body.darkMode #confirmButtons button {
+    background: #242038;
+    color: #f5f0ff;
+    border-color: #8b6cff;
+    box-shadow:
+        3px 3px 0 #8b6cff;
+}
+
+body.darkMode #confirmConfirmButton.danger {
+    background: #9f4d55;
+    color: white;
+    border-color: #d66b74;
+    box-shadow:
+        3px 3px 0 #d66b74;
+}
+
+@media (max-width: 768px) {
+    #confirmCard {
+        width: 100%;
+        max-width: 360px;
+        transform: none;
+    }
 }
     
 </style>
@@ -2773,6 +2903,39 @@ body.darkMode
         </div>
     </div>
 </div>
+    
+    <div
+        id="confirmOverlay"
+        aria-hidden="true">
+        <div
+            id="confirmCard"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="confirmTitle">
+            <div id="confirmHeader">
+                <span id="confirmMark">
+                    !
+                </span>
+                <h2 id="confirmTitle">
+                    Confirm
+                </h2>
+            </div>
+            <p id="confirmMessage">
+            </p>
+            <div id="confirmButtons">
+                <button
+                    id="confirmCancelButton"
+                    type="button">
+                    Cancel
+                </button>
+                <button
+                    id="confirmConfirmButton"
+                    type="button">
+                    Confirm
+                </button>
+            </div>
+        </div>
+    </div>
 <script type="module" src="../js/chat.js"></script>
 </body>
 </html>
