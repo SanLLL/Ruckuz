@@ -216,22 +216,15 @@ body.darkMode .themeToggle:hover {
 
 .logoutButton {
     position: static;
-
     padding: 10px 16px;
-
     border: 3px solid #b84f4f;
     border-radius: 14px;
-
     background: #ff8585;
     color: #4a2020;
-
     font-weight: bold;
     font-size: 15px;
-
     cursor: pointer;
-
     box-shadow: 4px 4px 0 #b84f4f;
-
     transition:
         transform 0.15s ease,
         box-shadow 0.15s ease;
@@ -1530,41 +1523,29 @@ body.darkMode .mediaVolume {
 .memberAvatar {
     width: 46px;
     height: 46px;
-
     border-radius: 50%;
-
     object-fit: cover;
-
     border: 2px solid #8b6cff;
 }
 
-
 .memberOnlineDot {
     position: absolute;
-
     right: -1px;
     bottom: -1px;
-
     width: 10px;
     height: 10px;
-
     border-radius: 50%;
-
     border: 2px solid #302b48;
-
     background: #777;
 }
-
 
 .memberOnlineDot.online {
     background: #55d66f;
 }
 
-
 .memberInfo {
     min-width: 0;
 }
-
 
 .memberName {
     color: #b79cff;
@@ -1582,12 +1563,137 @@ body.darkMode .mediaVolume {
 .memberStatus.online {
     color: #55d66f;
 }
-    
+
+body:not(.darkMode) #serverSidebar,
+body:not(.darkMode) #memberSidebar,
+body:not(.darkMode) #chat,
+body:not(.darkMode) #chatHeader,
+body:not(.darkMode) #messages {
+    background: #fffdf6;
+    color: #30254f;
+}
+
+body:not(.darkMode) #serverBanner {
+    background: #fff2c9;
+}
+
+body:not(.darkMode) #serverName {
+    background: #fff8df;
+}
+
+body:not(.darkMode) .serverSubtitle,
+body:not(.darkMode) .serverTitle {
+    color: #6b58b8;
+}
+
+body:not(.darkMode) .channelButton {
+    background: #fffdf6;
+    color: #6b58b8;
+}
+
+body:not(.darkMode) .channelButton:hover {
+    background: #efe8ff;
+}
+
+body:not(.darkMode) .channelButton.active {
+    background: #6b58b8;
+    color: white;
+}
+
+body:not(.darkMode) #chatHeader {
+    color: #6b58b8;
+}
+
+body:not(.darkMode) #currentChannelIcon {
+    color: #6b58b8;
+}
+
+body:not(.darkMode) .username {
+    color: #6b58b8;
+}
+
+body:not(.darkMode) .text {
+    color: #30254f;
+}
+
+body:not(.darkMode) #bottom {
+    background: #fff8df;
+    border-top-color: #6b58b8;
+}
+
+body:not(.darkMode) #messageInput {
+    background: white;
+    color: #30254f;
+    border: 2px solid #6b58b8;
+}
+
+body:not(.darkMode) #messageInput::placeholder {
+    color: #817a91;
+}
+
+body:not(.darkMode) #memberHeader {
+    background: #fff8df;
+    color: #6b58b8;
+}
+
+body:not(.darkMode) .memberItem:hover {
+    background: #efe8ff;
+}
+
+body:not(.darkMode) .memberName {
+    color: #6b58b8;
+}
+
+body:not(.darkMode) .memberStatus {
+    color: #817a91;
+}
+
+body:not(.darkMode) .memberStatus.online {
+    color: #3da95f;
+}
+
+body:not(.darkMode) .memberOnlineDot {
+    border-color: #fffdf6;
+}
+
 body.darkMode #serverSidebar,
 body.darkMode #memberSidebar,
 body.darkMode #chat,
-body.darkMode #chatHeader {
+body.darkMode #chatHeader,
+body.darkMode #messages {
     background: #302b48;
+    color: #f5f0ff;
+}
+
+body.darkMode #serverBanner {
+    background: #242038;
+}
+
+body.darkMode #serverName {
+    background: #302b48;
+}
+
+body.darkMode .channelButton {
+    background: transparent;
+    color: #b79cff;
+}
+
+body.darkMode .channelButton:hover {
+    background: #3d365d;
+}
+
+body.darkMode .channelButton.active {
+    background: #403863;
+    color: white;
+}
+
+body.darkMode .memberItem:hover {
+    background: #3d365d;
+}
+
+body.darkMode #memberHeader,
+body.darkMode .memberName {
+    color: #b79cff;
 }
     
 @media (max-width: 768px) {
