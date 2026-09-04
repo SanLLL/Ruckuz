@@ -100,62 +100,114 @@ export async function openProfile(userId){
         )
         .textContent =
             "RuckuZ Member";
-    const button1=document.getElementById("popupButton1");
-    const button2=document.getElementById("popupButton2");
-    if(userId===currentUserId){
-        button1.textContent = "Change PFP";
-        button1.onclick = () => {
-            document.getElementById("avatarUpload").click();
-        };
-        button2.textContent = "Change Username";
-        button2.onclick = null;
-}else{
-    button1.textContent = "Message";
-    button2.textContent = "Add Friend";
+    
+    const button1 =
+        document.getElementById("popupButton1");
+    const button2 =
+        document.getElementById("popupButton2");
+    const buttonRow =
+        document.querySelector(
+            "#profileCard .profileButtons"
+        );
+    
+    button1.onclick = null;
+    button2.onclick = null;
+    button1.disabled = false;
     button2.disabled = false;
-    const { data: existingRequest, error: requestError } =
-        await supabase
-            .from("friend_requests")
-            .select("id, sender_id, receiver_id, status")
+    
+    if (userId === currentUserId) {
+        buttonRow.style.display = "none";
+    
+    } else {
+    
+        buttonRow.style.display = "flex";
+        button1.textContent = "Message";
+        button2.textContent = "Add Friend";
+        
+        const {
+            data: existingFriend,
+            error: friendError
+        } = await supabase
+            .from("friends")
+            .select("id")
             .or(
-                `and(sender_id.eq.${currentUserId},receiver_id.eq.${userId}),and(sender_id.eq.${userId},receiver_id.eq.${currentUserId})`
+                `and(user_id.eq.${currentUserId},friend_id.eq.${userId}),and(user_id.eq.${userId},friend_id.eq.${currentUserId})`
             )
-            .eq("status", "pending")
             .maybeSingle();
-    if (requestError) {
-        console.error(requestError);
-    }
-    if (existingRequest) {
-        if (existingRequest.sender_id === currentUserId) {
-            button2.textContent = "Request Sent";
+        if (friendError) {
+            console.error(
+                "Friend check error:",
+                friendError
+            );
+        }
+        
+        if (existingFriend) {
+            button2.textContent = "Friends";
             button2.disabled = true;
+            button2.onclick = null;
         } else {
-            button2.textContent = "Wants to be Friends!";
-            button2.disabled = true;
+            const {
+                data: existingRequest,
+                error: requestError
+            } = await supabase
+                .from("friend_requests")
+                .select(
+                    "id, sender_id, receiver_id, status"
+                )
+                .or(
+                    `and(sender_id.eq.${currentUserId},receiver_id.eq.${userId}),and(sender_id.eq.${userId},receiver_id.eq.${currentUserId})`
+                )
+                .eq("status", "pending")
+                .maybeSingle();
+            if (requestError) {
+                console.error(
+                    "Friend request check error:",
+                    requestError
+                );
+            }
+            if (existingRequest) {
+                if (
+                    existingRequest.sender_id ===
+                    currentUserId
+                ) {
+                    button2.textContent =
+                        "Request Sent";
+                    button2.disabled = true;
+                } else {
+                    button2.textContent =
+                        "Request Received";
+                    button2.disabled = true;
+                }
+            } else {
+    
+                button2.onclick = async () => {
+                    button2.disabled = true;
+                    button2.textContent =
+                        "Sending...";
+                    const { error } =
+                        await supabase
+                            .from("friend_requests")
+                            .insert({
+                                sender_id:
+                                    currentUserId,
+                                receiver_id:
+                                    userId
+                            });
+    
+                    if (error) {
+                        console.error(error);
+                        button2.disabled = false;
+                        button2.textContent =
+                            "Couldn't Send";
+                        return;
+                    }
+    
+                    button2.textContent =
+                        "Request Sent";
+                };
+            }
         }
     }
-    button2.onclick = async () => {
-        button2.disabled = true;
-        button2.textContent = "Sending...";
-        const { error } = await supabase
-            .from("friend_requests")
-            .insert({
-                sender_id: currentUserId,
-                receiver_id: userId
-            });
-        if (error) {
-            console.error(error);
-            button2.disabled = false;
-            if (error.code === "23505") {
-                button2.textContent = "Request Sent";
-            } else {
-                button2.textContent = "Couldn't Send";
-            }
-            return;
-        }
-        button2.textContent = "Request Sent";
-    };
-}
     updateCurrentProfileStatus();
     overlay.style.display="flex";
 }
