@@ -1728,17 +1728,155 @@ function openMobileMessageMenu(message, messageElement) {
 }
 
 document.addEventListener("click", closeAllMenus);
-async function deleteMessage(messageId){
-    const confirmed = confirm(
-        "Delete this message?"
+const confirmOverlay =
+    document.getElementById(
+        "confirmOverlay"
     );
-    if(!confirmed) return;
-    const { error } = await supabase
-        .from("messages")
-        .delete()
-        .eq("id", messageId);
-    if(error){
-        console.error(error);
+const confirmTitle =
+    document.getElementById(
+        "confirmTitle"
+    );
+const confirmMessage =
+    document.getElementById(
+        "confirmMessage"
+    );
+const confirmCancelButton =
+    document.getElementById(
+        "confirmCancelButton"
+    );
+const confirmConfirmButton =
+    document.getElementById(
+        "confirmConfirmButton"
+    );
+let confirmResolver = null;
+function openConfirmDialog({
+    title,
+    message,
+    confirmText = "Confirm",
+    danger = false
+}) {
+    confirmTitle.textContent =
+        title;
+    confirmMessage.textContent =
+        message;
+    confirmConfirmButton.textContent =
+        confirmText;
+    confirmConfirmButton.classList.toggle(
+        "danger",
+        danger
+    );
+
+    confirmOverlay.classList.add(
+        "open"
+    );
+    confirmOverlay.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+    return new Promise(
+        resolve => {
+            confirmResolver =
+                resolve;
+        }
+    );
+}
+function closeConfirmDialog(
+    result
+) {
+    confirmOverlay.classList.remove(
+        "open"
+    );
+    confirmOverlay.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+    const resolver =
+        confirmResolver;
+    confirmResolver =
+        null;
+    if (resolver) {
+        resolver(
+            result
+        );
+    }
+}
+
+confirmCancelButton.onclick =
+    () => {
+        closeConfirmDialog(
+            false
+        );
+    };
+
+confirmConfirmButton.onclick =
+    () => {
+        closeConfirmDialog(
+            true
+        );
+    };
+
+confirmOverlay.onclick =
+    event => {
+        if (
+            event.target ===
+            confirmOverlay
+        ) {
+            closeConfirmDialog(
+                false
+            );
+        }
+    };
+
+document.addEventListener(
+    "keydown",
+    event => {
+        if (
+            event.key === "Escape" &&
+            confirmOverlay.classList.contains(
+                "open"
+            )
+        ) {
+            closeConfirmDialog(
+                false
+            );
+        }
+    }
+);
+
+async function deleteMessage(
+    messageId
+) {
+    const confirmed =
+        await openConfirmDialog({
+            title:
+                "Delete message?",
+            message:
+                "This message will be removed for everyone.",
+            confirmText:
+                "Delete",
+            danger:
+                true
+        });
+
+    if (!confirmed) {
+        return;
+    }
+
+    const { error } =
+        await supabase
+            .from("messages")
+            .delete()
+            .eq(
+                "id",
+                messageId
+            );
+
+    if (error) {
+        console.error(
+            "Message deletion error:",
+            error
+        );
     }
 }
 
@@ -1896,22 +2034,40 @@ themeToggle.onclick = () => {
 
 const logoutButton =
     document.getElementById("logoutButton");
-logoutButton.onclick = async () => {
-    logoutButton.disabled = true;
-    logoutButton.textContent = "Logging out...";
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-
-        console.error(error);
-        logoutButton.disabled = false;
-        logoutButton.textContent = "Logout";
-        alert("Couldn't log out. Please try again.");
-        return;
-    }
-
-    clearPersistentLogin();
-    location.href = "../";
-};
+        logoutButton.onclick =
+            async () => {
+                const confirmed =
+                    await openConfirmDialog({
+                        title:
+                            "Log out?",
+                        message:
+                            "You will need to sign in again to return to your account.",
+                        confirmText:
+                            "Log Out",
+                        danger:
+                            true
+                    });
+                if (!confirmed) {
+                    return;
+                }
+                logoutButton.disabled =
+                    true;
+                logoutButton.textContent =
+                    "Logging out...";
+                const { error } =
+                    await supabase.auth.signOut();
+                if (error) {
+                    console.error(error);
+                    logoutButton.disabled =
+                        false;
+                    logoutButton.textContent =
+                        "Logout";
+                    return;
+                }
+                clearPersistentLogin();
+                location.href =
+                    "../";
+            };
 
 const friendRequestsButton =
     document.getElementById("friendRequestsButton");
