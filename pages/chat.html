@@ -2302,13 +2302,125 @@ body:not(.darkMode) #settingsButton:hover {
         width: auto;
         box-sizing: border-box;
     }
-
+    
     #fileButton,
     #send {
         flex-shrink: 0;
     }
 }
 
+.settingsAvatarBlock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+#settingsChangeAvatar,
+#saveUsername {
+    padding: 8px 12px;
+    border: 3px solid #6b58b8;
+    border-radius: 5px;
+    background: #ffd36b;
+    color: #30254f;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow:
+        3px 3px 0 #6b58b8;
+}
+
+#settingsChangeAvatar:active,
+#saveUsername:active {
+    transform: translate(2px, 2px);
+    box-shadow:
+        1px 1px 0 #6b58b8;
+}
+
+.usernameEditor {
+    position: relative;
+    width: 100%;
+}
+
+#usernameInput {
+    width: 100%;
+    box-sizing: border-box;
+    padding:
+        12px
+        70px
+        12px
+        12px;
+    border: 3px solid #6b58b8;
+    border-radius: 5px;
+    background: white;
+    color: #30254f;
+    font-size: 15px;
+    outline: none;
+}
+
+#usernameInput:focus {
+    box-shadow:
+        3px 3px 0 #c7b8ed;
+}
+
+#usernameCharacterCount {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform:
+        translateY(-50%);
+    color: #817a91;
+    font-size: 11px;
+}
+
+#saveUsername {
+    margin-top: 10px;
+}
+
+#usernameSaveMessage {
+    min-height: 18px;
+    margin-top: 7px;
+    color: #4e9c65;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.memberCustomStatus {
+    max-width: 150px;
+    margin-top: 2px;
+    color: #aaa2bd;
+    font-size: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+body:not(.darkMode)
+.memberCustomStatus {
+    color: #817a91;
+}
+
+body.darkMode
+#usernameInput {
+    background: #1f1c30;
+
+    color: white;
+
+    border-color: #8b6cff;
+}
+
+
+body.darkMode
+#settingsChangeAvatar,
+body.darkMode
+#saveUsername {
+    background: #403863;
+    color: #f5f0ff;
+    border-color: #8b6cff;
+    box-shadow:
+        3px 3px 0 #8b6cff;
+}
+    
 </style>
 </head>
 <body>
