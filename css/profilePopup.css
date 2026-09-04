@@ -149,3 +149,38 @@ body.darkMode .profileStatus.online {
 body.darkMode .profileStatus.offline {
     color: #aaa2bd;
 }
+
+body.darkMode #profileCard {
+    background: #302b48;
+    color: #f5f0ff;
+    border-color: #8b6cff;
+    box-shadow:
+        10px 10px 0 #8b6cff;
+}
+
+body.darkMode #profileCard h2 {
+    color: #f5f0ff;
+}
+
+body.darkMode #profileCard p {
+    color: #aaa2bd;
+}
+
+body.darkMode .profileButtons button {
+    background: #242038;
+    color: #f5f0ff;
+    border: 2px solid #8b6cff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+body.darkMode .profileButtons button:hover {
+    background: #403863;
+}
+
+body.darkMode .profileButtons button:disabled {
+    color: #817a91;
+    border-color: #514875;
+    background: #29253d;
+    cursor: default;
+}
