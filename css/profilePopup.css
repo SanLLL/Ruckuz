@@ -97,3 +97,55 @@ body.darkMode .profileStatusDot.online {
 body.darkMode .profileStatusDot.offline {
     background: #756f88;
 }
+
+#popupUserId {
+    margin-top: 3px;
+    text-align: center;
+    color: #817a91;
+    font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Consolas,
+        monospace;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+#popupCustomStatus {
+    margin: 12px auto 0;
+    max-width: 280px;
+    padding: 8px 10px;
+    border: 2px dashed #c7b8ed;
+    border-radius: 10px;
+    background: #fff8df;
+    color: #30254f;
+    text-align: center;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+body.darkMode #popupUserId {
+    color: #aaa2bd;
+}
+
+body.darkMode #popupCustomStatus {
+    background: #242038;
+    color: #f5f0ff;
+    border-color: #7563a8;
+}
+
+.profileStatus.online {
+    color: #3da95f;
+}
+
+.profileStatus.offline {
+    color: #817a91;
+}
+
+body.darkMode .profileStatus.online {
+    color: #73e696;
+}
+
+body.darkMode .profileStatus.offline {
+    color: #aaa2bd;
+}
