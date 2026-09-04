@@ -1846,6 +1846,409 @@ body.darkMode
         display: none !important;
     }
 }
+
+#serverSidebar {
+    display: flex;
+    flex-direction: column;
+}
+
+#channelList {
+    flex-shrink: 0;
+}
+ 
+#selfUserPanel {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px;
+    border-top: 3px solid #8b6cff;
+    background: #26223a;
+    min-height: 70px;
+    box-sizing: border-box;
+}
+
+#selfAvatarWrapper {
+    position: relative;
+    flex-shrink: 0;
+}
+
+#selfUserAvatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #8b6cff;
+}
+
+#selfOnlineDot {
+    position: absolute;
+    right: 0;
+    bottom: 1px;
+    width: 11px;
+    height: 11px;
+    border: 2px solid #26223a;
+    border-radius: 50%;
+    background: #777;
+}
+
+#selfOnlineDot.online {
+    background: #55d66f;
+}
+
+#selfUserInfo {
+    min-width: 0;
+    flex: 1;
+}
+
+#selfUsername {
+    color: #b79cff;
+    font-size: 16px;
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#selfPresence {
+    color: #55d66f;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+#selfCustomStatus {
+    margin-top: 2px;
+    color: #aaa2bd;
+    font-size: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+#settingsButton {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    background: transparent;
+    color: #b79cff;
+    font-size: 19px;
+    cursor: pointer;
+    transition:
+        transform .15s ease,
+        background .15s ease,
+        border-color .15s ease;
+}
+
+#settingsButton:hover {
+    background: #403863;
+    border-color: #8b6cff;
+    transform: rotate(15deg);
+}
+
+#settingsOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 30000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+    background: rgba(0, 0, 0, .55);
+}
+
+#settingsOverlay.open {
+    display: flex;
+}
+
+#settingsCard {
+    width: min(460px, 100%);
+    max-height: 88dvh;
+    overflow-y: auto;
+    padding: 22px;
+    box-sizing: border-box;
+    border: 4px solid #6b58b8;
+    border-radius: 20px;
+    background: #fffdf6;
+    color: #30254f;
+    box-shadow:
+        10px 10px 0 #6b58b8;
+    transform: rotate(-0.25deg);
+}
+
+#settingsHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.settingsSticker {
+    display: inline-block;
+    padding: 7px 12px;
+    border: 3px solid #6b58b8;
+    background: #ffd36b;
+    color: #30254f;
+    font-size: 22px;
+    font-weight: bold;
+    transform: rotate(-1.5deg);
+}
+
+.settingsSubtitle {
+    margin-top: 9px;
+    color: #817a91;
+    font-size: 13px;
+}
+
+#closeSettings {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 3px solid #6b58b8;
+    border-radius: 10px;
+    background: white;
+    color: #6b58b8;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.settingsProfile {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 22px;
+}
+
+#settingsAvatar {
+    width: 76px;
+    height: 76px;
+    flex-shrink: 0;
+    border: 4px solid #6b58b8;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.settingsIdentity {
+    min-width: 0;
+    flex: 1;
+}
+
+#settingsUsername {
+    font-size: 21px;
+    font-weight: bold;
+    color: #6b58b8;
+}
+
+.settingsIdLabel {
+    margin-top: 7px;
+    font-size: 11px;
+    font-weight: bold;
+    color: #817a91;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+.settingsIdRow {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+    margin-top: 3px;
+}
+
+#settingsRuckuzId {
+    padding: 6px 8px;
+    border: 2px dashed #6b58b8;
+    background: #efe8ff;
+    color: #30254f;
+    font-size: 13px;
+    user-select: all;
+}
+
+#copyRuckuzId {
+    padding: 7px 10px;
+    border: 2px solid #6b58b8;
+    border-radius: 8px;
+    background: white;
+    color: #6b58b8;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.settingsDivider {
+    margin: 20px 0;
+    border-top: 3px dashed #c7b8ed;
+}
+
+.settingsSection h3 {
+    margin: 0 0 5px;
+    color: #6b58b8;
+}
+
+.settingsSection p {
+    margin: 0 0 10px;
+    color: #817a91;
+    font-size: 13px;
+}
+
+.statusEditor {
+    position: relative;
+}
+
+#customStatusInput {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 70px 12px 12px;
+    border: 3px solid #6b58b8;
+    border-radius: 12px;
+    background: white;
+    color: #30254f;
+    font-size: 15px;
+    outline: none;
+}
+
+#customStatusInput:focus {
+    box-shadow:
+        4px 4px 0 #c7b8ed;
+}
+
+#statusCharacterCount {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #817a91;
+    font-size: 11px;
+}
+
+#saveCustomStatus {
+    margin-top: 10px;
+    padding: 10px 15px;
+    border: 3px solid #6b58b8;
+    border-radius: 10px;
+    background: #ffd36b;
+    color: #30254f;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#statusSaveMessage {
+    min-height: 18px;
+    margin-top: 7px;
+    color: #4e9c65;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.settingsActionButton {
+    width: 100%;
+    box-sizing: border-box;
+    position: static !important;
+}
+
+.dangerSettings h3 {
+    color: #b84f4f;
+}
+
+body.darkMode #settingsCard {
+    background: #302b48;
+    color: #f5f0ff;
+    border-color: #8b6cff;
+    box-shadow:
+        10px 10px 0 #8b6cff;
+}
+
+body.darkMode .settingsSticker {
+    background: #8b6cff;
+    border-color: #b79cff;
+    color: white;
+}
+
+body.darkMode #settingsUsername,
+body.darkMode .settingsSection h3 {
+    color: #b79cff;
+}
+
+body.darkMode #settingsRuckuzId {
+    background: #242038;
+    color: #f5f0ff;
+    border-color: #8b6cff;
+}
+
+body.darkMode #copyRuckuzId,
+body.darkMode #closeSettings {
+    background: #242038;
+    color: #b79cff;
+    border-color: #8b6cff;
+}
+
+body.darkMode #customStatusInput {
+    background: #1f1c30;
+    color: white;
+    border-color: #8b6cff;
+}
+
+body.darkMode .settingsDivider {
+    border-color: #514875;
+}
+
+body:not(.darkMode) #selfUserPanel {
+    background: #fff8df;
+    border-top-color: #6b58b8;
+}
+
+body:not(.darkMode) #selfOnlineDot {
+    border-color: #fff8df;
+}
+
+body:not(.darkMode) #selfUsername {
+    color: #6b58b8;
+}
+
+body:not(.darkMode) #selfCustomStatus {
+    color: #817a91;
+}
+
+body:not(.darkMode) #settingsButton {
+    color: #6b58b8;
+}
+    
+body:not(.darkMode) #settingsButton:hover {
+    background: #efe8ff;
+}
+
+@media (max-width: 768px) {
+
+    #settingsCard {
+        width: 100%;
+        max-height: 92dvh;
+        padding: 17px;
+        transform: none;
+    }
+
+    .settingsProfile {
+        align-items: flex-start;
+    }
+
+    #settingsAvatar {
+        width: 64px;
+        height: 64px;
+    }
+
+    .settingsSticker {
+        font-size: 19px;
+    }
+
+    .settingsIdRow {
+        flex-wrap: wrap;
+    }
+}
     
 </style>
 </head>
@@ -1855,19 +2258,18 @@ body.darkMode
         ☰
     </button>
     <div id="desktopTopButtons">
-        <button id="friendRequestsButton" class="friendRequestsButton">
+        <button
+            id="friendRequestsButton" class="friendRequestsButton">
             Requests
-            <span id="friendRequestCount">0</span>
+            <span id="friendRequestCount">
+                0
+            </span>
         </button>
         <button id="friendsButton">
             Friends
-            <span id="friendsCount">0</span>
-        </button>
-        <button id="logoutButton" class="logoutButton">
-            Logout
-        </button>
-        <button id="themeToggle" class="themeToggle">
-            Dark Mode
+            <span id="friendsCount">
+                0
+            </span>
         </button>
     </div>
     
@@ -1887,11 +2289,8 @@ body.darkMode
         Friends
         <span id="mobileFriendsCount">0</span>
     </button>
-    <button id="mobileLogoutButton">
-        Logout
-    </button>
-    <button id="mobileThemeButton">
-        Dark Mode
+    <button id="mobileSettingsButton">
+        Settings
     </button>
     </div>
     
@@ -1901,46 +2300,41 @@ body.darkMode
             Channels
         </span>
         <button
-            id="closeMobileChannels"
-        >
+            id="closeMobileChannels">
             ✕
         </button>
     </div>
     <div id="mobileChannelList">
         <button
             class="mobileChannelButton active"
-            data-channel="general"
-        >
+            data-channel="general">
             general-chat
         </button>
         <button
             class="mobileChannelButton"
-            data-channel="meme"
-        >
+            data-channel="meme">
             meme-chat
         </button>
         <button
             class="mobileChannelButton"
-            data-channel="media"
-        >
+            data-channel="media">
             media-chat
         </button>
         <button
             class="mobileChannelButton"
-            data-channel="gaming"
-        >
+            data-channel="gaming">
             gaming-chat
         </button>
     </div>
 </div>
+    
 <div id="mobileMembersPanel">
     <div class="mobilePanelHeader">
         <span>
             Members
         </span>
         <button
-            id="closeMobileMembers"
-        >
+            id="closeMobileMembers">
             ✕
         </button>
     </div>
@@ -1961,6 +2355,7 @@ body.darkMode
         </p>
     </div>
 </div>
+    
 <div id="friendsPanel">
     <div id="friendsHeader">
         <h2>Friends</h2>
@@ -1974,6 +2369,7 @@ body.darkMode
         </p>
     </div>
 </div>
+    
 <div id="serverLayout">
     <aside id="serverSidebar">
         <div id="serverBanner">
@@ -1992,30 +2388,58 @@ body.darkMode
         <div id="channelList">
             <button
                 class="channelButton active"
-                data-channel="general"
-            >
+                data-channel="general">
                 # general-chat
             </button>
             <button
                 class="channelButton"
-                data-channel="meme"
-            >
+                data-channel="meme">
                 # meme-chat
             </button>
             <button
                 class="channelButton"
-                data-channel="media"
-            >
+                data-channel="media">
                 # media-chat
             </button>
             <button
                 class="channelButton"
-                data-channel="gaming"
-            >
+                data-channel="gaming">
                 # gaming-chat
             </button>
         </div>
+        
+        <div id="selfUserPanel">
+            <div id="selfAvatarWrapper">
+                <img
+                    id="selfUserAvatar"
+                    src="/Ruckuz/assets/avatars/ruckuz.png"
+                    alt="Your avatar">
+                <span
+                    id="selfOnlineDot"
+                    class="online"
+                ></span>
+            </div>
+            <div id="selfUserInfo">
+                <div id="selfUsername">
+                    Loading...
+                </div>
+                <div id="selfPresence">
+                    Connecting...
+                </div>
+                <div id="selfCustomStatus">
+                    Set status
+                </div>
+            </div>
+            <button
+                id="settingsButton"
+                title="Settings"
+                aria-label="Open settings">
+                ⚙
+            </button>
+        
+        </div>
     </aside>
+    
     <main id="chat">
         <div id="chatHeader">
             <span id="currentChannelIcon">#</span>
@@ -2028,30 +2452,27 @@ body.darkMode
         <div id="bottom">
             <button
                 id="fileButton"
-                type="button"
-            >
+                type="button">
                 +
             </button>
             <input
                 id="messageInput"
-                placeholder="Say something..."
-            >
+                placeholder="Say something...">
             <button id="send">
                 Send
             </button>
             <input
                 type="file"
                 id="fileUpload"
-                style="display:none;"
-            >
+                style="display:none;">
             <input
                 type="file"
                 id="avatarUpload"
                 accept="image/png,image/jpeg,image/webp"
-                style="display:none;"
-            >
+                style="display:none;">
         </div>
     </main>
+    
     <aside id="memberSidebar">
         <div id="memberHeader">
             Member List
@@ -2059,6 +2480,96 @@ body.darkMode
         <div id="memberList">
         </div>
     </aside>
+</div>
+    
+<div id="settingsOverlay">
+    <div id="settingsCard">
+        <div id="settingsHeader">
+            <div>
+                <div class="settingsSticker">
+                    RuckuZ Settings
+                </div>
+                <div class="settingsSubtitle">
+                    Your little corner of the chaos.
+                </div>
+            </div>
+            <button
+                id="closeSettings"
+                aria-label="Close settings">
+                ✕
+            </button>
+        </div>
+
+        <div class="settingsProfile">
+            <img
+                id="settingsAvatar"
+                src="/Ruckuz/assets/avatars/ruckuz.png"
+                alt="Your avatar">
+            <div class="settingsIdentity">
+                <div id="settingsUsername">
+                    Loading...
+                </div>
+                <div class="settingsIdLabel">
+                    RuckuZ ID
+                </div>
+                <div class="settingsIdRow">
+                    <code id="settingsRuckuzId">
+                        ...
+                    </code>
+                    <button id="copyRuckuzId">
+                        Copy
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="settingsDivider"></div>
+        <div class="settingsSection">
+            <h3>
+                Custom Status
+            </h3>
+            <p>
+                This appears on your profile and user panel.
+            </p>
+            <div class="statusEditor">
+                <input
+                    id="customStatusInput"
+                    maxlength="80"
+                    placeholder="What are you up to?"
+                >
+                <span id="statusCharacterCount">
+                    0 / 80
+                </span>
+            </div>
+            <button id="saveCustomStatus">
+                Save Status
+            </button>
+            <div id="statusSaveMessage">
+            </div>
+        </div>
+        <div class="settingsDivider"></div>
+        <div class="settingsSection">
+            <h3>
+                Appearance
+            </h3>
+            <button
+                id="themeToggle"
+                class="themeToggle settingsActionButton">
+                Dark Mode
+            </button>
+        </div>
+        <div class="settingsDivider"></div>
+        <div class="settingsSection dangerSettings">
+            <h3>
+                Account
+            </h3>
+            <button
+                id="logoutButton"
+                class="logoutButton settingsActionButton">
+                Logout
+            </button>
+        </div>
+    </div>
 </div>
 <script type="module" src="../js/chat.js"></script>
 </body>
