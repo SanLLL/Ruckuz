@@ -43,7 +43,9 @@ export function createProfilePopup(){
         <div id="profileCard">
             <img id="popupAvatar">
             <h2 id="popupName"></h2>
+            <div id="popupUserId"></div>
             <div id="profileStatus"></div>
+            <div id="popupCustomStatus"></div>
             <p id="popupJoined"></p>
             <div class="profileButtons">
                 <button id="popupButton1"></button>
@@ -69,9 +71,35 @@ export async function openProfile(userId){
     .eq("id",userId)
     .single();
     document.getElementById("popupAvatar").src=profile.avatar_url;
-    document.getElementById("popupName").textContent=profile.username;
-    document.getElementById("popupJoined").textContent=
-        "RuckuZ Member";
+    document
+        .getElementById(
+            "popupName"
+        )
+        .textContent =
+            profile.username;
+    document
+        .getElementById(
+            "popupUserId"
+        )
+        .textContent =
+            profile.ruckuz_id ||
+            "RuckuZ ID unavailable";
+    const customStatus =
+        (profile.status_text || "")
+            .trim();
+    document
+        .getElementById(
+            "popupCustomStatus"
+        )
+        .textContent =
+            customStatus ||
+            "No custom status";
+    document
+        .getElementById(
+            "popupJoined"
+        )
+        .textContent =
+            "RuckuZ Member";
     const button1=document.getElementById("popupButton1");
     const button2=document.getElementById("popupButton2");
     if(userId===currentUserId){
