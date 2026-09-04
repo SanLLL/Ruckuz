@@ -1,4 +1,14 @@
-import { supabase } from "./supabase.js";
+import {
+    supabase,
+    getPersistentSession,
+    clearPersistentLogin
+} from "./supabase.js";
+
+import {
+    getCookie,
+    setCookie
+} from "./cookies.js";
+
 import {
     createProfilePopup,
     openProfile,
@@ -6,17 +16,13 @@ import {
     setOnlineUsers
 } from "./profilePopup.js";
 
-const {
-    data: { session }
-} = await supabase.auth.getSession();
-
+const session = await getPersistentSession();
 if (!session) {
     location.href = "../";
 }
 
 setCurrentUser(session.user.id);
 createProfilePopup();
-
 const presenceChannel = supabase.channel("ruckuz-presence", {
     config: {
         presence: {
@@ -1198,11 +1204,10 @@ async function uploadAvatar() {
         .getPublicUrl(fileName);
     
     const avatarUrl = publicUrlData.publicUrl;
-    
     console.log("Avatar file:", fileName);
     console.log("Avatar URL:", avatarUrl);
-    
     const { error: profileError } = await supabase
+        
         .from("profiles")
         .update({
             avatar_url: avatarUrl
@@ -1406,40 +1411,103 @@ supabase
 )
 .subscribe();
 
-const themeToggle = document.getElementById("themeToggle");
+const themeToggle =
+    document.getElementById(
+        "themeToggle"
+    );
 
-if (localStorage.getItem("ruckuz-theme") === "dark") {
-    document.body.classList.add("darkMode");
-    themeToggle.textContent = "Light Mode";
-}
+const cookieTheme =
+    getCookie(
+        "ruckuz-theme"
+    );
 
-themeToggle.onclick = () => {
+const oldLocalTheme =
+    localStorage.getItem(
+        "ruckuz-theme"
+    );
 
-    document.body.classList.toggle("darkMode");
+const savedTheme =
+    cookieTheme ||
+    oldLocalTheme ||
+    "light";
 
-    const darkMode =
-        document.body.classList.contains("darkMode");
+function applyTheme(
+    theme,
+    save = true
+) {
 
-    if (darkMode) {
+    const dark =
+        theme === "dark";
+    
+    document.body.classList.toggle(
+        "darkMode",
+        dark
+    );
 
-        themeToggle.textContent = "Light Mode";
-
-        localStorage.setItem(
-            "ruckuz-theme",
-            "dark"
-        );
-
-    } else {
-
-        themeToggle.textContent = "Dark Mode";
-
-        localStorage.setItem(
-            "ruckuz-theme",
-            "light"
-        );
+    if (themeToggle) {
+        themeToggle.textContent =
+            dark
+                ? "Light Mode"
+                : "Dark Mode";
 
     }
 
+    const mobileButton =
+        document.getElementById(
+            "mobileThemeButton"
+        );
+
+    if (mobileButton) {
+        mobileButton.textContent =
+            dark
+                ? "Light Mode"
+                : "Dark Mode";
+        
+    }
+
+    if (save) {
+
+        setCookie(
+            "ruckuz-theme",
+            theme,
+            365
+        );
+
+        localStorage.setItem(
+            "ruckuz-theme",
+            theme
+        );
+    }
+}
+
+applyTheme(
+    savedTheme,
+    false
+);
+
+if (
+    !cookieTheme &&
+    oldLocalTheme
+) {
+
+    setCookie(
+        "ruckuz-theme",
+        oldLocalTheme,
+        365
+    );
+}
+
+themeToggle.onclick = () => {
+    const nextTheme =
+        document.body.classList.contains(
+            "darkMode"
+        )
+            ? "light"
+            : "dark";
+
+    applyTheme(
+        nextTheme
+    );
 };
 
 const logoutButton =
@@ -1464,6 +1532,7 @@ logoutButton.onclick = async () => {
         return;
     }
 
+    clearPersistentLogin();
     location.href = "../";
 };
 
@@ -2037,6 +2106,7 @@ mobileRequestsButton.onclick = async () => {
     }
 
 };
+
 mobileFriendsButton.onclick = async () => {
     mobileMenu.classList.remove("open");
     const isOpen =
@@ -2048,6 +2118,7 @@ mobileFriendsButton.onclick = async () => {
         await loadFriends();
     }
 };
+
 mobileLogoutButton.onclick = async () => {
     mobileLogoutButton.disabled = true;
     mobileLogoutButton.textContent =
@@ -2064,29 +2135,23 @@ mobileLogoutButton.onclick = async () => {
         );
         return;
     }
+    clearPersistentLogin();
     location.href = "../";
 };
+
 mobileThemeButton.onclick = () => {
-    document.body.classList.toggle("darkMode");
-    const darkMode =
-        document.body.classList.contains("darkMode");
-    if (darkMode) {
-        mobileThemeButton.textContent =
-            "Light Mode";
-        localStorage.setItem(
-            "ruckuz-theme",
-            "dark"
-        );
+    const nextTheme =
+        document.body.classList.contains(
+            "darkMode"
+        )
+            ? "light"
+            : "dark";
 
-    } else {
+    applyTheme(
+        nextTheme
+    );
 
-        mobileThemeButton.textContent =
-            "Dark Mode";
-        localStorage.setItem(
-            "ruckuz-theme",
-            "light"
-        );
-
-    }
-
+    mobileMenu.classList.remove(
+        "open"
+    );
 };
