@@ -92,40 +92,28 @@ fileButton.onclick = () => {
 
 fileUpload.onchange = uploadChatFile;
 let profiles = {};
-const settingsButton =
-    document.getElementById("settingsButton");
-const mobileSettingsButton =
-    document.getElementById("mobileSettingsButton");
-const settingsOverlay =
-    document.getElementById("settingsOverlay");
-const closeSettings =
-    document.getElementById("closeSettings");
-const selfUserAvatar =
-    document.getElementById("selfUserAvatar");
-const selfUsername =
-    document.getElementById("selfUsername");
-const selfPresence =
-    document.getElementById("selfPresence");
-const selfCustomStatus =
-    document.getElementById("selfCustomStatus");
-const selfOnlineDot =
-    document.getElementById("selfOnlineDot");
-const settingsAvatar =
-    document.getElementById("settingsAvatar");
-const settingsUsername =
-    document.getElementById("settingsUsername");
-const settingsRuckuzId =
-    document.getElementById("settingsRuckuzId");
-const copyRuckuzId =
-    document.getElementById("copyRuckuzId");
-const customStatusInput =
-    document.getElementById("customStatusInput");
-const statusCharacterCount =
-    document.getElementById("statusCharacterCount");
-const saveCustomStatus =
-    document.getElementById("saveCustomStatus");
-const statusSaveMessage =
-    document.getElementById("statusSaveMessage");
+const settingsButton = document.getElementById("settingsButton");
+const mobileSettingsButton = document.getElementById("mobileSettingsButton");
+const settingsOverlay = document.getElementById("settingsOverlay");
+const closeSettings = document.getElementById("closeSettings");
+const selfUserAvatar = document.getElementById("selfUserAvatar");
+const selfUsername = document.getElementById("selfUsername");
+const selfPresence = document.getElementById("selfPresence");
+const selfCustomStatus = document.getElementById("selfCustomStatus");
+const selfOnlineDot = document.getElementById("selfOnlineDot");
+const settingsAvatar = document.getElementById("settingsAvatar");
+const settingsUsername = document.getElementById("settingsUsername");
+const settingsChangeAvatar = document.getElementById("settingsChangeAvatar");
+const usernameInput = document.getElementById("usernameInput");
+const usernameCharacterCount = document.getElementById("usernameCharacterCount");
+const saveUsername = document.getElementById("saveUsername");
+const usernameSaveMessage = document.getElementById("usernameSaveMessage");
+const settingsRuckuzId = document.getElementById("settingsRuckuzId");
+const copyRuckuzId = document.getElementById("copyRuckuzId");
+const customStatusInput = document.getElementById("customStatusInput");
+const statusCharacterCount = document.getElementById("statusCharacterCount");
+const saveCustomStatus = document.getElementById("saveCustomStatus");
+const statusSaveMessage = document.getElementById("statusSaveMessage");
 function getMyProfile() {
     return (
         profiles[session.user.id] ||
@@ -179,6 +167,11 @@ function refreshSettingsProfile() {
     settingsRuckuzId.textContent =
         profile.ruckuz_id ||
         "ID unavailable";
+    usernameInput.value =
+        profile.username ||
+        "";
+    usernameCharacterCount.textContent =
+        `${usernameInput.value.length} / 32`;
     customStatusInput.value =
         profile.status_text ||
         "";
@@ -204,6 +197,9 @@ function closeSettingsPanel() {
 
 settingsButton.onclick =
     openSettings;
+settingsChangeAvatar.onclick = () => {
+    avatarUpload.click();
+};
 mobileSettingsButton.onclick = () => {
     mobileMenu.classList.remove(
         "open"
@@ -222,6 +218,146 @@ settingsOverlay.onclick =
 
             closeSettingsPanel();
         }
+    };
+
+usernameInput.addEventListener(
+    "input",
+    () => {
+        usernameCharacterCount.textContent =
+            `${usernameInput.value.length} / 32`;
+    }
+);
+saveUsername.onclick =
+    async () => {
+        const newUsername =
+            usernameInput
+                .value
+                .trim();
+        usernameSaveMessage.textContent =
+            "";
+        if (
+            newUsername.length < 2 ||
+            newUsername.length > 32
+        ) {
+
+            usernameSaveMessage.textContent =
+                "Username must be 2 to 32 characters.";
+            return;
+
+        }
+
+        if (
+            /[\r\n\t]/.test(
+                newUsername
+            )
+        ) {
+
+            usernameSaveMessage.textContent =
+                "That username contains invalid characters.";
+            return;
+        }
+        const profile =
+            getMyProfile();
+        if (
+            profile &&
+            profile.username === newUsername
+        ) {
+            usernameSaveMessage.textContent =
+                "That's already your username.";
+            return;
+        }
+
+        saveUsername.disabled = true;
+        saveUsername.textContent =
+            "Saving...";
+        const {
+            error: profileError
+        } = await supabase
+            .from("profiles")
+            .update({
+                username:
+                    newUsername
+            })
+            .eq(
+                "id",
+                session.user.id
+            );
+
+        if (profileError) {
+            console.error(
+                "Username update error:",
+                profileError
+            );
+            saveUsername.disabled = false;
+            saveUsername.textContent =
+                "Save Username";
+            usernameSaveMessage.textContent =
+                "Couldn't change username.";
+            return;
+        }
+
+        const {
+            error: authError
+        } = await supabase.auth.updateUser({
+            data: {
+                username:
+                    newUsername
+            }
+        });
+
+
+        if (authError) {
+
+            console.warn(
+                "Auth username metadata couldn't sync:",
+                authError
+            );
+
+        }
+
+        if (
+            profiles[
+                session.user.id
+            ]
+        ) {
+
+            profiles[
+                session.user.id
+            ].username =
+                newUsername;
+        }
+
+        if (
+            memberProfiles[
+                session.user.id
+            ]
+        ) {
+
+            memberProfiles[
+                session.user.id
+            ].username =
+                newUsername;
+        }
+
+        document
+            .querySelectorAll(
+                `.message[data-user="${session.user.id}"] .username`
+            )
+            .forEach(
+                element => {
+                    element.textContent =
+                        newUsername;
+                }
+            );
+
+        refreshSelfUserPanel();
+        refreshSettingsProfile();
+        renderMemberList();
+        saveUsername.disabled = false;
+        saveUsername.textContent =
+            "Save Username";
+        usernameSaveMessage.textContent =
+            "Username changed.";
     };
 
 customStatusInput.addEventListener(
@@ -280,6 +416,17 @@ saveCustomStatus.onclick =
             ].status_text =
                 newStatus;
         }
+        if (
+            memberProfiles[
+                session.user.id
+            ]
+        ) {
+            memberProfiles[
+                session.user.id
+            ].status_text =
+                newStatus;
+        }
+        renderMemberList();
         refreshSelfUserPanel();
         refreshSettingsProfile();
         statusSaveMessage.textContent =
@@ -376,7 +523,7 @@ async function loadMemberProfiles() {
     } = await supabase
         .from("profiles")
         .select(
-            "id, username, avatar_url"
+            "id, username, avatar_url, status_text"
         )
         .order(
             "username",
@@ -468,8 +615,7 @@ function createMemberElement(
             <img
                 class="memberAvatar"
                 src="${avatar}?v=${Date.now()}"
-                alt="${escapeHTML(profile.username)}"
-            >
+                alt="${escapeHTML(profile.username)}">
             <span
                 class="memberOnlineDot ${
                     isOnline
@@ -495,6 +641,17 @@ function createMemberElement(
                         : "offline"
                 }
             </div>
+                ${
+                    (profile.status_text || "").trim()
+                        ? `
+                            <div class="memberCustomStatus">
+                                ${escapeHTML(
+                                    profile.status_text.trim()
+                                )}
+                            </div>
+                        `
+                        : ""
+                }
         </div>
     `;
     div.onclick = () => {
@@ -1162,6 +1319,7 @@ async function sendMessage() {
                     user_id:
                         session.user.id,
                     username:
+                        profiles[session.user.id]?.username ??
                         session.user.user_metadata.username ??
                         session.user.email,
                     content:
@@ -1299,6 +1457,7 @@ async function uploadChatFile() {
                 user_id:
                     session.user.id,
                 username:
+                    profiles[session.user.id]?.username ??
                     session.user.user_metadata.username ??
                     session.user.email,
                 content: "",
@@ -1439,31 +1598,37 @@ async function uploadAvatar() {
     if (profileError) {
         console.error(profileError);
         return;
-
     }
 
-if (profiles[session.user.id]) {
-    profiles[session.user.id].avatar_url = avatarUrl;
+    if (profiles[session.user.id]) {
+        profiles[session.user.id].avatar_url = avatarUrl;
+    }
+    if (
+        memberProfiles[
+            session.user.id
+        ]
+    ) {
+        memberProfiles[
+            session.user.id
+        ].avatar_url =
+            avatarUrl;
+    }
+    renderMemberList();
+    document
+        .querySelectorAll(".avatar")
+        .forEach(avatar => {
+            const message = avatar.closest(".message");
+            if (!message) return;
+            if (
+                message.dataset.user === session.user.id
+            ) {
+                avatar.src = avatarUrl;
+            }
+        });
 
-}
-
-document
-    .querySelectorAll(".avatar")
-    .forEach(avatar => {
-        const message = avatar.closest(".message");
-        if (!message) return;
-        if (
-            
-            message.dataset.user === session.user.id
-        ) {
-            
-            avatar.src = avatarUrl;
-        }
-    });
-
-refreshSelfUserPanel();
-refreshSettingsProfile();
-alert("PFP changed!");
+    refreshSelfUserPanel();
+    refreshSettingsProfile();
+    alert("PFP changed!");
 
 }
 
@@ -1496,9 +1661,7 @@ function createDropdown(message){
 
         menu.querySelector(".deleteBtn").onclick = () => {
             deleteMessage(message.id);
-            
             menu.remove();
-
         };
 
     }else{
@@ -1507,13 +1670,9 @@ function createDropdown(message){
             <button disabled>
                 You can't edit this
             </button>
-
         `;
-
     }
-
     return menu;
-
 }
 
 function openMobileMessageMenu(message, messageElement) {
@@ -1737,23 +1896,16 @@ themeToggle.onclick = () => {
 
 const logoutButton =
     document.getElementById("logoutButton");
-
 logoutButton.onclick = async () => {
-
     logoutButton.disabled = true;
     logoutButton.textContent = "Logging out...";
-
     const { error } = await supabase.auth.signOut();
-
     if (error) {
 
         console.error(error);
-
         logoutButton.disabled = false;
         logoutButton.textContent = "Logout";
-
         alert("Couldn't log out. Please try again.");
-
         return;
     }
 
@@ -1778,25 +1930,18 @@ friendRequestsButton.onclick = async () => {
         friendRequestsPanel.style.display === "flex";
     if (isOpen) {
         friendRequestsPanel.style.display = "none";
-
     } else {
-
         friendRequestsPanel.style.display = "flex";
         await loadFriendRequests();
-
     }
-
 };
-
 
 closeFriendRequests.onclick = () => {
     friendRequestsPanel.style.display = "none";
 
 };
 
-
 async function loadFriendRequests() {
-
     const { data, error } = await supabase
         .from("friend_requests")
         .select("*")
@@ -1807,9 +1952,7 @@ async function loadFriendRequests() {
         });
 
     if (error) {
-
         console.error("Friend request loading error:", error);
-
         friendRequestsList.innerHTML = `
             <p class="noRequests">
                 Couldn't load requests. 
@@ -1833,7 +1976,6 @@ async function loadFriendRequests() {
     }
 
     for (const request of data) {
-
         const {
             data: profile,
             error: profileError
@@ -1842,17 +1984,13 @@ async function loadFriendRequests() {
             .select("id, username, avatar_url")
             .eq("id", request.sender_id)
             .single();
-
         if (profileError) {
-
             console.error(
                 "Profile loading error:",
                 profileError
             );
-
             continue;
         }
-
         createFriendRequestElement({
             ...request,
             profiles: profile
