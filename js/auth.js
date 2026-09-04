@@ -1,9 +1,7 @@
-import { supabase } from "./supabase.js";
-const {
-    data: { session }
-} = await supabase.auth.getSession();
+import { supabase, getPersistentSession, rememberSession } from "./supabase.js";
+const session = await getPersistentSession();
 if (session) {
-    location.href = "pages/chat.html";
+ location.href = "pages/chat.html";
 }
 
 let registerMode = false;
@@ -70,15 +68,10 @@ button.onclick = async () => {
             options: {
                 emailRedirectTo:
                     "https://sanlll.github.io/Ruckuz/",
-        
                 data: {
-        
                     username: username.value
-        
                 }
-        
             }
-        
         });
 
         if (error) {
@@ -92,7 +85,6 @@ button.onclick = async () => {
 
     }
 
-
     const { data, error } = await supabase.auth.signInWithPassword({
         email: email.value,
         password: password.value
@@ -102,7 +94,6 @@ button.onclick = async () => {
     if (error) {
         statusText.textContent = error.message;
         return;
-
     }
 
     const user = data.user;
@@ -113,7 +104,6 @@ button.onclick = async () => {
         .maybeSingle();
 
     if (!profile) {
-
         const { error: profileError } = await supabase
             .from("profiles")
             .insert({
@@ -122,16 +112,12 @@ button.onclick = async () => {
                     user.user_metadata.username ??
                     user.email.split("@")[0],
                 avatar_url: "/Ruckuz/assets/avatars/ruckuz.png"
-
             });
-
+        
         if (profileError) {
             console.error(profileError);
-
         }
-
     }
-
     location.href = "pages/chat.html";
 
 };
