@@ -126,8 +126,9 @@ body {
     flex-shrink:0;
 }
 
-.messageContent{
-    flex:1;
+.messageContent {
+    flex: 1;
+    min-width: 0;
 }
 
 .username{
@@ -2925,6 +2926,93 @@ body.darkMode .emojiChoice:hover {
     .message {
         padding-top: 9px;
         padding-bottom: 9px;
+    }
+}
+
+@media (max-width: 768px) {
+    .messageRow {
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+    .messageContent {
+        min-width: 0;
+        max-width: 100%;
+    }
+    .messageFile {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .customMediaPlayer {
+        width: calc(100% - 4px);
+        max-width: calc(100% - 4px);
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    .customVideoPlayer .mediaElement {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        box-sizing: border-box;
+        border: 0;
+        border-radius: 0;
+    }
+
+    .mediaControls,
+    .audioControls {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+        gap: 5px;
+    }
+
+    .customAudioPlayer {
+        width: calc(100% - 4px);
+        max-width: calc(100% - 4px);
+        min-width: 0;
+        box-sizing: border-box;
+        padding: 8px;
+    }
+
+    .audioPlayerMain {
+        flex: 1 1 auto;
+        min-width: 0;
+        max-width: 100%;
+        overflow: hidden;
+    }
+    .audioPlayerIcon {
+        width: 38px;
+        height: 38px;
+        flex: 0 0 38px;
+        margin-right: 7px;
+    }
+    
+    .mediaPlayButton,
+    .mediaMuteButton,
+    .mediaFullscreenButton {
+        width: 34px;
+        height: 34px;
+        flex: 0 0 34px;
+    }
+
+    .mediaProgress {
+        flex: 1 1 40px;
+        width: auto;
+        min-width: 30px;
+    }
+
+    .mediaVolume {
+        flex: 0 1 48px;
+        width: 48px;
+        min-width: 32px;
+    }
+    .mediaTime {
+        min-width: 52px;
+        font-size: 11px;
     }
 }
 
