@@ -17,22 +17,32 @@ body {
     min-height: 100vh;
 }
 
-#messages{
-    flex:1;
-    overflow-y:auto;
-    padding:20px;
+#messages {
+    --message-side-padding: 20px;
+    flex: 1;
+    overflow-y: auto;
+    padding:
+        12px
+        var(--message-side-padding);
 }
 
 .message {
-    margin-bottom: 18px;
+    margin:
+        0
+        calc(var(--message-side-padding) * -1)
+        2px;
+    padding:
+        9px
+        var(--message-side-padding);
+    box-sizing: border-box;
     background: transparent;
     transition:
         background-color 0.12s ease;
 }
 
 .messageMenu {
-    width: 24px;
-    height: 28px;
+    width: 26px;
+    height: 30px;
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -894,6 +904,7 @@ body.darkMode .messageGif img {
     .messageMenu {
         display: none;
     }
+
 }
 @media (max-width: 768px) {
     .mobileMessageDropdown {
@@ -2853,7 +2864,70 @@ body.darkMode .emojiChoice:hover {
             rgba(0, 0, 0, 0.24);
     }
 }
-    
+
+@media (hover: hover) and (pointer: fine) {
+    body:not(.darkMode) {
+        --ruckuz-scroll-track: #eee8da;
+        --ruckuz-scroll-thumb: #6b58b8;
+        --ruckuz-scroll-hover: #806bd0;
+    }
+
+    body.darkMode {
+        --ruckuz-scroll-track: #211d32;
+        --ruckuz-scroll-thumb: #8b6cff;
+        --ruckuz-scroll-hover: #b79cff;
+    }
+
+    * {
+        scrollbar-width: thin;
+
+        scrollbar-color:
+            var(--ruckuz-scroll-thumb)
+            var(--ruckuz-scroll-track);
+    }
+
+    *::-webkit-scrollbar {
+        width: 12px;
+        height: 12px;
+    }
+    *::-webkit-scrollbar-track {
+        background:
+            var(--ruckuz-scroll-track);
+        border-left:
+            2px solid
+            var(--ruckuz-scroll-thumb);
+    }
+    *::-webkit-scrollbar-thumb {
+        background:
+            var(--ruckuz-scroll-thumb);
+        border:
+            2px solid
+            var(--ruckuz-scroll-track);
+        border-radius: 2px;
+    }
+    *::-webkit-scrollbar-thumb:hover {
+        background:
+            var(--ruckuz-scroll-hover);
+    }
+    *::-webkit-scrollbar-corner {
+        background:
+            var(--ruckuz-scroll-track);
+    }
+}
+
+@media (max-width: 768px) {
+    #messages {
+        --message-side-padding: 12px;
+        padding:
+            8px
+            var(--message-side-padding);
+    }
+    .message {
+        padding-top: 9px;
+        padding-bottom: 9px;
+    }
+}
+
 </style>
 </head>
 <body>
