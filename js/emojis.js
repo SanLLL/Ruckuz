@@ -583,3 +583,44 @@ export function upgradeTypedCustomEmojis(
         );
     }
 }
+
+export function isEmojiOnlyText(
+    text
+) {
+    const parts =
+        splitGraphemes(
+            (text || "").trim()
+        )
+        .filter(
+            part =>
+                !/^\s+$/u.test(
+                    part
+                )
+        );
+    if (parts.length === 0) {
+        return false;
+    }
+
+    return parts.every(
+        part => {
+            if (
+                /^\p{Regional_Indicator}{2}$/u
+                    .test(part)
+            ) {
+                return true;
+            }
+            if (
+                /^[#*0-9]\uFE0F?\u20E3$/u
+                    .test(part)
+            ) {
+
+                return true;
+            }
+
+            return (
+                /\p{Extended_Pictographic}/u
+                    .test(part)
+            );
+        }
+    );
+}
