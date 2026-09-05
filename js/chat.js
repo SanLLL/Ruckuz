@@ -87,6 +87,9 @@ function updateOnlineUsers() {
 
 const messages = document.getElementById("messages");
 const input = document.getElementById("messageInput");
+clearComposer(
+    input
+);
 const emojiButton = document.getElementById("emojiButton");
 const emojiPicker = document.getElementById("emojiPicker");
 const emojiGrid = document.getElementById("emojiGrid");
