@@ -23,7 +23,8 @@ import {
     getComposerText,
     clearComposer,
     insertEmojiAtCaret,
-    upgradeTypedCustomEmojis
+    upgradeTypedCustomEmojis,
+    isEmojiOnlyText
 } from "./emojis.js";
 
 const session = await getPersistentSession();
@@ -860,6 +861,7 @@ function addMessage(message) {
         username: message.username,
         avatar_url: "/Ruckuz/assets/avatars/ruckuz.png"
     };
+    
     const div = document.createElement("div");
     div.className = "message";
     div.dataset.id = message.id;
@@ -869,15 +871,25 @@ function addMessage(message) {
     const gifUrl = getGifEmbedUrl(message.content);
     if (gifUrl) {
         gifHTML = createGifHTML(gifUrl);
+        
     } else {
+        const emojiOnly =
+            isEmojiOnlyText(
+                message.content || ""
+            );
         textHTML = `
-            <div class="text">
+            <div class="text${
+                emojiOnly
+                    ? " emojiOnly"
+                    : ""
+            }">
                 ${renderEmojiHTML(
                     message.content || ""
                 )}
             </div>
         `;
     }
+    
     let fileHTML = "";
     if (message.file_url) {
         const fileType = message.file_type || "";
@@ -1512,7 +1524,11 @@ function createLocalMessage(text, tempId) {
                 <div class="username">
                     ${profile.username}
                 </div>
-                <div class="text">
+                <div class="text${
+                    isEmojiOnlyText(text)
+                        ? " emojiOnly"
+                        : ""
+                }">
                     ${renderEmojiHTML(text)}
                 </div>
                 <div class="localMessageStatus">
