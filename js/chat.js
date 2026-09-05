@@ -27,6 +27,54 @@ import {
     isEmojiOnlyText
 } from "./emojis.js";
 
+const bootTheme =
+    getCookie(
+        "ruckuz-theme"
+    ) ||
+    localStorage.getItem(
+        "ruckuz-theme"
+    ) ||
+    "light";
+document.body.classList.toggle(
+    "darkMode",
+    bootTheme === "dark"
+);
+document.documentElement.dataset.ruckuzTheme = bootTheme;
+const appLoadingScreen = document.getElementById("appLoadingScreen");
+const appLoadingText = document.getElementById("appLoadingText");
+function setAppLoadingText(
+    text
+) {
+    if (
+        appLoadingText
+    ) {
+        appLoadingText.textContent =
+            text;
+    }
+}
+
+function finishAppLoading() {
+    if (
+        !appLoadingScreen
+    ) {
+        return;
+    }
+    appLoadingScreen.classList.add(
+        "leaving"
+    );
+    setTimeout(
+        () => {
+
+            appLoadingScreen.remove();
+        },
+        230
+    );
+}
+
+setAppLoadingText(
+    "Checking account..."
+);
+
 const session = await getPersistentSession();
 if (!session) {
     location.href = "../";
@@ -1417,20 +1465,15 @@ function initializeMediaPlayers(container) {
                             await player.requestFullscreen();
                         } else if (player.webkitRequestFullscreen) {
                             player.webkitRequestFullscreen();
-        
                         }
-        
                     } catch (error) {
                         console.error(
                             "Fullscreen error:",
                             error
                         );
-        
                     }
-        
                 }
             );
-        
         }
         media.addEventListener(
             "click",
@@ -1440,15 +1483,126 @@ function initializeMediaPlayers(container) {
                 } else {
                     media.pause();
                 }
-
             }
         );
-
         updatePlayButton();
         updateMuteButton();
         updateTime();
-
     });
+}
+
+async function waitForInitialMediaMetadata() {
+    const mediaElements =
+        Array.from(
+            messages.querySelectorAll(
+                ".customMediaPlayer .mediaElement"
+            )
+        );
+    if (
+        mediaElements.length === 0
+    ) {
+        return;
+    }
+    let finishedCount =
+        0;
+    setAppLoadingText(
+        `Preparing media 0 / ${mediaElements.length}`
+    );
+    function waitForOneMedia(
+        media
+    ) {
+        return new Promise(
+            resolve => {
+                if (
+                    media.readyState >= 1
+                ) {
+                    finishedCount++;
+                    setAppLoadingText(
+                        `Preparing media ${finishedCount} / ${mediaElements.length}`
+                    );
+                    resolve();
+                    return;
+                }
+                let finished =
+                    false;
+                let timeoutId =
+                    null;
+                function done() {
+                    if (
+                        finished
+                    ) {
+                        return;
+                    }
+                    finished =
+                        true;
+                    if (
+                        timeoutId
+                    ) {
+                        clearTimeout(
+                            timeoutId
+                        );
+                    }
+                    media.removeEventListener(
+                        "loadedmetadata",
+                        done
+                    );
+                    media.removeEventListener(
+                        "error",
+                        done
+                    );
+                    finishedCount++;
+                    setAppLoadingText(
+                        `Preparing media ${finishedCount} / ${mediaElements.length}`
+                    );
+                    resolve();
+                }
+                media.addEventListener(
+                    "loadedmetadata",
+                    done
+                );
+                media.addEventListener(
+                    "error",
+                    done
+                );
+                timeoutId =
+                    setTimeout(
+                        done,
+                        7000
+                    );
+                if (
+                    media.readyState < 1
+                ) {
+                    media.load();
+                }
+            }
+        );
+    }
+
+    await Promise.all(
+        mediaElements.map(
+            waitForOneMedia
+        )
+    );
+}
+
+async function waitForRuckuzFont() {
+    if (
+        !document.fonts ||
+        !document.fonts.ready
+    ) {
+        return;
+    }
+    await Promise.race([
+        document.fonts.ready,
+        new Promise(
+            resolve => {
+                setTimeout(
+                    resolve,
+                    2500
+                );
+            }
+        )
+    ]);
 }
 
 async function sendMessage() {
@@ -2031,11 +2185,10 @@ async function deleteMessage(
             danger:
                 true
         });
-
+    
     if (!confirmed) {
         return;
     }
-
     const { error } =
         await supabase
             .from("messages")
@@ -2044,7 +2197,6 @@ async function deleteMessage(
                 "id",
                 messageId
             );
-
     if (error) {
         console.error(
             "Message deletion error:",
@@ -2053,11 +2205,29 @@ async function deleteMessage(
     }
 }
 
+setAppLoadingText(
+    "Loading profile..."
+);
 await loadProfiles();
 refreshSelfUserPanel();
 refreshSettingsProfile();
+setAppLoadingText(
+    "Loading members..."
+);
 await loadMemberProfiles();
+setAppLoadingText(
+    "Loading messages..."
+);
 await loadMessages();
+setAppLoadingText(
+    "Preparing interface..."
+);
+await waitForRuckuzFont();
+await waitForInitialMediaMetadata();
+setAppLoadingText(
+    "Ready."
+);
+finishAppLoading();
 supabase
 .channel("messages")
 .on(
@@ -2138,6 +2308,17 @@ function applyTheme(
         "darkMode",
         dark
     );
+
+    document.documentElement.dataset.ruckuzTheme =
+        dark
+            ? "dark"
+            : "light";
+    
+    
+    document.documentElement.style.backgroundColor =
+        dark
+            ? "#151222"
+            : "#fffdf6";
 
     if (themeToggle) {
         themeToggle.textContent =
