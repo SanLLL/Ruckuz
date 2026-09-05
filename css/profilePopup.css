@@ -102,11 +102,6 @@ body.darkMode .profileStatusDot.offline {
     margin-top: 3px;
     text-align: center;
     color: #817a91;
-    font-family:
-        ui-monospace,
-        SFMono-Regular,
-        Consolas,
-        monospace;
     font-size: 12px;
     font-weight: bold;
 }
