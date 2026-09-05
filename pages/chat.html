@@ -23,24 +23,53 @@ body {
     padding:20px;
 }
 
-.message{
-    margin-bottom:18px;
+.message {
+    margin-bottom: 18px;
+    background: transparent;
+    transition:
+        background-color 0.12s ease;
 }
 
-.messageMenu{
-    width:24px;
-    opacity:0;
-    cursor:pointer;
-    user-select:none;
-    transition:.15s;
-    font-size:22px;
-    color:#666;
-
+.messageMenu {
+    width: 24px;
+    height: 28px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    opacity: 0;
+    cursor: pointer;
+    user-select: none;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    background: transparent;
+    color: #817a91;
+    font-size: 20px;
+    line-height: 1;
+    transition:
+        opacity 0.12s ease,
+        background-color 0.12s ease,
+        border-color 0.12s ease;
 }
 
-.message:hover .messageMenu{
-    opacity:1;
-
+@media (hover: hover) and (pointer: fine) {
+    .message:hover {
+        background: rgba(0, 0, 0, 0.13);
+    }
+    .message:hover .messageMenu {
+        opacity: 1;
+        background: #efe8ff;
+        border-color: #6b58b8;
+    }
+    body.darkMode .message:hover {
+        background: rgba(0, 0, 0, 0.24);
+    }
+    body.darkMode .message:hover .messageMenu {
+        background: #242038;
+        border-color: #8b6cff;
+        color: #b79cff;
+    }
 }
 
 .messageDropdown{
@@ -2804,6 +2833,24 @@ body.darkMode .emojiChoice:hover {
 @media (max-width: 768px) {
     .messageRow {
         --message-avatar-size: 42px;
+    }
+}
+
+@media (max-width: 768px) {
+    .message {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    body:not(.darkMode)
+    .message.mobileHoldActive {
+        background:
+            rgba(48, 37, 79, 0.10);
+    }
+
+    body.darkMode
+    .message.mobileHoldActive {
+        background:
+            rgba(0, 0, 0, 0.24);
     }
 }
     
