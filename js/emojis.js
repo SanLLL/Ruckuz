@@ -39,21 +39,12 @@ const CUSTOM_EMOJIS = new Map([
     ["\u{1F47F}", "hornedanger.png"],
     ["\u{1F60B}", "licking.png"],
     ["\u{1F92C}", "swearing.png"],
+    ["\u{1F628}", "fear.png"],
 ]);
 
 const DEFAULT_PICKER_EMOJIS = [
     "\u{1F60E}",
-    "\u{1F914}",
-    "\u{1F634}",
-    "\u{1F621}",
-    "\u{1F92F}",
-    "\u{1F525}",
-    "\u2764\uFE0F",
-    "\u{1F44D}",
-    "\u{1F44E}",
-    "\u{1F389}",
-    "\u2728",
-    "\u{1F480}"
+    "\u{1F914}"
 ];
 
 const failedCustomEmojis =
