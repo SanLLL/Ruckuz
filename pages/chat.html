@@ -2737,7 +2737,6 @@ body.darkMode #confirmConfirmButton.danger {
                 aria-label="Open settings">
                 ⚙
             </button>
-        
         </div>
     </aside>
     
@@ -2756,12 +2755,33 @@ body.darkMode #confirmConfirmButton.danger {
                 type="button">
                 +
             </button>
-            <input
-                id="messageInput"
-                placeholder="Say something...">
-            <button id="send">
-                Send
-            </button>
+        <div
+            id="messageInput"
+            contenteditable="true"
+            role="textbox"
+            aria-label="Message"
+            data-placeholder="Say something..."
+            spellcheck="true">
+        </div>
+        <button
+            id="emojiButton"
+            type="button"
+            aria-label="Open emoji selector"
+            aria-expanded="false">
+            :)
+        </button>
+            
+        <div
+            id="emojiPicker"
+            aria-hidden="true">
+            <div id="emojiPickerHeader">
+                Emojis
+            </div>
+            
+            <div id="emojiGrid">
+            </div>
+        
+        </div>
             <input
                 type="file"
                 id="fileUpload"
