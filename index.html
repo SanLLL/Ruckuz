@@ -1,12 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>RuckuZ</title>
+
+<script>
+(function () {
+    function readCookie(name) {
+        const prefix =
+            encodeURIComponent(name) + "=";
+        const cookies =
+            document.cookie.split(";");
+        for (const cookie of cookies) {
+            const value =
+                cookie.trim();
+            if (value.startsWith(prefix)) {
+                return decodeURIComponent(
+                    value.slice(
+                        prefix.length
+                    )
+                );
+            }
+        }
+        return null;
+    }
+    const theme =
+        readCookie("ruckuz-theme") ||
+        localStorage.getItem("ruckuz-theme") ||
+        "light";
+    document.documentElement.classList.add(
+        "authBooting"
+    );
+    document.documentElement.dataset.ruckuzTheme = theme;
+    document.documentElement.style.backgroundColor =
+        theme === "dark"
+            ? "#151222"
+            : "#fffdf6";
+})();
+</script>
 
 <link rel="stylesheet" href="css/main.css">
 <link rel="stylesheet" href="css/auth.css">
@@ -15,12 +48,29 @@
 </head>
 
 <body>
+
+<div
+    id="authLoadingScreen"
+    role="status"
+    aria-live="polite">
+    <div id="authLoadingCard">
+        <div id="authLoadingTitle">
+            RuckuZ
+        </div>
+        <div id="authLoadingRow">
+            <span id="authLoadingSpinner"></span>
+            <span id="authLoadingText">
+                Checking account...
+            </span>
+        </div>
+    </div>
+</div>
 <div id="app">
 <div class="authCard">
 <h1>RuckuZ</h1>
 
 <p class="subtitle">
-A place to hang out.
+A place to doodle.
 </p>
 
 <div class="tabs">
