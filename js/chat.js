@@ -16,6 +16,16 @@ import {
     setOnlineUsers
 } from "./profilePopup.js";
 
+import {
+    renderEmojiHTML,
+    wireEmojiFallbacks,
+    buildEmojiPicker,
+    getComposerText,
+    clearComposer,
+    insertEmojiAtCaret,
+    upgradeTypedCustomEmojis
+} from "./emojis.js";
+
 const session = await getPersistentSession();
 if (!session) {
     location.href = "../";
@@ -77,7 +87,9 @@ function updateOnlineUsers() {
 
 const messages = document.getElementById("messages");
 const input = document.getElementById("messageInput");
-const send = document.getElementById("send");
+const emojiButton = document.getElementById("emojiButton");
+const emojiPicker = document.getElementById("emojiPicker");
+const emojiGrid = document.getElementById("emojiGrid");
 const memberList = document.getElementById("memberList");
 const mobileMemberList = document.getElementById("mobileMemberList");
 let memberProfiles = {};
@@ -92,6 +104,94 @@ fileButton.onclick = () => {
 
 fileUpload.onchange = uploadChatFile;
 let profiles = {};
+function closeEmojiPicker() {
+    emojiPicker.classList.remove(
+        "open"
+    );
+    emojiPicker.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+    emojiButton.setAttribute(
+        "aria-expanded",
+        "false"
+    );
+}
+
+buildEmojiPicker(
+    emojiGrid,
+    emoji => {
+        insertEmojiAtCaret(
+            input,
+            emoji
+        );
+    }
+);
+emojiButton.onclick =
+    event => {
+        event.stopPropagation();
+        const opening =
+            !emojiPicker.classList.contains(
+                "open"
+            );
+        if (opening) {
+            emojiPicker.classList.add(
+                "open"
+            );
+            emojiPicker.setAttribute(
+                "aria-hidden",
+                "false"
+            );
+            emojiButton.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+        } else {
+            closeEmojiPicker();
+        }
+    };
+
+emojiPicker.onclick =
+    event => {
+        event.stopPropagation();
+    };
+document.addEventListener(
+    "click",
+    event => {
+        if (
+            !emojiPicker.contains(
+                event.target
+            ) &&
+            event.target !==
+                emojiButton
+        ) {
+            closeEmojiPicker();
+        }
+    }
+);
+
+document.addEventListener(
+    "keydown",
+    event => {
+        if (
+            event.key === "Escape" &&
+            emojiPicker.classList.contains(
+                "open"
+            )
+        ) {
+            closeEmojiPicker();
+        }
+    }
+);
+
+input.addEventListener(
+    "input",
+    () => {
+        upgradeTypedCustomEmojis(
+            input
+        );
+    }
+);
 const settingsButton = document.getElementById("settingsButton");
 const mobileSettingsButton = document.getElementById("mobileSettingsButton");
 const settingsOverlay = document.getElementById("settingsOverlay");
@@ -769,7 +869,9 @@ function addMessage(message) {
     } else {
         textHTML = `
             <div class="text">
-                ${escapeHTML(message.content || "")}
+                ${renderEmojiHTML(
+                    message.content || ""
+                )}
             </div>
         `;
     }
@@ -1025,16 +1127,30 @@ function addMessage(message) {
             clearTimeout(longPressTimer);
         }
     );
-    messages.appendChild(div);
-    initializeMediaPlayers(div);
+    
+    wireEmojiFallbacks(
+        div
+    );
+    messages.appendChild(
+        div
+    );
+    initializeMediaPlayers(
+        div
+    );
 }
-send.onclick = sendMessage;
-input.addEventListener("keydown", e => {
-    if (e.key === "Enter") {
-        sendMessage();
-    }
 
-});
+input.addEventListener(
+    "keydown",
+    event => {
+        if (
+            event.key === "Enter" &&
+            !event.isComposing
+        ) {
+            event.preventDefault();
+            sendMessage();
+        }
+    }
+);
 
 function initializeMediaPlayers(container) {
     const players =
@@ -1301,16 +1417,29 @@ function initializeMediaPlayers(container) {
 }
 
 async function sendMessage() {
-    const text = input.value.trim();
-    if (text === "") return;
+    const text =
+        getComposerText(
+            input
+        ).trim();
+    if (text === "") {
+        return;
+    }
     const tempId =
         `local-${crypto.randomUUID()}`;
     const localMessage =
-        createLocalMessage(text, tempId);
-    messages.appendChild(localMessage);
+        createLocalMessage(
+            text,
+            tempId
+        );
+    messages.appendChild(
+        localMessage
+    );
     messages.scrollTop =
         messages.scrollHeight;
-    input.value = "";
+    clearComposer(
+        input
+    );
+    closeEmojiPicker();
     try {
         const { error } =
             await supabase
@@ -1319,7 +1448,9 @@ async function sendMessage() {
                     user_id:
                         session.user.id,
                     username:
-                        profiles[session.user.id]?.username ??
+                        profiles[
+                            session.user.id
+                        ]?.username ??
                         session.user.user_metadata.username ??
                         session.user.email,
                     content:
@@ -1379,7 +1510,7 @@ function createLocalMessage(text, tempId) {
                     ${profile.username}
                 </div>
                 <div class="text">
-                    ${escapeHTML(text)}
+                    ${renderEmojiHTML(text)}
                 </div>
                 <div class="localMessageStatus">
                     <span class="messageSpinner"></span>
@@ -1388,6 +1519,9 @@ function createLocalMessage(text, tempId) {
             </div>
         </div>
     `;
+    wireEmojiFallbacks(
+        div
+    );
     return div;
 }
 
