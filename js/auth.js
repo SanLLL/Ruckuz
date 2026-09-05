@@ -1,7 +1,40 @@
 import { supabase, getPersistentSession, rememberSession } from "./supabase.js";
-const session = await getPersistentSession();
+const authLoadingScreen = document.getElementById("authLoadingScreen");
+function revealLoginScreen() {
+    document.documentElement.classList.remove(
+        "authBooting"
+    );
+    if (!authLoadingScreen) {
+        return;
+    }
+    authLoadingScreen.classList.add(
+        "leaving"
+    );
+    setTimeout(
+        () => {
+
+            authLoadingScreen.remove();
+        },
+        210
+    );
+}
+
+let session = null;
+try {
+    session =
+        await getPersistentSession();
+} catch (error) {
+    console.error(
+        "Session check failed:",
+        error
+    );
+}
 if (session) {
- location.href = "pages/chat.html";
+    location.replace(
+        "pages/chat.html"
+    );
+} else {
+    revealLoginScreen();
 }
 
 let registerMode = false;
