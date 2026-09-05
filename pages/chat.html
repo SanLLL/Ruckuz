@@ -2781,6 +2781,31 @@ body.darkMode .emojiChoice:hover {
         height: 44px;
     }
 }
+
+.messageRow {
+    --message-avatar-size: 48px;
+}
+
+.text.emojiOnly {
+    font-size:
+        var(--message-avatar-size);
+    line-height: 1.05;
+}
+    
+.text.emojiOnly .ruckuzEmoji {
+    width:
+        var(--message-avatar-size);
+    height:
+        var(--message-avatar-size);
+    margin: 0 2px;
+    vertical-align: middle;
+}
+    
+@media (max-width: 768px) {
+    .messageRow {
+        --message-avatar-size: 42px;
+    }
+}
     
 </style>
 </head>
