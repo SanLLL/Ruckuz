@@ -1107,39 +1107,59 @@ function addMessage(message) {
     };
     let longPressTimer = null;
     let longPressTriggered = false;
+    function clearLongPressState() {
+        clearTimeout(
+            longPressTimer
+        );
+        longPressTimer = null;
+        div.classList.remove(
+            "mobileHoldActive"
+        );
+    }
     div.addEventListener(
         "touchstart",
         (event) => {
-            longPressTriggered = false;
-            longPressTimer = setTimeout(() => {
-                longPressTriggered = true;
-                event.preventDefault();
-                closeAllMenus();
-                openMobileMessageMenu(
-                    message,
-                    div
+            longPressTriggered =
+                false;
+            longPressTimer =
+                setTimeout(
+                    () => {
+                        longPressTriggered =
+                            true;
+                        div.classList.add(
+                            "mobileHoldActive"
+                        );
+                        event.preventDefault();
+                        closeAllMenus();
+                        openMobileMessageMenu(
+                            message,
+                            div
+                        );
+                    },
+                    600
                 );
-            }, 600);
         },
-        { passive: false }
+        {
+            passive: false
+        }
     );
+    
     div.addEventListener(
         "touchend",
         () => {
-            clearTimeout(longPressTimer);
+            clearLongPressState();
         }
     );
     div.addEventListener(
         "touchmove",
         () => {
-            clearTimeout(longPressTimer);
+            clearLongPressState();
         }
     );
     div.addEventListener(
         "touchcancel",
         () => {
-
-            clearTimeout(longPressTimer);
+            clearLongPressState();
         }
     );
     
