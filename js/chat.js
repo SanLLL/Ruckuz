@@ -904,39 +904,166 @@ function createGifHTML(url) {
     `;
 }
 
+function renderMessageBodyHTML(
+    message
+) {
+
+    const gifUrl =
+        getGifEmbedUrl(
+            message.content
+        );
+
+
+    if (gifUrl) {
+
+        return createGifHTML(
+            gifUrl
+        );
+
+    }
+
+    const emojiOnly =
+        isEmojiOnlyText(
+            message.content || ""
+        );
+
+    return `
+        <div class="text${
+            emojiOnly
+                ? " emojiOnly"
+                : ""
+        }">
+            ${renderEmojiHTML(
+                message.content || ""
+            )}
+        </div>
+    `;
+
+}
+
+function refreshRenderedMessage(
+    element,
+    message
+) {
+    if (!element) {
+        return;
+    }
+    const defaultAvatar =
+        "/Ruckuz/assets/avatars/ruckuz.png";
+    const profile =
+        message.author_deleted
+            ? {
+                username:
+                    message.username,
+
+                avatar_url:
+                    defaultAvatar
+            }
+            : (
+                profiles[
+                    message.user_id
+                ] || {
+                    username:
+                        message.username,
+
+                    avatar_url:
+                        defaultAvatar
+                }
+            );
+    
+    const username =
+        element.querySelector(
+            ".username"
+        );
+    if (username) {
+        username.textContent =
+            profile.username;
+    }
+    const avatar =
+        element.querySelector(
+            ".avatar"
+        );
+    if (avatar) {
+        avatar.src =
+            profile.avatar_url ||
+            defaultAvatar;
+        avatar.alt =
+            profile.username;
+    }
+    const body =
+        element.querySelector(
+            ".messageBody"
+        );
+
+    if (body) {
+        body.innerHTML =
+            renderMessageBodyHTML(
+                message
+            );
+        wireEmojiFallbacks(
+            body
+        );
+    }
+
+    let editedMarker =
+        element.querySelector(
+            ".editedMarker"
+        );
+
+    if (message.edited_at) {
+        if (!editedMarker) {
+            editedMarker =
+                document.createElement(
+                    "span"
+                );
+            editedMarker.className =
+                "editedMarker";
+            element
+                .querySelector(
+                    ".messageContent"
+                )
+                ?.appendChild(
+                    editedMarker
+                );
+        }
+        editedMarker.textContent =
+            "edited";
+        
+    } else if (editedMarker) {
+        editedMarker.remove();
+    }
+}
+
 function addMessage(message) {
-    const profile = profiles[message.user_id] || {
-        username: message.username,
-        avatar_url: "/Ruckuz/assets/avatars/ruckuz.png"
-    };
+    const defaultAvatar =
+        "/Ruckuz/assets/avatars/ruckuz.png";
+    const profile =
+        message.author_deleted
+            ? {
+                username:
+                    message.username,
+                avatar_url:
+                    defaultAvatar
+            }
+            : (
+                profiles[
+                    message.user_id
+                ] || {
+                    username:
+                        message.username,
+                    avatar_url:
+                        defaultAvatar
+                }
+            );
     
     const div = document.createElement("div");
     div.className = "message";
     div.dataset.id = message.id;
     div.dataset.user = message.user_id;
-    let textHTML = "";
-    let gifHTML = "";
-    const gifUrl = getGifEmbedUrl(message.content);
-    if (gifUrl) {
-        gifHTML = createGifHTML(gifUrl);
-        
-    } else {
-        const emojiOnly =
-            isEmojiOnlyText(
-                message.content || ""
-            );
-        textHTML = `
-            <div class="text${
-                emojiOnly
-                    ? " emojiOnly"
-                    : ""
-            }">
-                ${renderEmojiHTML(
-                    message.content || ""
-                )}
-            </div>
-        `;
-    }
+    const messageBodyHTML =
+        renderMessageBodyHTML(
+            message
+        );
     
     let fileHTML = "";
     if (message.file_url) {
@@ -1129,8 +1256,18 @@ function addMessage(message) {
                 <div class="username">
                     ${escapeHTML(profile.username)}
                 </div>
-                ${textHTML}
-                ${gifHTML}
+                <div class="messageBody">
+                    ${messageBodyHTML}
+                </div>
+                ${
+                    message.edited_at
+                        ? `
+                            <span class="editedMarker">
+                                edited
+                            </span>
+                        `
+                        : ""
+                }
                 ${fileHTML}
             </div>
         </div>
@@ -1981,18 +2118,21 @@ function createDropdown(message){
         `;
 
         menu.querySelector(".editBtn").onclick = () => {
-            alert("Edit coming next!");
+            const messageElement = document.querySelector(`.message[data-id="${message.id}"]`);
+            if (messageElement) {
+                startEditingMessage(
+                    message,
+                    messageElement
+                );
+            }
             menu.remove();
-
         };
-
         menu.querySelector(".deleteBtn").onclick = () => {
             deleteMessage(message.id);
             menu.remove();
         };
 
     }else{
-
         menu.innerHTML = `
             <button disabled>
                 You can't edit this
@@ -2000,6 +2140,186 @@ function createDropdown(message){
         `;
     }
     return menu;
+}
+
+function startEditingMessage(
+    message,
+    messageElement
+) {
+    const body =
+        messageElement.querySelector(
+            ".messageBody"
+        );
+    if (!body) {
+        return;
+    }
+    if (
+        body.querySelector(
+            ".messageEditBox"
+        )
+    ) {
+        return;
+    }
+    const originalText =
+        message.content || "";
+    body.innerHTML = `
+        <div class="messageEditBox">
+            <textarea
+                class="messageEditTextarea"
+                maxlength="2000"
+            ></textarea>
+            <div class="messageEditActions">
+                <button
+                    type="button"
+                    class="messageEditSave">
+                    Save
+                </button>
+                <button
+                    type="button"
+                    class="messageEditCancel">
+                    Cancel
+                </button>
+            </div>
+            <div class="messageEditStatus">
+            </div>
+        </div>
+    `;
+    const textarea =
+        body.querySelector(
+            ".messageEditTextarea"
+        );
+    const saveButton =
+        body.querySelector(
+            ".messageEditSave"
+        );
+    const cancelButton =
+        body.querySelector(
+            ".messageEditCancel"
+        );
+    const status =
+        body.querySelector(
+            ".messageEditStatus"
+        );
+    textarea.value =
+        originalText;
+    textarea.focus();
+    textarea.setSelectionRange(
+        textarea.value.length,
+        textarea.value.length
+    );
+    function cancelEditing() {
+        refreshRenderedMessage(
+            messageElement,
+            message
+        );
+    }
+    async function saveEditing() {
+        const newText =
+            textarea
+                .value
+                .trim();
+        if (
+            newText === "" &&
+            !message.file_url
+        ) {
+            status.textContent =
+                "A message can't be empty.";
+            return;
+        }
+        if (
+            newText ===
+            originalText.trim()
+        ) {
+
+            cancelEditing();
+            return;
+
+        }
+        saveButton.disabled =
+            true;
+        cancelButton.disabled =
+            true;
+        saveButton.textContent =
+            "Saving...";
+        status.textContent =
+            "";
+        const {
+            data,
+            error
+        } =
+            await supabase
+                .from(
+                    "messages"
+                )
+                .update({
+                    content:
+                        newText,
+
+                    edited_at:
+                        new Date()
+                            .toISOString()
+                })
+                .eq(
+                    "id",
+                    message.id
+                )
+                .eq(
+                    "user_id",
+                    session.user.id
+                )
+                .select()
+                .single();
+        if (error) {
+            console.error(
+                "Message edit error:",
+                error
+            );
+            saveButton.disabled =
+                false;
+            cancelButton.disabled =
+                false;
+            saveButton.textContent =
+                "Save";
+            status.textContent =
+                "Couldn't save the edit.";
+            return;
+        }
+        Object.assign(
+            message,
+            data
+        );
+        refreshRenderedMessage(
+            messageElement,
+            message
+        );
+    }
+    saveButton.onclick =
+        saveEditing;
+    cancelButton.onclick =
+        cancelEditing;
+    textarea.addEventListener(
+        "keydown",
+        event => {
+            if (
+                event.key ===
+                "Escape"
+            ) {
+                event.preventDefault();
+                cancelEditing();
+            }
+            if (
+                event.key ===
+                    "Enter" &&
+                (
+                    event.ctrlKey ||
+                    event.metaKey
+                )
+            ) {
+                event.preventDefault();
+                saveEditing();
+            }
+        }
+    );
 }
 
 function openMobileMessageMenu(message, messageElement) {
@@ -2250,6 +2570,38 @@ supabase
         );
         messages.scrollTop =
             messages.scrollHeight;
+    }
+)
+
+.on(
+    "postgres_changes",
+    {
+        event: "UPDATE",
+        schema: "public",
+        table: "messages"
+    },
+    payload => {
+
+        if (
+            payload.new.channel !==
+            currentChannel
+        ) {
+            return;
+        }
+        
+        const element =
+            document.querySelector(
+                `.message[data-id="${payload.new.id}"]`
+            );
+
+        if (!element) {
+            return;
+        }
+
+        refreshRenderedMessage(
+            element,
+            payload.new
+        );
     }
 )
 
