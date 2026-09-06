@@ -3216,6 +3216,74 @@ body.darkMode .noFriends {
     color: #aaa2bd;
 }
 
+.messageEditBox {
+    margin-top: 4px;
+}
+
+.messageEditTextarea {
+    width: 100%;
+    min-height: 70px;
+    box-sizing: border-box;
+    resize: vertical;
+    padding: 9px;
+    border: 2px solid #6b58b8;
+    border-radius: 4px;
+    background: #fffdf6;
+    color: #30254f;
+    font: inherit;
+    outline: none;
+}
+
+.messageEditActions {
+    display: flex;
+    gap: 7px;
+    margin-top: 7px;
+}
+
+.messageEditActions button {
+    padding: 7px 11px;
+    border: 2px solid #6b58b8;
+    border-radius: 4px;
+    background: #fff8df;
+    color: #30254f;
+    font: inherit;
+    cursor: pointer;
+}
+
+.messageEditSave {
+    font-weight: bold;
+}
+
+.messageEditStatus {
+    min-height: 16px;
+    margin-top: 5px;
+    color: #b84f4f;
+    font-size: 12px;
+}
+
+.editedMarker {
+    display: inline-block;
+    margin-top: 3px;
+    color: #817a91;
+    font-size: 11px;
+}
+
+body.darkMode .messageEditTextarea {
+    background: #1f1c30;
+    color: #f5f0ff;
+    border-color: #8b6cff;
+}
+
+body.darkMode .messageEditActions button {
+    background: #242038;
+    color: #f5f0ff;
+    border-color: #8b6cff;
+}
+
+body.darkMode .editedMarker {
+    color: #aaa2bd;
+}
+
 </style>
 </head>
 <body>
