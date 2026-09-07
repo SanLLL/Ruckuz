@@ -224,13 +224,16 @@ updateSendButtonVisibility();
 fileButton.onclick = () => {
     fileUpload.click();
 };
+
 fileUpload.onchange =
     uploadChatFile;
+
 function isDarkMode() {
     return document.body.classList.contains(
         "darkMode"
     );
 }
+
 function themedButtonPath(
     name
 ) {
@@ -238,6 +241,7 @@ function themedButtonPath(
         ? `../assets/buttons/dark/${name}dark.png`
         : `../assets/buttons/light/${name}light.png`;
 }
+
 function volumeIconPath(
     volume,
     muted
@@ -246,56 +250,39 @@ function volumeIconPath(
         muted ||
         volume === 0
     ) {
-
         return isDarkMode()
             ? "../assets/icons/volumedarkmute.png"
             : "../assets/icons/volumelightmute.png";
-
     }
-
     if (
         isDarkMode()
     ) {
-
         if (
-            volume < 0.34
+            volume <= 0.33
         ) {
-            return "../assets/icons/volumedark1.png";
-
+            return "../assets/icons/volumedark3.png";
         }
-
         if (
-            volume < 0.67
+            volume <= 0.66
         ) {
             return "../assets/icons/volumedark2.png";
 
         }
-        return "../assets/icons/volumedark3.png";
+        return "../assets/icons/volumedark1.png";
 
     }
-
     if (
-        volume < 0.25
-    ) {
-        return "../assets/icons/volumelight1.png";
-
-    }
-
-    if (
-        volume < 0.5
-    ) {
-        return "../assets/icons/volumelight2.png";
-
-    }
-
-    if (
-        volume < 0.75
+        volume <= 0.33
     ) {
         return "../assets/icons/volumelight3.png";
 
     }
-    return "../assets/icons/volumelight4.png";
-
+    if (
+        volume <= 0.66
+    ) {
+        return "../assets/icons/volumelight2.png";
+    }
+    return "../assets/icons/volumelight1.png";
 }
 
 function syncStaticThemeArt(
