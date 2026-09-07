@@ -255,6 +255,7 @@ const selfCustomStatus = document.getElementById("selfCustomStatus");
 const selfOnlineDot = document.getElementById("selfOnlineDot");
 const settingsAvatar = document.getElementById("settingsAvatar");
 const settingsUsername = document.getElementById("settingsUsername");
+const saveUsernameLabel = saveUsername.querySelector(".drawnButtonContent");
 const settingsChangeAvatar = document.getElementById("settingsChangeAvatar");
 const usernameInput = document.getElementById("usernameInput");
 const usernameCharacterCount = document.getElementById("usernameCharacterCount");
@@ -265,6 +266,7 @@ const copyRuckuzId = document.getElementById("copyRuckuzId");
 const customStatusInput = document.getElementById("customStatusInput");
 const statusCharacterCount = document.getElementById("statusCharacterCount");
 const saveCustomStatus = document.getElementById("saveCustomStatus");
+const saveCustomStatusLabel = saveCustomStatus.querySelector(".drawnButtonContent");
 const statusSaveMessage = document.getElementById("statusSaveMessage");
 const deleteAccountButton = document.getElementById("deleteAccountButton");
 const deleteAccountStatus = document.getElementById("deleteAccountStatus");
@@ -394,8 +396,7 @@ saveUsername.onclick =
             newUsername.length > 32
         ) {
 
-            usernameSaveMessage.textContent =
-                "Username must be 2 to 32 characters.";
+            usernameSaveMessage.textContent = "Username must be 2 to 32 characters.";
             return;
 
         }
@@ -406,8 +407,7 @@ saveUsername.onclick =
             )
         ) {
 
-            usernameSaveMessage.textContent =
-                "That username contains invalid characters.";
+            usernameSaveMessage.textContent = "That username contains invalid characters.";
             return;
         }
         const profile =
@@ -416,14 +416,12 @@ saveUsername.onclick =
             profile &&
             profile.username === newUsername
         ) {
-            usernameSaveMessage.textContent =
-                "That's already your username.";
+            usernameSaveMessage.textContent = "That's already your username.";
             return;
         }
 
         saveUsername.disabled = true;
-        saveUsername.textContent =
-            "Saving...";
+        saveUsernameLabel.textContent = "Saving...";
         const {
             error: profileError
         } = await supabase
@@ -443,10 +441,8 @@ saveUsername.onclick =
                 profileError
             );
             saveUsername.disabled = false;
-            saveUsername.textContent =
-                "Save Username";
-            usernameSaveMessage.textContent =
-                "Couldn't change username.";
+            saveUsernameLabel.textContent = "Save Username";
+            usernameSaveMessage.textContent = "Couldn't change username.";
             return;
         }
 
@@ -530,8 +526,7 @@ saveCustomStatus.onclick =
                 .trim();
         saveCustomStatus.disabled =
             true;
-        saveCustomStatus.textContent =
-            "Saving...";
+        saveCustomStatusLabel.textContent = "Saving...";
         statusSaveMessage.textContent =
             "";
         const {
@@ -549,15 +544,13 @@ saveCustomStatus.onclick =
                 );
         saveCustomStatus.disabled =
             false;
-        saveCustomStatus.textContent =
-            "Save Status";
+        saveCustomStatusLabel.textContent = "Save Status";
         if (error) {
             console.error(
                 "Status update error:",
                 error
             );
-            statusSaveMessage.textContent =
-                "Couldn't save status.";
+            statusSaveMessage.textContent = "Couldn't save status.";
             return;
         }
         if (
@@ -2764,16 +2757,12 @@ const logoutButton =
                 }
                 logoutButton.disabled =
                     true;
-                logoutButton.textContent =
-                    "Logging out...";
                 const { error } =
                     await supabase.auth.signOut();
                 if (error) {
                     console.error(error);
                     logoutButton.disabled =
                         false;
-                    logoutButton.textContent =
-                        "Logout";
                     return;
                 }
                 clearPersistentLogin();
@@ -2799,12 +2788,8 @@ deleteAccountButton.onclick =
             return;
         }
 
-        deleteAccountButton.disabled =
-            true;
-        deleteAccountButton.textContent =
-            "Deleting...";
-        deleteAccountStatus.textContent =
-            "";
+        deleteAccountButton.disabled = true;
+        deleteAccountStatus.textContent = "Deleting...";
 
         const {
             data,
@@ -2819,20 +2804,13 @@ deleteAccountButton.onclick =
                 "Account deletion error:",
                 error
             );
-            deleteAccountButton.disabled =
-                false;
-            deleteAccountButton.textContent =
-                "Delete Account";
-            deleteAccountStatus.textContent =
-                "Couldn't delete the account.";
+            deleteAccountButton.disabled = false;
+            deleteAccountStatus.textContent = "Couldn't delete the account.";
             return;
         }
 
         if (!data?.ok) {
-            deleteAccountButton.disabled =
-                false;
-            deleteAccountButton.textContent =
-                "Delete Account";
+            deleteAccountButton.disabled = false;
             deleteAccountStatus.textContent =
                 data?.error ||
                 "Couldn't delete the account.";
