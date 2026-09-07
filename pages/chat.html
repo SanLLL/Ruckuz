@@ -3321,6 +3321,283 @@ body.darkMode
         3px 3px 0 #d66b74;
 }
 
+body:not(.darkMode)
+#friendRequestsButton {
+    width: 132px;
+    height: 52px;
+    padding: 0 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    box-sizing: border-box;
+    border: 0;
+    border-radius: 0;
+    background:
+        transparent
+        url("../assets/buttons/light/buttonlight.png")
+        center / 100% 100%
+        no-repeat;
+    box-shadow: none;
+    color: #30254f;
+    cursor: pointer;
+}
+
+body:not(.darkMode)
+#friendRequestsButton:hover {
+    transform:
+        translateY(-1px);
+    box-shadow: none;
+}
+
+body:not(.darkMode)
+#friendRequestsButton:active {
+    transform:
+        translateY(1px);
+    box-shadow: none;
+}
+
+body:not(.darkMode)
+#friendsButton {
+    width: 132px;
+    height: 52px;
+    padding: 0 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    box-sizing: border-box;
+    border: 0;
+    border-radius: 0;
+    background:
+        transparent
+        url("../assets/buttons/buttonwhite.png")
+        center / 100% 100%
+        no-repeat;
+    box-shadow: none;
+    color: #6b58b8;
+    cursor: pointer;
+}
+
+body:not(.darkMode)
+#friendsButton:hover {
+    transform:
+        translateY(-1px);
+}
+
+body:not(.darkMode)
+#friendsButton:active {
+    transform:
+        translateY(1px);
+}
+
+body:not(.darkMode)
+#settingsChangeAvatar,
+body:not(.darkMode)
+#saveUsername,
+body:not(.darkMode)
+#saveCustomStatus {
+    height: 63px;
+    padding: 0 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border: 0;
+    border-radius: 0;
+    background:
+        transparent
+        url("../assets/buttons/light/buttonlight.png")
+        center / 100% 100%
+        no-repeat;
+    box-shadow: none;
+    color: #30254f;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+body:not(.darkMode)
+#settingsChangeAvatar {
+    width: 145px;
+    height: 57px;
+
+    padding: 0 13px;
+}
+
+body:not(.darkMode)
+#saveUsername,
+body:not(.darkMode)
+#saveCustomStatus {
+    width: 160px;
+}
+
+body:not(.darkMode)
+#settingsChangeAvatar:hover,
+body:not(.darkMode)
+#saveUsername:hover,
+body:not(.darkMode)
+#saveCustomStatus:hover {
+    transform:
+        translateY(-1px);
+    box-shadow: none;
+}
+
+body:not(.darkMode)
+#settingsChangeAvatar:active,
+body:not(.darkMode)
+#saveUsername:active,
+body:not(.darkMode)
+#saveCustomStatus:active {
+    transform:
+        translateY(1px);
+    box-shadow: none;
+}
+
+#logoutButton {
+    width: 190px;
+    height: 51px;
+    max-width: 100%;
+    padding: 0;
+    display: block;
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 0;
+    border-radius: 0;
+    background:
+        transparent
+        url("../assets/buttons/logout.png")
+        center / 100% 100%
+        no-repeat
+        !important;
+    box-shadow: none !important;
+    color: transparent !important;
+    text-shadow: none;
+    cursor: pointer;
+}
+
+#logoutButton:hover {
+    transform:
+        translateY(-1px);
+    box-shadow: none !important;
+}
+
+#logoutButton:active {
+    transform:
+        translateY(1px);
+    box-shadow: none !important;
+}
+
+#deleteAccountButton {
+    width: 190px;
+    height: 90px;
+    max-width: 100%;
+    margin-top: 12px;
+    padding: 0;
+    display: block;
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 0;
+    border-radius: 0;
+    background:
+        transparent
+        url("../assets/buttons/delete.png")
+        center / 100% 100%
+        no-repeat
+        !important;
+    box-shadow: none !important;
+    color: transparent !important;
+    text-shadow: none;
+    cursor: pointer;
+}
+
+#deleteAccountButton:hover {
+    transform:
+        translateY(-1px);
+    box-shadow: none !important;
+}
+
+#deleteAccountButton:active {
+    transform:
+        translateY(1px);
+    box-shadow: none !important;
+}
+
+#logoutButton:disabled,
+#deleteAccountButton:disabled {
+    opacity: 0.55;
+
+    cursor: wait;
+}
+
+@media (max-width: 768px) {
+    body:not(.darkMode)
+    #mobileRequestsButton {
+        width: 170px !important;
+        height: 67px !important;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 15px !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background:
+            transparent
+            url("../assets/buttons/light/buttonlight.png")
+            center / 100% 100%
+            no-repeat
+            !important;
+        box-shadow: none !important;
+        color: #30254f !important;
+    }
+    
+    body:not(.darkMode)
+    #mobileFriendsButton {
+        width: 170px !important;
+        height: 67px !important;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 15px !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background:
+            transparent
+            url("../assets/buttons/buttonwhite.png")
+            center / 100% 100%
+            no-repeat
+            !important;
+        box-shadow: none !important;
+        color: #6b58b8 !important;
+    }
+
+    body:not(.darkMode)
+    #settingsChangeAvatar {
+        width: 135px;
+        height: 53px;
+    }
+    body:not(.darkMode)
+    #saveUsername,
+    body:not(.darkMode)
+    #saveCustomStatus {
+        width: 155px;
+        height: 61px;
+    }
+    #logoutButton {
+        width: 180px;
+        height: 49px;
+    }
+    #deleteAccountButton {
+        width: 180px;
+        height: 85px;
+    }
+}
+
 </style>
 </head>
 <body>
@@ -3705,12 +3982,14 @@ body.darkMode
             </h3>
             <button
                 id="logoutButton"
-                class="logoutButton settingsActionButton">
+                class="logoutButton settingsActionButton"
+                aria-label="Logout">
                 Logout
             </button>
             <button
                 id="deleteAccountButton"
-                class="deleteAccountButton settingsActionButton">
+                class="deleteAccountButton settingsActionButton"
+                aria-label="Delete Account">
                 Delete Account
             </button>
             <div id="deleteAccountStatus">
