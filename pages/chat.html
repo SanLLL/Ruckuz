@@ -3321,280 +3321,167 @@ body.darkMode
         3px 3px 0 #d66b74;
 }
 
-body:not(.darkMode)
-#friendRequestsButton {
+.drawnLightButton,
+.drawnWhiteButton {
+    position: relative;
     width: 132px;
-    height: 52px;
-    padding: 0 14px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
+    aspect-ratio: 348 / 137;
+    padding: 0;
+    display: inline-block;
     box-sizing: border-box;
+    overflow: visible;
     border: 0;
     border-radius: 0;
-    background:
-        transparent
-        url("../assets/buttons/light/buttonlight.png")
-        center / 100% 100%
-        no-repeat;
+    background: transparent;
     box-shadow: none;
-    color: #30254f;
     cursor: pointer;
 }
 
-body:not(.darkMode)
-#friendRequestsButton:hover {
-    transform:
-        translateY(-1px);
-    box-shadow: none;
+.drawnButtonArt {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
 }
 
-body:not(.darkMode)
-#friendRequestsButton:active {
-    transform:
-        translateY(1px);
-    box-shadow: none;
-}
-
-body:not(.darkMode)
-#friendsButton {
-    width: 132px;
-    height: 52px;
-    padding: 0 14px;
-    display: inline-flex;
+.drawnButtonContent {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
     align-items: center;
     justify-content: center;
     gap: 5px;
+    padding: 0 13px;
     box-sizing: border-box;
-    border: 0;
-    border-radius: 0;
-    background:
-        transparent
-        url("../assets/buttons/buttonwhite.png")
-        center / 100% 100%
-        no-repeat;
-    box-shadow: none;
-    color: #6b58b8;
-    cursor: pointer;
-}
-
-body:not(.darkMode)
-#friendsButton:hover {
-    transform:
-        translateY(-1px);
-}
-
-body:not(.darkMode)
-#friendsButton:active {
-    transform:
-        translateY(1px);
-}
-
-body:not(.darkMode)
-#settingsChangeAvatar,
-body:not(.darkMode)
-#saveUsername,
-body:not(.darkMode)
-#saveCustomStatus {
-    height: 63px;
-    padding: 0 18px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    border: 0;
-    border-radius: 0;
-    background:
-        transparent
-        url("../assets/buttons/light/buttonlight.png")
-        center / 100% 100%
-        no-repeat;
-    box-shadow: none;
-    color: #30254f;
+    color: inherit;
+    font: inherit;
     font-weight: bold;
-    cursor: pointer;
+    pointer-events: none;
 }
 
-body:not(.darkMode)
+.drawnLightButton {
+    color: #30254f;
+}
+
+.drawnWhiteButton {
+    color: #6b58b8;
+}
+
+.drawnLightButton:hover,
+.drawnWhiteButton:hover {
+    transform:
+        translateY(-1px);
+}
+
+.drawnLightButton:active,
+.drawnWhiteButton:active {
+    transform:
+        translateY(1px);
+}
+
+body.darkMode
+.drawnLightButton .drawnButtonArt,
+body.darkMode
+.drawnWhiteButton .drawnButtonArt {
+    display: none;
+}
+
+body.darkMode
+.drawnLightButton,
+body.darkMode
+.drawnWhiteButton {
+    width: auto;
+    aspect-ratio: auto;
+    padding: 10px 16px;
+    border: 3px solid #8b6cff;
+    background: #302b48;
+    color: #f5f0ff;
+}
+
+body.darkMode
+.drawnLightButton .drawnButtonContent,
+body.darkMode
+.drawnWhiteButton .drawnButtonContent {
+    position: static;
+    padding: 0;
+}
+
+.settingsDrawnButton {
+    width: 160px;
+    aspect-ratio: 348 / 137;
+}
+
 #settingsChangeAvatar {
     width: 145px;
-    height: 57px;
-
-    padding: 0 13px;
 }
 
-body:not(.darkMode)
-#saveUsername,
-body:not(.darkMode)
-#saveCustomStatus {
-    width: 160px;
+#friendRequestCount,
+#mobileRequestCount {
+    position: relative;
+    z-index: 2;
 }
 
-body:not(.darkMode)
-#settingsChangeAvatar:hover,
-body:not(.darkMode)
-#saveUsername:hover,
-body:not(.darkMode)
-#saveCustomStatus:hover {
-    transform:
-        translateY(-1px);
-    box-shadow: none;
-}
-
-body:not(.darkMode)
-#settingsChangeAvatar:active,
-body:not(.darkMode)
-#saveUsername:active,
-body:not(.darkMode)
-#saveCustomStatus:active {
-    transform:
-        translateY(1px);
-    box-shadow: none;
-}
-
-#logoutButton {
-    width: 190px;
-    height: 51px;
-    max-width: 100%;
-    padding: 0;
+.drawnImageActionButton {
+    width: fit-content !important;
+    height: fit-content !important;
+    max-width: none !important;
+    max-height: none !important;
+    margin-left: 0;
+    padding: 0 !important;
     display: block;
-    box-sizing: border-box;
-    overflow: hidden;
-    border: 0;
-    border-radius: 0;
-    background:
-        transparent
-        url("../assets/buttons/logout.png")
-        center / 100% 100%
-        no-repeat
-        !important;
+    overflow: visible;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
     box-shadow: none !important;
-    color: transparent !important;
-    text-shadow: none;
+    line-height: 0;
     cursor: pointer;
 }
 
-#logoutButton:hover {
-    transform:
-        translateY(-1px);
-    box-shadow: none !important;
-}
-
-#logoutButton:active {
-    transform:
-        translateY(1px);
-    box-shadow: none !important;
-}
-
-#deleteAccountButton {
-    width: 190px;
-    height: 90px;
-    max-width: 100%;
-    margin-top: 12px;
-    padding: 0;
+.drawnImageActionButton img {
     display: block;
-    box-sizing: border-box;
-    overflow: hidden;
-    border: 0;
-    border-radius: 0;
-    background:
-        transparent
-        url("../assets/buttons/delete.png")
-        center / 100% 100%
-        no-repeat
-        !important;
-    box-shadow: none !important;
-    color: transparent !important;
-    text-shadow: none;
-    cursor: pointer;
+    pointer-events: none;
+    user-select: none;
 }
 
-#deleteAccountButton:hover {
+.drawnImageActionButton:hover {
     transform:
         translateY(-1px);
-    box-shadow: none !important;
+    box-shadow:
+        none !important;
 }
 
-#deleteAccountButton:active {
+.drawnImageActionButton:active {
     transform:
         translateY(1px);
-    box-shadow: none !important;
+    box-shadow:
+        none !important;
 }
 
-#logoutButton:disabled,
-#deleteAccountButton:disabled {
+.drawnImageActionButton:disabled {
     opacity: 0.55;
-
     cursor: wait;
 }
 
 @media (max-width: 768px) {
-    body:not(.darkMode)
-    #mobileRequestsButton {
-        width: 170px !important;
-        height: 67px !important;
-        margin-left: auto;
-        margin-right: auto;
-        padding: 0 15px !important;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        border: 0 !important;
-        border-radius: 0 !important;
-        background:
-            transparent
-            url("../assets/buttons/light/buttonlight.png")
-            center / 100% 100%
-            no-repeat
-            !important;
-        box-shadow: none !important;
-        color: #30254f !important;
-    }
-    
-    body:not(.darkMode)
+    #mobileRequestsButton,
     #mobileFriendsButton {
-        width: 170px !important;
-        height: 67px !important;
+        width: 170px;
+        aspect-ratio: 348 / 137;
         margin-left: auto;
         margin-right: auto;
-        padding: 0 15px !important;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        border: 0 !important;
-        border-radius: 0 !important;
-        background:
-            transparent
-            url("../assets/buttons/buttonwhite.png")
-            center / 100% 100%
-            no-repeat
-            !important;
-        box-shadow: none !important;
-        color: #6b58b8 !important;
+        padding: 0;
     }
-
-    body:not(.darkMode)
+    .settingsDrawnButton {
+        width: 155px;
+    }
     #settingsChangeAvatar {
         width: 135px;
-        height: 53px;
-    }
-    body:not(.darkMode)
-    #saveUsername,
-    body:not(.darkMode)
-    #saveCustomStatus {
-        width: 155px;
-        height: 61px;
-    }
-    #logoutButton {
-        width: 180px;
-        height: 49px;
-    }
-    #deleteAccountButton {
-        width: 180px;
-        height: 85px;
     }
 }
 
@@ -3626,20 +3513,39 @@ body:not(.darkMode)
     </button>
     <div id="desktopTopButtons">
         <button
-            id="friendRequestsButton" class="friendRequestsButton">
-            Requests
-            <span id="friendRequestCount">
-                0
+            id="friendRequestsButton"
+            class="friendRequestsButton drawnLightButton">
+            <img
+                class="drawnButtonArt"
+                src="../assets/buttons/light/buttonlight.png"
+                alt="">
+            <span class="drawnButtonContent">
+                <span>
+                    Requests
+                </span>
+                <span id="friendRequestCount">
+                    0
+                </span>
             </span>
         </button>
-        <button id="friendsButton">
-            Friends
-            <span id="friendsCount">
-                0
+        <button
+            id="friendsButton"
+            class="drawnWhiteButton">
+            <img
+                class="drawnButtonArt"
+                src="../assets/buttons/buttonwhite.png"
+                alt="">
+            <span class="drawnButtonContent">
+                <span>
+                    Friends
+                </span>
+                <span id="friendsCount">
+                    0
+                </span>
             </span>
         </button>
     </div>
-    
+
 </div>
     <div id="mobileMenu">
     <button id="mobileChannelsButton">
@@ -3648,13 +3554,37 @@ body:not(.darkMode)
     <button id="mobileMembersButton">
         Members
     </button>
-    <button id="mobileRequestsButton">
-        Requests
-        <span id="mobileRequestCount">0</span>
+    <button
+        id="mobileRequestsButton"
+        class="drawnLightButton">
+        <img
+            class="drawnButtonArt"
+            src="../assets/buttons/light/buttonlight.png"
+            alt="">
+        <span class="drawnButtonContent">
+            <span>
+                Requests
+            </span>
+            <span id="mobileRequestCount">
+                0
+            </span>
+        </span>
     </button>
-    <button id="mobileFriendsButton">
-        Friends
-        <span id="mobileFriendsCount">0</span>
+    <button
+        id="mobileFriendsButton"
+        class="drawnWhiteButton">
+        <img
+            class="drawnButtonArt"
+            src="../assets/buttons/buttonwhite.png"
+            alt="">
+        <span class="drawnButtonContent">
+            <span>
+                Friends
+            </span>
+            <span id="mobileFriendsCount">
+                0
+            </span>
+        </span>
     </button>
     <button id="mobileSettingsButton">
         Settings
@@ -3892,9 +3822,16 @@ body:not(.darkMode)
             id="settingsAvatar"
             src="/Ruckuz/assets/avatars/ruckuz.png"
             alt="Your avatar">
-        
-        <button id="settingsChangeAvatar">
-            Change Picture
+        <button
+            id="settingsChangeAvatar"
+            class="drawnLightButton settingsDrawnButton">
+            <img
+                class="drawnButtonArt"
+                src="../assets/buttons/light/buttonlight.png"
+                alt="">
+            <span class="drawnButtonContent">
+                Change Picture
+            </span>
         </button>
     </div>
     
@@ -3932,13 +3869,21 @@ body:not(.darkMode)
         <span id="usernameCharacterCount">
             0 / 32
         </span>
+        </div>
+        <button
+            id="saveUsername"
+            class="drawnLightButton settingsDrawnButton">
+            <img
+                class="drawnButtonArt"
+                src="../assets/buttons/light/buttonlight.png"
+                alt="">
+            <span class="drawnButtonContent">
+                Save Username
+            </span>
+        </button>
+        <div id="usernameSaveMessage">
+        </div>
     </div>
-    <button id="saveUsername">
-        Save Username
-    </button>
-    <div id="usernameSaveMessage">
-    </div>
-</div>
 
         <div class="settingsDivider"></div>
         <div class="settingsSection">
@@ -3952,14 +3897,21 @@ body:not(.darkMode)
                 <input
                     id="customStatusInput"
                     maxlength="80"
-                    placeholder="What are you up to?"
-                >
+                    placeholder="What are you up to?">
                 <span id="statusCharacterCount">
                     0 / 80
                 </span>
             </div>
-            <button id="saveCustomStatus">
-                Save Status
+            <button
+                id="saveCustomStatus"
+                class="drawnLightButton settingsDrawnButton">
+                <img
+                    class="drawnButtonArt"
+                    src="../assets/buttons/light/buttonlight.png"
+                    alt="">
+                <span class="drawnButtonContent">
+                    Save Status
+                </span>
             </button>
             <div id="statusSaveMessage">
             </div>
@@ -3982,15 +3934,19 @@ body:not(.darkMode)
             </h3>
             <button
                 id="logoutButton"
-                class="logoutButton settingsActionButton"
+                class="logoutButton drawnImageActionButton"
                 aria-label="Logout">
-                Logout
+                <img
+                    src="../assets/buttons/logout.png"
+                    alt="">
             </button>
             <button
                 id="deleteAccountButton"
-                class="deleteAccountButton settingsActionButton"
+                class="deleteAccountButton drawnImageActionButton"
                 aria-label="Delete Account">
-                Delete Account
+                <img
+                    src="../assets/buttons/delete.png"
+                    alt="">
             </button>
             <div id="deleteAccountStatus">
             </div>
