@@ -237,16 +237,6 @@ body.darkMode #bottom {
     border-top-color: #8b6cff;
 }
 
-body.darkMode #messageInput {
-    background: #1f1c30;
-    color: #ffffff;
-    border: 2px solid #8b6cff;
-}
-
-body.darkMode #messageInput::placeholder {
-    color: #aaa2bd;
-}
-
 #topBar {
     position: fixed;
     top: 18px;
@@ -504,44 +494,6 @@ body.darkMode .friendRequest {
 .noFriends {
     text-align: center;
     padding: 20px;
-}
-
-#fileButton {
-    width: 52px;
-    height: 52px;
-    padding: 0;
-    border: 3px solid #6b58b8;
-    border-radius: 14px;
-    background: #ffd36b;
-    color: #30254f;
-    font-size: 30px;
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    box-shadow: 4px 4px 0 #6b58b8;
-    transition:
-        transform 0.15s ease,
-        box-shadow 0.15s ease;
-}
-
-#fileButton:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 #6b58b8;
-}
-
-#fileButton:active {
-    transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 #6b58b8;
-}
-
-body.darkMode #fileButton {
-    background: #8b6cff;
-    color: white;
-    border-color: #b79cff;
-    box-shadow: 4px 4px 0 #b79cff;
 }
 
 .messageFile {
@@ -2119,23 +2071,6 @@ body.darkMode
     position: relative;
 }
 
-#customStatusInput {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 12px 70px 12px 12px;
-    border: 3px solid #6b58b8;
-    border-radius: 12px;
-    background: white;
-    color: #30254f;
-    font-size: 15px;
-    outline: none;
-}
-
-#customStatusInput:focus {
-    box-shadow:
-        4px 4px 0 #c7b8ed;
-}
-
 #statusCharacterCount {
     position: absolute;
     right: 10px;
@@ -2192,12 +2127,6 @@ body.darkMode #copyRuckuzId,
 body.darkMode #closeSettings {
     background: #242038;
     color: #b79cff;
-    border-color: #8b6cff;
-}
-
-body.darkMode #customStatusInput {
-    background: #1f1c30;
-    color: white;
     border-color: #8b6cff;
 }
 
@@ -2329,26 +2258,6 @@ body:not(.darkMode) #settingsButton:hover {
     width: 100%;
 }
 
-#usernameInput {
-    width: 100%;
-    box-sizing: border-box;
-    padding:
-        12px
-        70px
-        12px
-        12px;
-    border: 3px solid #6b58b8;
-    border-radius: 5px;
-    background: white;
-    color: #30254f;
-    font-size: 15px;
-    outline: none;
-}
-
-#usernameInput:focus {
-    box-shadow:
-        3px 3px 0 #c7b8ed;
-}
 
 #usernameCharacterCount {
     position: absolute;
@@ -2385,13 +2294,6 @@ body:not(.darkMode) #settingsButton:hover {
 body:not(.darkMode)
 .memberCustomStatus {
     color: #817a91;
-}
-
-body.darkMode
-#usernameInput {
-    background: #1f1c30;
-    color: white;
-    border-color: #8b6cff;
 }
 
 #confirmOverlay {
@@ -2532,41 +2434,6 @@ body.darkMode #confirmConfirmButton.danger {
     align-items: flex-end;
 }
 
-#messageInput {
-    flex: 1 1 auto;
-    min-width: 0;
-    min-height: 48px;
-    max-height: 120px;
-    box-sizing: border-box;
-    padding: 11px 14px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    border: 2px solid #6b58b8;
-    background: white;
-    color: #30254f;
-    font-size: 18px;
-    line-height: 24px;
-    white-space: pre-wrap;
-    word-break: break-word;
-    outline: none;
-}
-
-#messageInput:empty::before {
-    content: attr(data-placeholder);
-    color: #817a91;
-    pointer-events: none;
-}
-
-body.darkMode #messageInput {
-    background: #1f1c30;
-    color: #f5f0ff;
-    border-color: #8b6cff;
-}
-
-body.darkMode #messageInput:empty::before {
-    color: #aaa2bd;
-}
-
 .composerEmojiToken {
     display: inline-flex;
     width: 26px;
@@ -2592,45 +2459,6 @@ body.darkMode #messageInput:empty::before {
     object-fit: contain;
     vertical-align: -8px;
     margin: 0 1px;
-}
-
-#emojiButton {
-    width: 48px;
-    height: 48px;
-    flex: 0 0 48px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 3px solid #6b58b8;
-    border-radius: 5px;
-    background: #ffd36b;
-    color: #30254f;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow:
-        3px 3px 0 #6b58b8;
-}
-
-#emojiButton:hover {
-    transform: translate(-1px, -1px);
-    box-shadow:
-        4px 4px 0 #6b58b8;
-}
-
-#emojiButton:active {
-    transform: translate(2px, 2px);
-    box-shadow:
-        1px 1px 0 #6b58b8;
-}
-
-body.darkMode #emojiButton {
-    background: #403863;
-    color: #f5f0ff;
-    border-color: #8b6cff;
-    box-shadow:
-        3px 3px 0 #8b6cff;
 }
 
 #emojiPicker {
@@ -3472,6 +3300,11 @@ body:not(.darkMode)
     box-shadow: none !important;
 }
 
+#messageInput:empty::before {
+    content: attr(data-placeholder);
+    pointer-events: none;
+}
+
 #messageInput {
     min-height: 48px;
     max-height: 120px;
@@ -3535,6 +3368,83 @@ body.darkMode #messageInput:empty::before {
     width: 100%;
     height: 100%;
     object-fit: contain;
+}
+
+.composerInputShell {
+    position: relative;
+}
+
+#messageInput {
+    padding-right: 60px;
+}
+
+.inlineSendButton {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    z-index: 4;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform:
+        translateY(-50%)
+        scale(0.82);
+    transition:
+        opacity 0.12s ease,
+        transform 0.12s ease,
+        visibility 0.12s ease;
+}
+
+.inlineSendButton img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.inlineSendButton.visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform:
+        translateY(-50%)
+        scale(1);
+}
+
+.inlineSendButton.visible:hover {
+    transform:
+        translateY(-52%)
+        scale(1);
+}
+
+.inlineSendButton.visible:active {
+    transform:
+        translateY(-48%)
+        scale(0.96);
+}
+
+@media (max-width: 768px) {
+    #messageInput {
+        padding-right: 54px;
+    }
+
+    .inlineSendButton {
+        width: 34px;
+        height: 34px;
+        right: 7px;
+    }
 }
 
 </style>
@@ -3811,14 +3721,12 @@ body.darkMode #messageInput:empty::before {
                 type="button"
                 class="iconArtButton"
                 aria-label="Upload file">
-        
                 <img
                     class="themeSwapImage"
                     src="../assets/buttons/light/medialight.png"
                     data-light-src="../assets/buttons/light/medialight.png"
                     data-dark-src="../assets/buttons/dark/mediadark.png"
                     alt="">
-        
             </button>
             <div
                 id="messageInputShell"
@@ -3829,7 +3737,6 @@ body.darkMode #messageInput:empty::before {
                     data-light-src="../assets/buttons/light/inputlight.png"
                     data-dark-src="../assets/buttons/dark/inputdark.png"
                     alt="">
-                
                 <div
                     id="messageInput"
                     contenteditable="true"
@@ -3837,7 +3744,20 @@ body.darkMode #messageInput:empty::before {
                     aria-label="Message"
                     data-placeholder="Say something..."
                     spellcheck="true"></div>
-        
+                <button
+                    id="sendButton"
+                    type="button"
+                    class="inlineSendButton"
+                    aria-label="Send message"
+                    aria-hidden="true"
+                    disabled>
+                    <img
+                        class="themeSwapImage"
+                        src="../assets/buttons/light/sendlight.png"
+                        data-light-src="../assets/buttons/light/sendlight.png"
+                        data-dark-src="../assets/buttons/dark/senddark.png"
+                        alt="">
+                </button>
             </div>
             <button
                 id="emojiButton"
@@ -3851,7 +3771,6 @@ body.darkMode #messageInput:empty::before {
                     data-light-src="../assets/buttons/light/emojilight.png"
                     data-dark-src="../assets/buttons/dark/emojidark.png"
                     alt="">
-        
             </button>
             <div
                 id="emojiPicker"
