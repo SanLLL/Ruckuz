@@ -3246,33 +3246,6 @@ body.darkMode .editedMarker {
         translateY(1px);
 }
 
-body.darkMode
-.drawnLightButton .drawnButtonArt,
-body.darkMode
-.drawnWhiteButton .drawnButtonArt {
-    display: none;
-}
-
-body.darkMode
-.drawnLightButton,
-body.darkMode
-.drawnWhiteButton {
-    width: auto;
-    aspect-ratio: auto;
-    padding: 10px 16px;
-    border: 3px solid #8b6cff;
-    background: #302b48;
-    color: #f5f0ff;
-}
-
-body.darkMode
-.drawnLightButton .drawnButtonContent,
-body.darkMode
-.drawnWhiteButton .drawnButtonContent {
-    position: static;
-    padding: 0;
-}
-
 .settingsDrawnButton {
     width: 160px;
     aspect-ratio: 348 / 137;
@@ -3414,6 +3387,156 @@ body:not(.darkMode)
     margin: 0;
 }
 
+.themeSwapImage,
+.themedInputArt,
+.mediaButtonIcon {
+    display: block;
+    pointer-events: none;
+    user-select: none;
+}
+
+.iconArtButton,
+.themeImageButton {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    cursor: pointer;
+}
+
+.iconArtButton:hover,
+.themeImageButton:hover {
+    transform: translateY(-1px);
+}
+
+.iconArtButton:active,
+.themeImageButton:active {
+    transform: translateY(1px);
+}
+
+.iconArtButton {
+    flex: 0 0 auto;
+    width: 50px;
+    height: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.iconArtButton img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#bottom {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    position: relative;
+}
+
+.themedInputShell {
+    position: relative;
+}
+
+.composerInputShell {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 50px;
+}
+
+.settingsInputShell {
+    width: 100%;
+    min-height: 52px;
+}
+
+.themedInputArt {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+}
+
+#messageInput,
+#usernameInput,
+#customStatusInput {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    background: transparent;
+    border: 0;
+    outline: none;
+    box-shadow: none !important;
+}
+
+#messageInput {
+    min-height: 48px;
+    max-height: 120px;
+    padding: 12px 18px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-size: 18px;
+    line-height: 24px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+#usernameInput,
+#customStatusInput {
+    box-sizing: border-box;
+    padding: 12px 72px 12px 16px;
+    font-size: 15px;
+}
+
+#usernameCharacterCount,
+#statusCharacterCount {
+    z-index: 1;
+    right: 14px;
+}
+
+body:not(.darkMode) #messageInput,
+body:not(.darkMode) #usernameInput,
+body:not(.darkMode) #customStatusInput {
+    color: #30254f;
+}
+
+body.darkMode #messageInput,
+body.darkMode #usernameInput,
+body.darkMode #customStatusInput {
+    color: #f5f0ff;
+}
+
+body:not(.darkMode) #messageInput:empty::before {
+    color: #817a91;
+}
+
+body.darkMode #messageInput:empty::before {
+    color: #aaa2bd;
+}
+
+.themeImageButton img {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+}
+
+.mediaPlayButton,
+.mediaMuteButton {
+    padding: 0;
+    overflow: hidden;
+}
+
+.mediaButtonIcon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
 </style>
 </head>
 <body>
@@ -3445,8 +3568,10 @@ body:not(.darkMode)
             id="friendRequestsButton"
             class="drawnLightButton">
             <img
-                class="drawnButtonArt"
+                class="drawnButtonArt themeSwapImage"
                 src="../assets/buttons/light/buttonlight.png"
+                data-light-src="../assets/buttons/light/buttonlight.png"
+                data-dark-src="../assets/buttons/dark/buttondark.png"
                 alt="">
             <span class="drawnButtonContent">
                 <span>
@@ -3461,8 +3586,10 @@ body:not(.darkMode)
             id="friendsButton"
             class="drawnWhiteButton">
             <img
-                class="drawnButtonArt"
+                class="drawnButtonArt themeSwapImage"
                 src="../assets/buttons/buttonwhite.png"
+                data-light-src="../assets/buttons/buttonwhite.png"
+                data-dark-src="../assets/buttons/buttondark.png"
                 alt="">
             <span class="drawnButtonContent">
                 <span>
@@ -3487,8 +3614,10 @@ body:not(.darkMode)
         id="mobileRequestsButton"
         class="drawnLightButton">
         <img
-            class="drawnButtonArt"
+            class="drawnButtonArt themeSwapImage"
             src="../assets/buttons/light/buttonlight.png"
+            data-light-src="../assets/buttons/light/buttonlight.png"
+            data-dark-src="../assets/buttons/dark/buttondark.png"
             alt="">
         <span class="drawnButtonContent">
             <span>
@@ -3503,8 +3632,10 @@ body:not(.darkMode)
         id="mobileFriendsButton"
         class="drawnWhiteButton">
         <img
-            class="drawnButtonArt"
+            class="drawnButtonArt themeSwapImage"
             src="../assets/buttons/buttonwhite.png"
+            data-light-src="../assets/buttons/buttonwhite.png"
+            data-dark-src="../assets/buttons/buttondark.png"
             alt="">
         <span class="drawnButtonContent">
             <span>
@@ -3677,35 +3808,73 @@ body:not(.darkMode)
         <div id="bottom">
             <button
                 id="fileButton"
-                type="button">
-                +
+                type="button"
+                class="iconArtButton"
+                aria-label="Upload file">
+                <img
+                    class="themeSwapImage"
+                    src="../assets/buttons/light/medialight.png"
+                    data-light-src="../assets/buttons/light/medialight.png"
+                    data-dark-src="../assets/buttons/dark/mediadark.png"
+                    alt="">
             </button>
-        <div
-            id="messageInput"
-            contenteditable="true"
-            role="textbox"
-            aria-label="Message"
-            data-placeholder="Say something..."
-            spellcheck="true"></div>
-        <button
-            id="emojiButton"
-            type="button"
-            aria-label="Open emoji selector"
-            aria-expanded="false">
-            :D
-        </button>
-            
-        <div
-            id="emojiPicker"
-            aria-hidden="true">
-            <div id="emojiPickerHeader">
-                Emojis
-            </div>
-            
-            <div id="emojiGrid">
+        
+            <div
+                id="messageInputShell"
+                class="themedInputShell composerInputShell">
+                <img
+                    class="themedInputArt themeSwapImage"
+                    src="../assets/buttons/light/inputlight.png"
+                    data-light-src="../assets/buttons/light/inputlight.png"
+                    data-dark-src="../assets/buttons/dark/inputdark.png"
+                    alt="">
+                <div
+                    id="messageInput"
+                    contenteditable="true"
+                    role="textbox"
+                    aria-label="Message"
+                    data-placeholder="Say something..."
+                    spellcheck="true"></div>
             </div>
         
-        </div>
+            <button
+                id="emojiButton"
+                type="button"
+                class="iconArtButton"
+                aria-label="Open emoji selector"
+                aria-expanded="false">
+                <img
+                    class="themeSwapImage"
+                    src="../assets/buttons/light/emojilight.png"
+                    data-light-src="../assets/buttons/light/emojilight.png"
+                    data-dark-src="../assets/buttons/dark/emojidark.png"
+                    alt="">
+            </button>
+        
+            <button
+                id="sendButton"
+                type="button"
+                class="iconArtButton"
+                aria-label="Send message">
+                <img
+                    class="themeSwapImage"
+                    src="../assets/buttons/light/sendlight.png"
+                    data-light-src="../assets/buttons/light/sendlight.png"
+                    data-dark-src="../assets/buttons/dark/senddark.png"
+                    alt="">
+            </button>
+        
+            <div
+                id="emojiPicker"
+                aria-hidden="true">
+                <div id="emojiPickerHeader">
+                    Emojis
+                </div>
+        
+                <div id="emojiGrid">
+                </div>
+            </div>
+        
             <input
                 type="file"
                 id="fileUpload"
@@ -3755,8 +3924,10 @@ body:not(.darkMode)
             id="settingsChangeAvatar"
             class="drawnLightButton settingsDrawnButton">
             <img
-                class="drawnButtonArt"
+                class="drawnButtonArt themeSwapImage"
                 src="../assets/buttons/light/buttonlight.png"
+                data-light-src="../assets/buttons/light/buttonlight.png"
+                data-dark-src="../assets/buttons/dark/buttondark.png"
                 alt="">
             <span class="drawnButtonContent">
                 Change Picture
@@ -3790,21 +3961,29 @@ body:not(.darkMode)
     <p>
         Your RuckuZ userID won't change.
     </p>
-    <div class="usernameEditor">
-        <input
-            id="usernameInput"
-            maxlength="32"
-            placeholder="Username">
-        <span id="usernameCharacterCount">
-            0 / 32
-        </span>
+        <div class="usernameEditor themedInputShell settingsInputShell">
+            <img
+                class="themedInputArt themeSwapImage"
+                src="../assets/buttons/light/inputlight.png"
+                data-light-src="../assets/buttons/light/inputlight.png"
+                data-dark-src="../assets/buttons/dark/inputdark.png"
+                alt="">
+            <input
+                id="usernameInput"
+                maxlength="32"
+                placeholder="Username">
+            <span id="usernameCharacterCount">
+                0 / 32
+            </span>
         </div>
         <button
             id="saveUsername"
             class="drawnLightButton settingsDrawnButton">
             <img
-                class="drawnButtonArt"
+                class="drawnButtonArt themeSwapImage"
                 src="../assets/buttons/light/buttonlight.png"
+                data-light-src="../assets/buttons/light/buttonlight.png"
+                data-dark-src="../assets/buttons/dark/buttondark.png"
                 alt="">
             <span class="drawnButtonContent">
                 Save Username
@@ -3822,21 +4001,29 @@ body:not(.darkMode)
             <p>
                 This appears on your profile and user panel.
             </p>
-            <div class="statusEditor">
-                <input
-                    id="customStatusInput"
-                    maxlength="80"
-                    placeholder="What are you up to?">
-                <span id="statusCharacterCount">
-                    0 / 80
-                </span>
-            </div>
+                <div class="statusEditor themedInputShell settingsInputShell">
+                    <img
+                        class="themedInputArt themeSwapImage"
+                        src="../assets/buttons/light/inputlight.png"
+                        data-light-src="../assets/buttons/light/inputlight.png"
+                        data-dark-src="../assets/buttons/dark/inputdark.png"
+                        alt="">
+                    <input
+                        id="customStatusInput"
+                        maxlength="80"
+                        placeholder="What are you up to?">
+                    <span id="statusCharacterCount">
+                        0 / 80
+                    </span>
+                </div>
             <button
                 id="saveCustomStatus"
                 class="drawnLightButton settingsDrawnButton">
                 <img
-                    class="drawnButtonArt"
+                    class="drawnButtonArt themeSwapImage"
                     src="../assets/buttons/light/buttonlight.png"
+                    data-light-src="../assets/buttons/light/buttonlight.png"
+                    data-dark-src="../assets/buttons/dark/buttondark.png"
                     alt="">
                 <span class="drawnButtonContent">
                     Save Status
@@ -3852,8 +4039,16 @@ body:not(.darkMode)
             </h3>
             <button
                 id="themeToggle"
-                class="themeToggle settingsActionButton">
-                Dark Mode
+                class="themeImageButton"
+                type="button"
+                aria-label="Toggle theme">
+                <img
+                    id="themeToggleArt"
+                    class="themeSwapImage"
+                    src="../assets/buttons/light/themelight.png"
+                    data-light-src="../assets/buttons/light/themelight.png"
+                    data-dark-src="../assets/buttons/dark/themedark.png"
+                    alt="">
             </button>
         </div>
         <div class="settingsDivider"></div>
