@@ -3811,14 +3811,15 @@ body.darkMode #messageInput:empty::before {
                 type="button"
                 class="iconArtButton"
                 aria-label="Upload file">
+        
                 <img
                     class="themeSwapImage"
                     src="../assets/buttons/light/medialight.png"
                     data-light-src="../assets/buttons/light/medialight.png"
                     data-dark-src="../assets/buttons/dark/mediadark.png"
                     alt="">
-            </button>
         
+            </button>
             <div
                 id="messageInputShell"
                 class="themedInputShell composerInputShell">
@@ -3828,6 +3829,7 @@ body.darkMode #messageInput:empty::before {
                     data-light-src="../assets/buttons/light/inputlight.png"
                     data-dark-src="../assets/buttons/dark/inputdark.png"
                     alt="">
+                
                 <div
                     id="messageInput"
                     contenteditable="true"
@@ -3835,8 +3837,8 @@ body.darkMode #messageInput:empty::before {
                     aria-label="Message"
                     data-placeholder="Say something..."
                     spellcheck="true"></div>
-            </div>
         
+            </div>
             <button
                 id="emojiButton"
                 type="button"
@@ -3849,28 +3851,14 @@ body.darkMode #messageInput:empty::before {
                     data-light-src="../assets/buttons/light/emojilight.png"
                     data-dark-src="../assets/buttons/dark/emojidark.png"
                     alt="">
-            </button>
         
-            <button
-                id="sendButton"
-                type="button"
-                class="iconArtButton"
-                aria-label="Send message">
-                <img
-                    class="themeSwapImage"
-                    src="../assets/buttons/light/sendlight.png"
-                    data-light-src="../assets/buttons/light/sendlight.png"
-                    data-dark-src="../assets/buttons/dark/senddark.png"
-                    alt="">
             </button>
-        
             <div
                 id="emojiPicker"
                 aria-hidden="true">
                 <div id="emojiPickerHeader">
                     Emojis
                 </div>
-        
                 <div id="emojiGrid">
                 </div>
             </div>
@@ -3879,11 +3867,13 @@ body.darkMode #messageInput:empty::before {
                 type="file"
                 id="fileUpload"
                 style="display:none;">
+        
             <input
                 type="file"
                 id="avatarUpload"
                 accept="image/png,image/jpeg,image/webp"
                 style="display:none;">
+        
         </div>
     </main>
     
@@ -3999,7 +3989,7 @@ body.darkMode #messageInput:empty::before {
                 Custom Status
             </h3>
             <p>
-                This appears on your profile and user panel.
+                This appears on your profile
             </p>
                 <div class="statusEditor themedInputShell settingsInputShell">
                     <img
@@ -4041,7 +4031,7 @@ body.darkMode #messageInput:empty::before {
                 id="themeToggle"
                 class="themeImageButton"
                 type="button"
-                aria-label="Toggle theme">
+                aria-label="Switch theme">
                 <img
                     id="themeToggleArt"
                     class="themeSwapImage"
