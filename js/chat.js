@@ -1069,6 +1069,129 @@ function createMemberElement(
     return div;
 }
 
+function padTimestampNumber(
+    value
+) {
+    return String(
+        value
+    ).padStart(
+        2,
+        "0"
+    );
+}
+
+function formatMessageClock(
+    date
+) {
+
+    return (
+        padTimestampNumber(
+            date.getHours()
+        ) +
+        ":" +
+        padTimestampNumber(
+            date.getMinutes()
+        )
+    );
+
+}
+
+function formatMessageTimestamp(
+    createdAt
+) {
+    const sentDate =
+        new Date(
+            createdAt
+        );
+
+    if (
+        Number.isNaN(
+            sentDate.getTime()
+        )
+    ) {
+        return "";
+
+    }
+
+    const now =
+        Date.now();
+
+    const age =
+        Math.max(
+            0,
+            now -
+            sentDate.getTime()
+        );
+
+    const oneDay =
+        24 *
+        60 *
+        60 *
+        1000;
+
+    const twoDays =
+        48 *
+        60 *
+        60 *
+        1000;
+
+    if (
+        age < oneDay
+    ) {
+        return formatMessageClock(
+            sentDate
+        );
+    }
+
+    if (
+        age < twoDays
+    ) {
+
+        return (
+            "yesterday at " +
+            formatMessageClock(
+                sentDate
+            )
+        );
+    }
+    return (
+        padTimestampNumber(
+            sentDate.getDate()
+        ) +
+        "." +
+        padTimestampNumber(
+            sentDate.getMonth() + 1
+        ) +
+        "." +
+        sentDate.getFullYear()
+    );
+
+}
+
+function refreshMessageTimestamps() {
+    document
+        .querySelectorAll(
+            ".message[data-created-at]"
+        )
+        .forEach(
+            messageElement => {
+                const timestamp =
+                    messageElement.querySelector(
+                        ".messageTimestamp"
+                    );
+
+                if (!timestamp) {
+                    return;
+                }
+
+                timestamp.textContent =
+                    formatMessageTimestamp(
+                        messageElement.dataset.createdAt
+                    );
+            }
+        );
+}
+
 async function loadMessages() {
     const { data, error } =
         await supabase
@@ -1311,14 +1434,16 @@ function addMessage(message) {
                 }
             );
     
+    const createdAt =
+        message.created_at ||
+        new Date().toISOString();
+    
     const div = document.createElement("div");
     div.className = "message";
     div.dataset.id = message.id;
     div.dataset.user = message.user_id;
-    const messageBodyHTML =
-        renderMessageBodyHTML(
-            message
-        );
+    div.dataset.createdAt = createdAt;
+    const messageBodyHTML = renderMessageBodyHTML(message);
     
     let fileHTML = "";
     if (message.file_url) {
@@ -1499,8 +1624,17 @@ function addMessage(message) {
                 alt="${escapeHTML(profile.username)}"
             >
             <div class="messageContent">
-                <div class="username">
-                    ${escapeHTML(profile.username)}
+                <div class="messageHeader">
+                    <div class="username">
+                        ${escapeHTML(
+                            profile.username
+                        )}
+                    </div>
+                    <span class="messageTimestamp">
+                        ${formatMessageTimestamp(
+                            createdAt
+                        )}
+                    </span>
                 </div>
                 <div class="messageBody">
                     ${messageBodyHTML}
@@ -2104,12 +2238,17 @@ function createLocalMessage(text, tempId) {
             avatar_url:
                 "/Ruckuz/assets/avatars/ruckuz.png"
         };
+
+    const createdAt =
+        new Date().toISOString();
     const div =
         document.createElement("div");
     div.className =
         "message localMessage";
     div.dataset.localId =
         tempId;
+    div.dataset.createdAt =
+    createdAt;
     div.innerHTML = `
         <div class="messageRow">
             <div class="messageMenu">
@@ -2120,8 +2259,15 @@ function createLocalMessage(text, tempId) {
                 alt="${profile.username}"
             >
             <div class="messageContent">
-                <div class="username">
-                    ${profile.username}
+                <div class="messageHeader">
+                    <div class="username">
+                        ${profile.username}
+                    </div>
+                    <span class="messageTimestamp">
+                        ${formatMessageTimestamp(
+                            createdAt
+                        )}
+                    </span>
                 </div>
                 <div class="text${
                     isEmojiOnlyText(text)
@@ -2240,11 +2386,15 @@ async function uploadChatFile() {
 }
 
 function createUploadingPreview(file, previewId) {
+    const createdAt =
+    new Date().toISOString();
     const div =
         document.createElement("div");
     div.className = "message";
     div.dataset.uploadId =
         previewId;
+    div.dataset.createdAt =
+    createdAt;
     div.innerHTML = `
         <div class="messageRow">
             <div class="messageMenu">
@@ -2258,11 +2408,20 @@ function createUploadingPreview(file, previewId) {
                 alt="You"
             >
             <div class="messageContent">
-                <div class="username">
-                    ${
-                        profiles[session.user.id]?.username ||
-                        session.user.email
-                    }
+                <div class="messageHeader">
+                    <div class="username">
+                        ${
+                            profiles[
+                                session.user.id
+                            ]?.username ||
+                            session.user.email
+                        }
+                    </div>
+                    <span class="messageTimestamp">
+                        ${formatMessageTimestamp(
+                            createdAt
+                        )}
+                    </span>
                 </div>
                 <div class="uploadingFile">
                     <div class="uploadPreview"></div>
@@ -2827,6 +2986,21 @@ setAppLoadingText(
     "Loading messages..."
 );
 await loadMessages();
+refreshMessageTimestamps();
+setInterval(
+    refreshMessageTimestamps,
+    60 * 1000
+);
+document.addEventListener(
+    "visibilitychange",
+    () => {
+        if (
+            !document.hidden
+        ) {
+            refreshMessageTimestamps();
+        }
+    }
+);
 setAppLoadingText(
     "Preparing interface..."
 );
