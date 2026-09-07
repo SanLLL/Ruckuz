@@ -255,11 +255,11 @@ const selfCustomStatus = document.getElementById("selfCustomStatus");
 const selfOnlineDot = document.getElementById("selfOnlineDot");
 const settingsAvatar = document.getElementById("settingsAvatar");
 const settingsUsername = document.getElementById("settingsUsername");
-const saveUsernameLabel = saveUsername.querySelector(".drawnButtonContent");
 const settingsChangeAvatar = document.getElementById("settingsChangeAvatar");
 const usernameInput = document.getElementById("usernameInput");
 const usernameCharacterCount = document.getElementById("usernameCharacterCount");
 const saveUsername = document.getElementById("saveUsername");
+const saveUsernameLabel = saveUsername.querySelector(".drawnButtonContent");
 const usernameSaveMessage = document.getElementById("usernameSaveMessage");
 const settingsRuckuzId = document.getElementById("settingsRuckuzId");
 const copyRuckuzId = document.getElementById("copyRuckuzId");
@@ -504,10 +504,9 @@ saveUsername.onclick =
         refreshSettingsProfile();
         renderMemberList();
         saveUsername.disabled = false;
-        saveUsername.textContent =
-            "Save Username";
-        usernameSaveMessage.textContent =
-            "Username changed.";
+        saveUsernameLabel.textContent = "Save Username";
+        
+        usernameSaveMessage.textContent = "Username changed.";
     };
 
 customStatusInput.addEventListener(
