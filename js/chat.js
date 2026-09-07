@@ -266,6 +266,8 @@ const customStatusInput = document.getElementById("customStatusInput");
 const statusCharacterCount = document.getElementById("statusCharacterCount");
 const saveCustomStatus = document.getElementById("saveCustomStatus");
 const statusSaveMessage = document.getElementById("statusSaveMessage");
+const deleteAccountButton = document.getElementById("deleteAccountButton");
+const deleteAccountStatus = document.getElementById("deleteAccountStatus");
 function getMyProfile() {
     return (
         profiles[session.user.id] ||
@@ -675,7 +677,11 @@ async function loadMemberProfiles() {
     } = await supabase
         .from("profiles")
         .select(
-            "id, username, avatar_url, status_text"
+            "id, username, avatar_url, status_text, is_deleted"
+        )
+        .eq(
+            "is_deleted",
+            false
         )
         .order(
             "username",
@@ -2774,6 +2780,71 @@ const logoutButton =
                 location.href =
                     "../";
             };
+
+deleteAccountButton.onclick =
+    async () => {
+        const confirmed =
+            await openConfirmDialog({
+                title:
+                    "Delete account?",
+                message:
+                    "Your account will be deleted. This cannot be undone.",
+                confirmText:
+                    "Delete Account",
+                danger:
+                    true
+            });
+
+        if (!confirmed) {
+            return;
+        }
+
+        deleteAccountButton.disabled =
+            true;
+        deleteAccountButton.textContent =
+            "Deleting...";
+        deleteAccountStatus.textContent =
+            "";
+
+        const {
+            data,
+            error
+        } =
+            await supabase.functions.invoke(
+                "delete-account"
+            );
+
+        if (error) {
+            console.error(
+                "Account deletion error:",
+                error
+            );
+            deleteAccountButton.disabled =
+                false;
+            deleteAccountButton.textContent =
+                "Delete Account";
+            deleteAccountStatus.textContent =
+                "Couldn't delete the account.";
+            return;
+        }
+
+        if (!data?.ok) {
+            deleteAccountButton.disabled =
+                false;
+            deleteAccountButton.textContent =
+                "Delete Account";
+            deleteAccountStatus.textContent =
+                data?.error ||
+                "Couldn't delete the account.";
+            return;
+        }
+        
+        await supabase.auth.signOut();
+        clearPersistentLogin();
+        location.replace(
+            "../"
+        );
+    };
 
 const friendRequestsButton =
     document.getElementById("friendRequestsButton");
