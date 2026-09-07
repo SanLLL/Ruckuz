@@ -3485,6 +3485,53 @@ body.darkMode
     }
 }
 
+body:not(.darkMode)
+button.drawnLightButton,
+body:not(.darkMode)
+button.drawnWhiteButton {
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+body:not(.darkMode)
+#settingsChangeAvatar,
+body:not(.darkMode)
+#saveUsername,
+body:not(.darkMode)
+#saveCustomStatus {
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+@media (max-width: 768px) {
+    body:not(.darkMode)
+    #mobileMenu
+    button.drawnLightButton,
+    body:not(.darkMode)
+    #mobileMenu
+    button.drawnWhiteButton {
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+}
+
+#deleteAccountButton {
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
 </style>
 </head>
 <body>
