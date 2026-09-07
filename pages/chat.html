@@ -3284,6 +3284,43 @@ body.darkMode .editedMarker {
     color: #aaa2bd;
 }
 
+.deleteAccountButton {
+    margin-top: 10px;
+    padding: 10px 16px;
+    border: 3px solid #9f3d46;
+    border-radius: 4px;
+    background: #ff8585;
+    color: #4a2020;
+    font: inherit;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow:
+        3px 3px 0 #9f3d46;
+}
+
+.deleteAccountButton:active {
+    transform:
+        translate(2px, 2px);
+    box-shadow:
+        1px 1px 0 #9f3d46;
+}
+
+#deleteAccountStatus {
+    min-height: 18px;
+    margin-top: 7px;
+    color: #b84f4f;
+    font-size: 12px;
+}
+
+body.darkMode
+.deleteAccountButton {
+    background: #9f4d55;
+    color: #fff4f4;
+    border-color: #d66b74;
+    box-shadow:
+        3px 3px 0 #d66b74;
+}
+
 </style>
 </head>
 <body>
@@ -3608,7 +3645,7 @@ body.darkMode .editedMarker {
         Username
     </h3>
     <p>
-        Your RuckuZ ID will not change when you change your username.
+        Your RuckuZ userID won't change.
     </p>
     <div class="usernameEditor">
         <input
@@ -3671,6 +3708,13 @@ body.darkMode .editedMarker {
                 class="logoutButton settingsActionButton">
                 Logout
             </button>
+            <button
+                id="deleteAccountButton"
+                class="deleteAccountButton settingsActionButton">
+                Delete Account
+            </button>
+            <div id="deleteAccountStatus">
+            </div>
         </div>
     </div>
 </div>
