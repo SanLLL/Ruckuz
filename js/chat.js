@@ -2664,32 +2664,12 @@ function applyTheme(
             ? "dark"
             : "light";
     
-    
     document.documentElement.style.backgroundColor =
         dark
             ? "#151222"
             : "#fffdf6";
 
-    if (themeToggle) {
-        themeToggle.textContent =
-            dark
-                ? "Light Mode"
-                : "Dark Mode";
-
-    }
-
-    const mobileButton =
-        document.getElementById(
-            "mobileThemeButton"
-        );
-
-    if (mobileButton) {
-        mobileButton.textContent =
-            dark
-                ? "Light Mode"
-                : "Dark Mode";
-        
-    }
+    syncThemeArt();
 
     if (save) {
 
@@ -2710,6 +2690,8 @@ applyTheme(
     savedTheme,
     false
 );
+
+syncThemeArt();
 
 if (
     !cookieTheme &&
