@@ -134,27 +134,266 @@ function updateOnlineUsers() {
     refreshSelfUserPanel();
 }
 
-const messages = document.getElementById("messages");
-const input = document.getElementById("messageInput");
+const messages =
+    document.getElementById(
+        "messages"
+    );
+
+const input =
+    document.getElementById(
+        "messageInput"
+    );
+
 clearComposer(
     input
 );
-const emojiButton = document.getElementById("emojiButton");
-const emojiPicker = document.getElementById("emojiPicker");
-const emojiGrid = document.getElementById("emojiGrid");
-const memberList = document.getElementById("memberList");
-const mobileMemberList = document.getElementById("mobileMemberList");
+
+const emojiButton =
+    document.getElementById(
+        "emojiButton"
+    );
+
+const emojiPicker =
+    document.getElementById(
+        "emojiPicker"
+    );
+
+const emojiGrid =
+    document.getElementById(
+        "emojiGrid"
+    );
+
+const memberList =
+    document.getElementById(
+        "memberList"
+    );
+
+const mobileMemberList =
+    document.getElementById(
+        "mobileMemberList"
+    );
+
 let memberProfiles = {};
-let currentOnlineUsers = new Set();
-const avatarUpload = document.getElementById("avatarUpload");
-avatarUpload.onchange = uploadAvatar;
-const fileButton = document.getElementById("fileButton");
-const fileUpload = document.getElementById("fileUpload");
+let currentOnlineUsers =
+    new Set();
+
+const avatarUpload =
+    document.getElementById(
+        "avatarUpload"
+    );
+
+avatarUpload.onchange =
+    uploadAvatar;
+
+const fileButton =
+    document.getElementById(
+        "fileButton"
+    );
+const fileUpload =
+    document.getElementById(
+        "fileUpload"
+    );
+
+const sendButton =
+    document.getElementById(
+        "sendButton"
+    );
+
 fileButton.onclick = () => {
     fileUpload.click();
+
 };
 
-fileUpload.onchange = uploadChatFile;
+fileUpload.onchange =
+    uploadChatFile;
+
+function isDarkMode() {
+    return document.body.classList.contains(
+        "darkMode"
+    );
+
+}
+
+function themedButtonPath(
+    name
+) {
+
+    return isDarkMode()
+        ? `../assets/buttons/dark/${name}dark.png`
+        : `../assets/buttons/light/${name}light.png`;
+
+}
+
+function volumeIconPath(
+    volume,
+    muted
+) {
+
+    if (
+        muted ||
+        volume === 0
+    ) {
+
+        return isDarkMode()
+            ? "../assets/icons/volumedarkmute.png"
+            : "../assets/icons/volumelightmute.png";
+
+    }
+
+    if (
+        isDarkMode()
+    ) {
+
+        if (
+            volume < 0.34
+        ) {
+            return "../assets/icons/volumedark1.png";
+
+        }
+
+        if (
+            volume < 0.67
+        ) {
+            return "../assets/icons/volumedark2.png";
+
+        }
+        return "../assets/icons/volumedark3.png";
+
+    }
+
+    if (
+        volume < 0.25
+    ) {
+        return "../assets/icons/volumelight1.png";
+
+    }
+
+    if (
+        volume < 0.5
+    ) {
+        return "../assets/icons/volumelight2.png";
+
+    }
+
+    if (
+        volume < 0.75
+    ) {
+        return "../assets/icons/volumelight3.png";
+
+    }
+    return "../assets/icons/volumelight4.png";
+
+}
+
+function syncStaticThemeArt(
+    root = document
+) {
+
+    root
+        .querySelectorAll(
+            "[data-light-src][data-dark-src]"
+        )
+        .forEach(
+            image => {
+
+                image.src =
+                    isDarkMode()
+                        ? image.dataset.darkSrc
+                        : image.dataset.lightSrc;
+            }
+        );
+}
+
+function syncMediaThemeArt(
+    root = document
+) {
+
+    root
+        .querySelectorAll(
+            ".customMediaPlayer"
+        )
+        .forEach(
+            player => {
+
+                const media =
+                    player.querySelector(
+                        ".mediaElement"
+                    );
+
+                const playIcon =
+                    player.querySelector(
+                        ".mediaPlayIcon"
+                    );
+
+                const volumeIcon =
+                    player.querySelector(
+                        ".mediaVolumeIcon"
+                    );
+
+                if (
+                    media &&
+                    playIcon
+                ) {
+
+                    playIcon.src =
+                        media.paused
+                            ? themedButtonPath(
+                                "play"
+                            )
+                            : themedButtonPath(
+                                "pause"
+                            );
+                }
+
+                if (
+                    media &&
+                    volumeIcon
+                ) {
+
+                    volumeIcon.src =
+                        volumeIconPath(
+                            media.volume,
+                            media.muted
+                        );
+                }
+            }
+        );
+}
+
+function syncThemeArt(
+    root = document
+) {
+
+    syncStaticThemeArt(
+        root
+    );
+
+    syncMediaThemeArt(
+        root
+    );
+
+    if (
+        typeof themeToggle !==
+        "undefined" &&
+        themeToggle
+    ) {
+        themeToggle.setAttribute(
+            "aria-label",
+            isDarkMode()
+                ? "Switch to light mode"
+                : "Switch to dark mode"
+        );
+    }
+}
+
+if (
+    sendButton
+) {
+
+    sendButton.onclick =
+        sendMessage;
+}
+
 let profiles = {};
 function closeEmojiPicker() {
     emojiPicker.classList.remove(
@@ -1079,31 +1318,31 @@ function addMessage(message) {
                 </div>
             `;
         } else if (fileType.startsWith("video/")) {
-
+        
             fileHTML = `
                 <div class="messageFile">
-                    <div class="customMediaPlayer customVideoPlayer">
+        
+                    <div
+                        class="customMediaPlayer customVideoPlayer">
                         <video
                             class="mediaElement"
                             src="${message.file_url}"
                             preload="metadata"
                             playsinline
                         ></video>
-
                         <div class="mediaControls">
-
                             <button
                                 class="mediaPlayButton"
                                 type="button"
-                                aria-label="Play"
-                            >
-                                ▶
+                                aria-label="Play">
+                                <img
+                                    class="mediaButtonIcon mediaPlayIcon"
+                                    src="${themedButtonPath("play")}"
+                                    alt="">
                             </button>
-
                             <span class="mediaTime">
                                 0:00 / 0:00
                             </span>
-
                             <input
                                 class="mediaProgress"
                                 type="range"
@@ -1111,17 +1350,19 @@ function addMessage(message) {
                                 max="100"
                                 value="0"
                                 step="0.1"
-                                aria-label="Video progress"
-                            >
-
+                                aria-label="Video progress">
                             <button
                                 class="mediaMuteButton"
                                 type="button"
-                                aria-label="Mute"
-                            >
-                                🔊
+                                aria-label="Mute">
+                                <img
+                                    class="mediaButtonIcon mediaVolumeIcon"
+                                    src="${volumeIconPath(
+                                        1,
+                                        false
+                                    )}"
+                                    alt="">
                             </button>
-
                             <input
                                 class="mediaVolume"
                                 type="range"
@@ -1129,54 +1370,46 @@ function addMessage(message) {
                                 max="1"
                                 value="1"
                                 step="0.01"
-                                aria-label="Volume"
-                            >
-
+                                aria-label="Volume">
                             <button
                                 class="mediaFullscreenButton"
                                 type="button"
-                                aria-label="Fullscreen"
-                            >
+                                aria-label="Fullscreen">
                                 ⛶
                             </button>
-
                         </div>
                     </div>
                 </div>
             `;
 
         } else if (fileType.startsWith("audio/")) {
-
             fileHTML = `
                 <div class="messageFile">
-                    <div class="customMediaPlayer customAudioPlayer">
-
+                    <div
+                        class="customMediaPlayer customAudioPlayer">
                         <div class="audioPlayerIcon">
                             ♪
                         </div>
-
                         <div class="audioPlayerMain">
-
                             <div class="audioFileName">
                                 ${escapeHTML(
-                                    message.file_name || "Audio"
+                                    message.file_name ||
+                                    "Audio"
                                 )}
                             </div>
-
                             <div class="audioControls">
-
                                 <button
                                     class="mediaPlayButton"
                                     type="button"
-                                    aria-label="Play"
-                                >
-                                    ▶
+                                    aria-label="Play">
+                                    <img
+                                        class="mediaButtonIcon mediaPlayIcon"
+                                        src="${themedButtonPath("play")}"
+                                        alt="">
                                 </button>
-
                                 <span class="mediaTime">
                                     0:00 / 0:00
                                 </span>
-
                                 <input
                                     class="mediaProgress"
                                     type="range"
@@ -1184,17 +1417,19 @@ function addMessage(message) {
                                     max="100"
                                     value="0"
                                     step="0.1"
-                                    aria-label="Audio progress"
-                                >
-
+                                    aria-label="Audio progress">
                                 <button
                                     class="mediaMuteButton"
                                     type="button"
-                                    aria-label="Mute"
-                                >
-                                    🔊
+                                    aria-label="Mute">
+                                    <img
+                                        class="mediaButtonIcon mediaVolumeIcon"
+                                        src="${volumeIconPath(
+                                            1,
+                                            false
+                                        )}"
+                                        alt="">
                                 </button>
-
                                 <input
                                     class="mediaVolume"
                                     type="range"
@@ -1202,23 +1437,18 @@ function addMessage(message) {
                                     max="1"
                                     value="1"
                                     step="0.01"
-                                    aria-label="Volume"
-                                >
-
+                                    aria-label="Volume">
                             </div>
-
                         </div>
-
                         <audio
                             class="mediaElement"
                             src="${message.file_url}"
                             preload="metadata"
                         ></audio>
-
                     </div>
                 </div>
             `;
-
+            
         } else {
 
             fileHTML = `
