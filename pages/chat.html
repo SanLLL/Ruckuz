@@ -3487,6 +3487,43 @@ body.darkMode
     color: #c9bee6 !important;
 }
 
+.messageHeader {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    column-gap: 8px;
+    row-gap: 1px;
+    min-width: 0;
+    margin-bottom: 3px;
+}
+
+.messageHeader .username {
+    margin-bottom: 0;
+}
+
+.messageTimestamp {
+    flex-shrink: 0;
+    color: #817a91;
+    font-size: 13px;
+    font-weight: normal;
+    white-space: nowrap;
+    opacity: 0.9;
+}
+
+body.darkMode
+.messageTimestamp {
+    color: #aaa2bd;
+}
+
+@media (max-width: 768px) {
+    .messageHeader {
+        column-gap: 7px;
+    }
+    .messageTimestamp {
+        font-size: 12px;
+    }
+}
+
 </style>
 </head>
 <body>
