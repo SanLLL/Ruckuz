@@ -70,7 +70,13 @@ export async function openProfile(userId){
     .select("*")
     .eq("id",userId)
     .single();
-    document.getElementById("popupAvatar").src=profile.avatar_url;
+    document
+        .getElementById(
+            "popupAvatar"
+        )
+        .src =
+            profile.avatar_url ||
+            "/Ruckuz/assets/avatars/ruckuz.png";
     document
         .getElementById(
             "popupName"
@@ -101,10 +107,8 @@ export async function openProfile(userId){
         .textContent =
             "RuckuZ Member";
     
-    const button1 =
-        document.getElementById("popupButton1");
-    const button2 =
-        document.getElementById("popupButton2");
+    const button1 = document.getElementById("popupButton1");
+    const button2 = document.getElementById("popupButton2");
     const buttonRow =
         document.querySelector(
             "#profileCard .profileButtons"
@@ -114,12 +118,48 @@ export async function openProfile(userId){
     button2.onclick = null;
     button1.disabled = false;
     button2.disabled = false;
+    if (profile.is_deleted) {
+        buttonRow.style.display =
+            "none";
+        document
+            .getElementById(
+                "profileStatus"
+            )
+            .textContent =
+                "Deleted account";
+        document
+            .getElementById(
+                "profileStatus"
+            )
+            .className =
+                "profileStatus offline";
+        document
+            .getElementById(
+                "popupUserId"
+            )
+            .textContent =
+                "Deleted account";
+        document
+            .getElementById(
+                "popupCustomStatus"
+            )
+            .textContent =
+                "";
+        document
+            .getElementById(
+                "popupJoined"
+            )
+            .textContent =
+                "";
+        overlay.style.display =
+            "flex";
+        return;
+    }
     
     if (userId === currentUserId) {
         buttonRow.style.display = "none";
     
     } else {
-    
         buttonRow.style.display = "flex";
         button1.textContent = "Message";
         button2.textContent = "Add Friend";
