@@ -199,36 +199,49 @@ const sendButton =
         "sendButton"
     );
 
+function updateSendButtonVisibility() {
+    const text =
+        getComposerText(
+            input
+        ).trim();
+
+    const shouldShow =
+        text.length > 0;
+    sendButton.classList.toggle(
+        "visible",
+        shouldShow
+    );
+    sendButton.disabled =
+        !shouldShow;
+    sendButton.setAttribute(
+        "aria-hidden",
+        shouldShow
+            ? "false"
+            : "true"
+    );
+}
+updateSendButtonVisibility();
 fileButton.onclick = () => {
     fileUpload.click();
-
 };
-
 fileUpload.onchange =
     uploadChatFile;
-
 function isDarkMode() {
     return document.body.classList.contains(
         "darkMode"
     );
-
 }
-
 function themedButtonPath(
     name
 ) {
-
     return isDarkMode()
         ? `../assets/buttons/dark/${name}dark.png`
         : `../assets/buttons/light/${name}light.png`;
-
 }
-
 function volumeIconPath(
     volume,
     muted
 ) {
-
     if (
         muted ||
         volume === 0
@@ -416,8 +429,10 @@ buildEmojiPicker(
             input,
             emoji
         );
+        updateSendButtonVisibility();
     }
 );
+
 emojiButton.onclick =
     event => {
         event.stopPropagation();
@@ -481,8 +496,11 @@ input.addEventListener(
         upgradeTypedCustomEmojis(
             input
         );
+        updateSendButtonVisibility();
+
     }
 );
+
 const settingsButton = document.getElementById("settingsButton");
 const mobileSettingsButton = document.getElementById("mobileSettingsButton");
 const settingsOverlay = document.getElementById("settingsOverlay");
@@ -1617,8 +1635,23 @@ function initializeMediaPlayers(container) {
         const fullscreenButton =
             player.querySelector(".mediaFullscreenButton");
         const timeDisplay =
-            player.querySelector(".mediaTime");
-        if (!media || !playButton) return;
+            player.querySelector(
+                ".mediaTime"
+            );
+        const playIcon =
+            playButton?.querySelector(
+                ".mediaPlayIcon"
+            );
+        const muteIcon =
+            muteButton?.querySelector(
+                ".mediaVolumeIcon"
+            );
+        if (
+            !media ||
+            !playButton
+        ) {
+            return;
+        }
         
         function formatTime(seconds) {
             if (!Number.isFinite(seconds)) {
@@ -1656,29 +1689,44 @@ function initializeMediaPlayers(container) {
             }
         }
         function updatePlayButton() {
-            if (media.paused) {
-                playButton.textContent = "▶";
+            if (
+                media.paused
+            ) {
+                if (
+                    playIcon
+                ) {
+                    playIcon.src =
+                        themedButtonPath(
+                            "play"
+                        );
+                }
                 playButton.setAttribute(
                     "aria-label",
                     "Play"
                 );
-
                 player.classList.remove(
                     "mediaPlaying"
                 );
-
+        
             } else {
-                playButton.textContent = "Ⅱ";
+                if (
+                    playIcon
+                ) {
+                    playIcon.src =
+                        themedButtonPath(
+                            "pause"
+                        );
+                }
                 playButton.setAttribute(
                     "aria-label",
                     "Pause"
                 );
-
                 player.classList.add(
                     "mediaPlaying"
                 );
             }
         }
+        
         playButton.addEventListener(
             "click",
             async event => {
@@ -1696,9 +1744,7 @@ function initializeMediaPlayers(container) {
                 } else {
 
                     media.pause();
-
                 }
-
             }
         );
         media.addEventListener(
@@ -1722,6 +1768,7 @@ function initializeMediaPlayers(container) {
                 }
             }
         );
+        
         media.addEventListener(
             "timeupdate",
             updateTime
@@ -1748,6 +1795,7 @@ function initializeMediaPlayers(container) {
             );
 
         }
+        
         if (volume) {
             volume.addEventListener(
                 "input",
@@ -1766,48 +1814,59 @@ function initializeMediaPlayers(container) {
         }
 
         if (volume) {
-        
             volume.value = media.volume;
-        
             volume.style.setProperty(
                 "--volume",
                 `${media.volume * 100}%`
             );
-        
         }
-        function updateMuteButton() {
-            if (!muteButton) return;
-            if (
-                media.muted ||
-                media.volume === 0
-            ) {
-                muteButton.textContent = "🔇";
-            } else if (media.volume < 0.5) {
-                muteButton.textContent = "🔉";
-            } else {
-                muteButton.textContent = "🔊";
-            }
-        }
-        if (muteButton) {
-            muteButton.addEventListener(
-                "click",
-                event => {
-                    event.stopPropagation();
-                    media.muted =
-                        !media.muted;
-                    if (
-                        !media.muted &&
-                        media.volume === 0
-                    ) {
-                        media.volume = 1;
 
-                        if (volume) {
-                            volume.value = 1;
-                        }
-                    }
-                    updateMuteButton();
+        media.addEventListener(
+            "volumechange",
+            () => {
+                if (
+                    volume
+                ) {
+                    const shownVolume =
+                        media.muted
+                            ? 0
+                            : media.volume;
+                    volume.style.setProperty(
+                        "--volume",
+                        `${shownVolume * 100}%`
+                    );
                 }
+                updateMuteButton();
+            }
+        );
+        
+        function updateMuteButton() {
+            if (
+                !muteButton
+            ) {
+                return;
+            }
+        
+            if (
+                muteIcon
+            ) {
+                muteIcon.src =
+                    volumeIconPath(
+                        media.volume,
+                        media.muted
+                    );
+        
+            }
+            muteButton.setAttribute(
+                "aria-label",
+                (
+                    media.muted ||
+                    media.volume === 0
+                )
+                    ? "Unmute"
+                    : "Mute"
             );
+        
         }
         if (fullscreenButton) {
             fullscreenButton.addEventListener(
@@ -1993,6 +2052,7 @@ async function sendMessage() {
     clearComposer(
         input
     );
+    updateSendButtonVisibility();
     closeEmojiPicker();
     try {
         const { error } =
