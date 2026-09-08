@@ -31,7 +31,7 @@ try {
 }
 if (session) {
     location.replace(
-        "pages/chat.html"
+        "/chat"
     );
 } else {
     revealLoginScreen();
@@ -100,7 +100,7 @@ button.onclick = async () => {
             password: password.value,
             options: {
                 emailRedirectTo:
-                    "https://sanlll.github.io/Ruckuz/",
+                    "https://ruckuz.org",
                 data: {
                     username: username.value
                 }
@@ -155,6 +155,6 @@ button.onclick = async () => {
             console.error(profileError);
         }
     }
-    location.href = "pages/chat.html";
+    location.href = "/chat";
 
 };
