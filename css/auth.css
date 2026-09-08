@@ -198,12 +198,10 @@ html[data-ruckuz-theme="dark"]
 }
 
 @keyframes authLoadingSpin {
-
     to {
         transform:
             rotate(360deg);
     }
-
 }
 
 html.authBooting #app {
@@ -220,4 +218,29 @@ html.authBooting #app {
         padding: 18px;
         transform: none;
     }
+}
+
+#forgotPassword {
+    display: block;
+    margin:
+        -3px
+        0
+        14px
+        auto;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #6b58b8;
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+#forgotPassword:hover {
+    text-decoration: underline;
+}
+
+#forgotPassword:disabled {
+    opacity: 0.55;
+    cursor: wait;
 }
