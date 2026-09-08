@@ -100,7 +100,7 @@ button.onclick = async () => {
             password: password.value,
             options: {
                 emailRedirectTo:
-                    "https://ruckuz.org",
+                    "https://ruckuz.org/",
                 data: {
                     username: username.value
                 }
