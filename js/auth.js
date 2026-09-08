@@ -47,10 +47,12 @@ const switchMode = document.getElementById("switchMode");
 const switchText = document.getElementById("switchText");
 const loginTab = document.getElementById("loginTab");
 const registerTab = document.getElementById("registerTab");
+const forgotPassword = document.getElementById("forgotPassword");
 
 function updateUI() {
     if (registerMode) {
         username.style.display = "block";
+        forgotPassword.style.display = "none";
         button.textContent = "Create Account";
         switchText.innerHTML =
             'Already have an account? <span id="switchMode">Login</span>';
@@ -61,6 +63,7 @@ function updateUI() {
     } else {
 
         username.style.display = "none";
+        forgotPassword.style.display = "block";
         button.textContent = "Login";
         switchText.innerHTML =
             'Don\'t have an account? <span id="switchMode">Register</span>';
