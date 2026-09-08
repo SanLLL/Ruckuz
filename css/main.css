@@ -36,3 +36,13 @@ body {
         repeat;
     background-size: 512px;
 }
+
+input[type="password"] {
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif
+        !important;
+    letter-spacing: 2px;
+    caret-color: currentColor;
+}
