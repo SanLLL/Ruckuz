@@ -95,6 +95,70 @@ registerTab.onclick = () => {
 
 };
 
+forgotPassword.onclick =
+    async () => {
+        
+        statusText.textContent =
+            "";
+
+        const resetEmail =
+            email
+                .value
+                .trim();
+
+        if (
+            resetEmail === ""
+        ) {
+
+            statusText.textContent =
+                "Enter your email address first.";
+            email.focus();
+            return;
+
+        }
+
+        forgotPassword.disabled =
+            true;
+        
+        forgotPassword.textContent =
+            "Sending...";
+
+        const {
+            error
+        } =
+            await supabase.auth
+                .resetPasswordForEmail(
+                    resetEmail,
+                    {
+                        redirectTo:
+                            "https://ruckuz.org/reset-password"
+                    }
+                );
+
+        forgotPassword.disabled =
+            false;
+
+        forgotPassword.textContent =
+            "Forgot password?";
+
+        if (
+            error
+        ) {
+
+            console.error(
+                "Password reset email error:",
+                error
+            );
+
+            statusText.textContent =
+                "Couldn't send the reset email.";
+            return;
+        }
+        
+        statusText.textContent =
+            "If an account uses that email, a password reset link has been sent.";
+    };
+
 button.onclick = async () => {
     statusText.textContent = "";
     if (registerMode) {
