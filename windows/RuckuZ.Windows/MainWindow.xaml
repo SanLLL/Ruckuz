@@ -10,8 +10,9 @@
 
     <Grid x:Name="RootGrid">
         <Grid.Resources>
-            <FontFamily x:Key="RuckuZFont">
-            </FontFamily>
+        <FontFamily x:Key="RuckuZFont">
+            ms-appx:///Assets/AprilshandwritingRegular-mpGj.otf#Aprils Handwriting
+        </FontFamily>
 
             <SolidColorBrush x:Key="RuckuZPrimaryBrush" Color="#4B347C"/>
             <SolidColorBrush x:Key="RuckuZTextBrush" Color="#30254F"/>

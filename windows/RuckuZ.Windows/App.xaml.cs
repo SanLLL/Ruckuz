@@ -20,11 +20,55 @@ public partial class App : Application
     public App()
     {
         InitializeComponent();
+
+        UnhandledException +=
+            App_UnhandledException;
     }
 
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
         _window = new MainWindow();
         _window.Activate();
+    }
+
+    private void App_UnhandledException(
+        object sender,
+        Microsoft.UI.Xaml.UnhandledExceptionEventArgs e
+    )
+    {
+        try
+        {
+            string folder =
+                System.IO.Path.Combine(
+                    Environment.GetFolderPath(
+                        Environment.SpecialFolder
+                            .LocalApplicationData
+                    ),
+                    "RuckuZ"
+                );
+
+            System.IO.Directory
+                .CreateDirectory(
+                    folder
+                );
+
+            string crashFile =
+                System.IO.Path.Combine(
+                    folder,
+                    "crash.log"
+                );
+
+            System.IO.File
+                .WriteAllText(
+                    crashFile,
+                    e.Exception.ToString()
+                );
+        }
+        catch
+        {
+        }
+
+        e.Handled =
+            false;
     }
 }

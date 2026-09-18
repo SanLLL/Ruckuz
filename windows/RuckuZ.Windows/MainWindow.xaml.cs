@@ -63,31 +63,59 @@ public sealed partial class MainWindow : Window
 
     private async Task BootAsync()
     {
-        LoadSavedTheme();
-        ApplyTheme();
+        LoadingOverlay.Visibility =
+            Visibility.Visible;
 
-        LoadingOverlay.Visibility = Visibility.Visible;
-        LoadingText.Text = "Checking account...";
+        LoadingText.Text =
+            "Starting RuckuZ...";
 
         try
         {
-            await SupabaseService.Instance.InitializeAsync();
+            LoadSavedTheme();
+            ApplyTheme();
 
-            var session = SupabaseService.Instance.Client.Auth.CurrentSession;
-            if (session?.User != null)
+            LoadingText.Text =
+                "Checking account...";
+
+            await SupabaseService
+                .Instance
+                .InitializeAsync();
+
+            var session =
+                SupabaseService
+                    .Instance
+                    .Client
+                    .Auth
+                    .CurrentSession;
+
+            if (
+                session?.User != null
+            )
             {
                 await EnterAppAsync();
+
                 return;
             }
         }
-        catch (Exception exception)
+        catch (
+            Exception exception
+        )
         {
-            System.Diagnostics.Debug.WriteLine(exception);
+            System.Diagnostics
+                .Debug
+                .WriteLine(
+                    exception
+                );
         }
 
-        LoadingOverlay.Visibility = Visibility.Collapsed;
-        AuthView.Visibility = Visibility.Visible;
-        AppView.Visibility = Visibility.Collapsed;
+        LoadingOverlay.Visibility =
+            Visibility.Collapsed;
+
+        AuthView.Visibility =
+            Visibility.Visible;
+
+        AppView.Visibility =
+            Visibility.Collapsed;
     }
 
     private async void MainWindow_Closed(object sender, WindowEventArgs args)

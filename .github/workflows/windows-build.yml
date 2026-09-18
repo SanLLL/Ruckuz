@@ -41,8 +41,7 @@ jobs:
           -p:WindowsPackageType=None
           -p:WindowsAppSDKSelfContained=true
           -p:EnableMsixTooling=true
-          -p:IncludeAllContentForSelfExtract=true
-          -p:PublishSingleFile=true
+          -p:PublishSingleFile=false
           -p:PublishTrimmed=false
           -p:DebugType=None
           -o windows-artifact
