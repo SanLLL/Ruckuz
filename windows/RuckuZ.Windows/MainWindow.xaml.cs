@@ -1,27 +1,59 @@
 using Microsoft.UI.Xaml;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
-namespace RuckuZ_Windows;
-
-/// <summary>
-/// The application window. This hosts a Frame that displays pages. Add your
-/// UI and logic to MainPage.xaml / MainPage.xaml.cs instead of here so you
-/// can use Page features such as navigation events and the Loaded lifecycle.
-/// </summary>
+using System;
+namespace RuckuZ.Windows;
 public sealed partial class MainWindow : Window
 {
+
     public MainWindow()
     {
+
         InitializeComponent();
+        Title =
+            "RuckuZ";
 
-        ExtendsContentIntoTitleBar = true;
-        SetTitleBar(AppTitleBar);
+    }
 
-        AppWindow.SetIcon("Assets/AppIcon.ico");
+    private void LoginButton_Click(
+        object sender,
+        RoutedEventArgs e
+    )
+    {
 
-        // Navigate the root frame to the main page on startup.
-        RootFrame.Navigate(typeof(MainPage));
+        string email =
+            EmailInput
+                .Text
+                .Trim();
+
+        string password =
+            PasswordInput
+                .Password;
+
+        if (
+            string.IsNullOrWhiteSpace(
+                email
+            )
+        )
+        {
+
+            StatusText.Text =
+                "Enter your email.";
+            return;
+
+        }
+
+        if (
+            string.IsNullOrWhiteSpace(
+                password
+            )
+        )
+        {
+
+            StatusText.Text =
+                "Enter your password.";
+            return;
+        }
+
+        StatusText.Text =
+            "RuckuZ login connection comes next.";
     }
 }
