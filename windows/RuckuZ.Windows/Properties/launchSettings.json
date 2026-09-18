@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "RuckuZ.Windows (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "RuckuZ.Windows (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

@@ -1,0 +1,56 @@
+name: Build RuckuZ Windows
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "windows/**"
+      - ".github/workflows/windows-build.yml"
+
+  workflow_dispatch:
+permissions:
+  contents: read
+
+jobs:
+  build-windows:
+    name: Build Windows x64
+    runs-on: windows-2025-vs2026
+    steps:
+
+      - name: Checkout RuckuZ
+        uses: actions/checkout@v6
+      - name: Install .NET 10
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restore packages
+        run: >
+          dotnet restore
+          windows/RuckuZ.Windows/RuckuZ.Windows.csproj
+
+      - name: Publish RuckuZ Windows
+        run: >
+          dotnet publish
+          windows/RuckuZ.Windows/RuckuZ.Windows.csproj
+          -c Release
+          -r win-x64
+          --self-contained true
+          -p:SelfContained=true
+          -p:WindowsPackageType=None
+          -p:WindowsAppSDKSelfContained=true
+          -p:EnableMsixTooling=true
+          -p:IncludeAllContentForSelfExtract=true
+          -p:PublishSingleFile=true
+          -p:PublishTrimmed=false
+          -p:DebugType=None
+          -o windows-artifact
+
+      - name: Upload RuckuZ Windows
+        uses: actions/upload-artifact@v4
+        with:
+          name: RuckuZ-Windows-x64
+          path: windows-artifact/**
+          if-no-files-found: error
+          retention-days: 14
