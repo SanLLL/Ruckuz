@@ -70,12 +70,12 @@ public sealed partial class MainWindow
     {
         Windows.UI.Color color = (kind, darkMode) switch
         {
-            ("primary", false) => Windows.UI.Color.FromArgb(255, 75, 52, 124),
+            ("primary", false) => Windows.UI.Color.FromArgb(255, 107, 88, 184),
             ("text", false) => Windows.UI.Color.FromArgb(255, 48, 37, 79),
-            ("muted", false) => Windows.UI.Color.FromArgb(255, 101, 94, 114),
-            ("primary", true) => Windows.UI.Color.FromArgb(255, 222, 207, 255),
+            ("muted", false) => Windows.UI.Color.FromArgb(255, 129, 122, 145),
+            ("primary", true) => Windows.UI.Color.FromArgb(255, 183, 156, 255),
             ("text", true) => Windows.UI.Color.FromArgb(255, 245, 240, 255),
-            ("muted", true) => Windows.UI.Color.FromArgb(255, 190, 179, 212),
+            ("muted", true) => Windows.UI.Color.FromArgb(255, 170, 162, 189),
             _ => Windows.UI.Color.FromArgb(255, 107, 88, 184)
         };
 
@@ -87,29 +87,41 @@ public sealed partial class MainWindow
         string themeFolder = darkMode ? "dark" : "light";
         string buttonName = darkMode ? "buttondark.png" : "buttonlight.png";
         string inputName = darkMode ? "inputdark.png" : "inputlight.png";
+        string backgroundAsset = darkMode ? "Assets/bg/darknote.png" : "Assets/bg/paper.png";
 
-        AuthBackgroundBrush.ImageSource = AppBitmap(darkMode ? "Assets/bg/darknote.png" : "Assets/bg/paper.png");
-        AppBackgroundBrush.ImageSource = AppBitmap(darkMode ? "Assets/bg/darknote.png" : "Assets/bg/paper.png");
+        AuthBackgroundImage.Source = AppBitmap(backgroundAsset);
+        AppBackgroundImage.Source = AppBitmap(backgroundAsset);
+        LoadingBackgroundImage.Source = AppBitmap(backgroundAsset);
+
+        RootGrid.Background = new SolidColorBrush(
+            darkMode
+                ? Windows.UI.Color.FromArgb(255, 21, 18, 34)
+                : Windows.UI.Color.FromArgb(255, 255, 253, 246)
+        );
+
+        AuthView.Background = RootGrid.Background;
+        AppView.Background = RootGrid.Background;
+        LoadingOverlay.Background = RootGrid.Background;
 
         AuthBrandPanel.Background = new SolidColorBrush(
             darkMode
                 ? Windows.UI.Color.FromArgb(247, 25, 20, 42)
-                : Windows.UI.Color.FromArgb(247, 47, 36, 77)
+                : Windows.UI.Color.FromArgb(247, 48, 36, 77)
         );
 
         AuthFormPanel.Background = new SolidColorBrush(
             darkMode
-                ? Windows.UI.Color.FromArgb(225, 29, 25, 43)
-                : Windows.UI.Color.FromArgb(0, 0, 0, 0)
+                ? Windows.UI.Color.FromArgb(240, 29, 25, 43)
+                : Windows.UI.Color.FromArgb(235, 255, 253, 246)
         );
 
-        SetResourceBrush("RuckuZPrimaryBrush", darkMode ? "#DECFFF" : "#4B347C");
+        SetResourceBrush("RuckuZPrimaryBrush", darkMode ? "#B79CFF" : "#6B58B8");
         SetResourceBrush("RuckuZTextBrush", darkMode ? "#F5F0FF" : "#30254F");
-        SetResourceBrush("RuckuZMutedBrush", darkMode ? "#BEB3D4" : "#655E72");
+        SetResourceBrush("RuckuZMutedBrush", darkMode ? "#AAA2BD" : "#817A91");
         SetResourceBrush("RuckuZAccentBrush", darkMode ? "#8B6CFF" : "#6B58B8");
-        SetResourceBrush("RuckuZPanelBrush", darkMode ? "#F41B1829" : "#F7FFFDF6");
-        SetResourceBrush("RuckuZHeaderBrush", darkMode ? "#EE211D30" : "#ECFFFDF6");
-        SetResourceBrush("RuckuZSelfBrush", darkMode ? "#332B49" : "#EDE5FF");
+        SetResourceBrush("RuckuZPanelBrush", darkMode ? "#302B48" : "#FFFDF6");
+        SetResourceBrush("RuckuZHeaderBrush", darkMode ? "#302B48" : "#FFFDF6");
+        SetResourceBrush("RuckuZSelfBrush", darkMode ? "#26223A" : "#FFF8DF");
 
         LoginTabArt.Source = AppBitmap($"Assets/buttons/{themeFolder}/{buttonName}");
         RegisterTabArt.Source = AppBitmap($"Assets/buttons/{themeFolder}/{buttonName}");
@@ -126,21 +138,31 @@ public sealed partial class MainWindow
         );
         SettingsButtonArt.Source = AppBitmap(
             darkMode
-                ? "Assets/buttons/dark/themedark.png"
-                : "Assets/buttons/light/themelight.png"
+                ? "Assets/buttons/dark/menudark.png"
+                : "Assets/buttons/light/menulight.png"
         );
 
-        GeneralChannelArt.Source = AppBitmap($"Assets/buttons/{themeFolder}/{buttonName}");
-        MemeChannelArt.Source = AppBitmap($"Assets/buttons/{themeFolder}/{buttonName}");
-        MediaChannelArt.Source = AppBitmap($"Assets/buttons/{themeFolder}/{buttonName}");
-        GamingChannelArt.Source = AppBitmap($"Assets/buttons/{themeFolder}/{buttonName}");
-
-        MediaButtonArt.Source = AppBitmap(darkMode ? "Assets/buttons/dark/mediadark.png" : "Assets/buttons/light/medialight.png");
+        MediaButtonArt.Source = AppBitmap(
+            darkMode
+                ? "Assets/buttons/dark/mediadark.png"
+                : "Assets/buttons/light/medialight.png"
+        );
         ComposerInputArt.Source = AppBitmap($"Assets/buttons/{themeFolder}/{inputName}");
-        SendButtonArt.Source = AppBitmap(darkMode ? "Assets/buttons/dark/senddark.png" : "Assets/buttons/light/sendlight.png");
-        EmojiButtonArt.Source = AppBitmap(darkMode ? "Assets/buttons/dark/emojidark.png" : "Assets/buttons/light/emojilight.png");
+        SendButtonArt.Source = AppBitmap(
+            darkMode
+                ? "Assets/buttons/dark/senddark.png"
+                : "Assets/buttons/light/sendlight.png"
+        );
+        EmojiButtonArt.Source = AppBitmap(
+            darkMode
+                ? "Assets/buttons/dark/emojidark.png"
+                : "Assets/buttons/light/emojilight.png"
+        );
 
         RootGrid.RequestedTheme = darkMode ? ElementTheme.Dark : ElementTheme.Light;
+
+        UpdateTitleBarTheme();
+        UpdateChannelArt();
         UpdateDynamicThemeArt(RootGrid);
     }
 
@@ -281,7 +303,7 @@ public sealed partial class MainWindow
             Text = value,
             PlaceholderText = placeholder,
             MaxLength = maxLength,
-            Margin = new Thickness(16, 4, 16, 4),
+            Margin = new Thickness(16, 7, 16, 1),
             Padding = new Thickness(0),
             BorderThickness = new Thickness(0),
             Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0, 0, 0, 0)),

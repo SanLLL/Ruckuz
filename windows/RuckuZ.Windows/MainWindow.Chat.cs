@@ -157,7 +157,7 @@ public sealed partial class MainWindow
 
         var row = new Grid
         {
-            Padding = new Thickness(6, 7, 6, 7),
+            Padding = new Thickness(0, 9, 0, 9),
             ColumnSpacing = 12
         };
 
@@ -185,7 +185,7 @@ public sealed partial class MainWindow
         {
             Text = username,
             FontFamily = RuckuZFont(),
-            FontSize = 18,
+            FontSize = 16,
             FontWeight = Microsoft.UI.Text.FontWeights.Bold,
             Foreground = BrushFor("primary")
         };
@@ -200,7 +200,7 @@ public sealed partial class MainWindow
             Text = FormatMessageTimestamp(createdAt),
             VerticalAlignment = VerticalAlignment.Center,
             FontFamily = RuckuZFont(),
-            FontSize = 13,
+            FontSize = 12,
             Foreground = BrushFor("muted")
         };
         timestampBlocks[timestamp] = createdAt;
@@ -281,7 +281,7 @@ public sealed partial class MainWindow
         {
             TextWrapping = TextWrapping.Wrap,
             FontFamily = RuckuZFont(),
-            FontSize = emojiOnly ? 28 : 18,
+            FontSize = emojiOnly ? 28 : 16,
             Foreground = BrushFor("text")
         };
 
@@ -505,10 +505,42 @@ public sealed partial class MainWindow
 
     private void UpdateChannelArt()
     {
-        GeneralChannelArt.Opacity = currentChannel == "general" ? 1 : 0.58;
-        MemeChannelArt.Opacity = currentChannel == "meme" ? 1 : 0.58;
-        MediaChannelArt.Opacity = currentChannel == "media" ? 1 : 0.58;
-        GamingChannelArt.Opacity = currentChannel == "gaming" ? 1 : 0.58;
+        ApplyChannelButtonState(GeneralChannelButton, "general");
+        ApplyChannelButtonState(MemeChannelButton, "meme");
+        ApplyChannelButtonState(MediaChannelButton, "media");
+        ApplyChannelButtonState(GamingChannelButton, "gaming");
+    }
+
+    private void ApplyChannelButtonState(Button button, string channel)
+    {
+        bool active = string.Equals(
+            currentChannel,
+            channel,
+            StringComparison.Ordinal
+        );
+
+        if (active)
+        {
+            button.Background = new SolidColorBrush(
+                darkMode
+                    ? Windows.UI.Color.FromArgb(255, 64, 56, 99)
+                    : Windows.UI.Color.FromArgb(255, 107, 88, 184)
+            );
+
+            button.Foreground = new SolidColorBrush(
+                Windows.UI.Color.FromArgb(255, 255, 255, 255)
+            );
+
+            button.FontWeight = Microsoft.UI.Text.FontWeights.Bold;
+            return;
+        }
+
+        button.Background = new SolidColorBrush(
+            Windows.UI.Color.FromArgb(0, 0, 0, 0)
+        );
+
+        button.Foreground = BrushFor("primary");
+        button.FontWeight = Microsoft.UI.Text.FontWeights.Normal;
     }
 
     private void MessageInput_TextChanged(object sender, TextChangedEventArgs e)
@@ -884,7 +916,7 @@ public sealed partial class MainWindow
                 Tag = id
             };
 
-            var row = new Grid { ColumnSpacing = 10 };
+            var row = new Grid { ColumnSpacing = 10, Padding = new Thickness(4, 4, 4, 4) };
             row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(42) });
             row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
@@ -898,7 +930,7 @@ public sealed partial class MainWindow
             {
                 Text = profile.String("username", "RuckuZ User"),
                 FontFamily = RuckuZFont(),
-                FontSize = 16,
+                FontSize = 14,
                 FontWeight = Microsoft.UI.Text.FontWeights.Bold,
                 Foreground = BrushFor("primary"),
                 TextTrimming = TextTrimming.CharacterEllipsis

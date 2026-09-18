@@ -50,6 +50,52 @@ public sealed partial class MainWindow : Window
         }
     }
 
+    private void UpdateTitleBarTheme()
+    {
+        try
+        {
+            if (!Microsoft.UI.Windowing.AppWindowTitleBar.IsCustomizationSupported())
+            {
+                return;
+            }
+
+            IntPtr hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hwnd);
+            Microsoft.UI.Windowing.AppWindow appWindow =
+                Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
+
+            var titleBar = appWindow.TitleBar;
+
+            Windows.UI.Color background = darkMode
+                ? Windows.UI.Color.FromArgb(255, 38, 34, 58)
+                : Windows.UI.Color.FromArgb(255, 255, 253, 246);
+
+            Windows.UI.Color foreground = darkMode
+                ? Windows.UI.Color.FromArgb(255, 245, 240, 255)
+                : Windows.UI.Color.FromArgb(255, 48, 37, 79);
+
+            Windows.UI.Color hover = darkMode
+                ? Windows.UI.Color.FromArgb(255, 61, 54, 93)
+                : Windows.UI.Color.FromArgb(255, 239, 232, 255);
+
+            titleBar.BackgroundColor = background;
+            titleBar.ForegroundColor = foreground;
+            titleBar.InactiveBackgroundColor = background;
+            titleBar.InactiveForegroundColor = foreground;
+            titleBar.ButtonBackgroundColor = background;
+            titleBar.ButtonForegroundColor = foreground;
+            titleBar.ButtonInactiveBackgroundColor = background;
+            titleBar.ButtonInactiveForegroundColor = foreground;
+            titleBar.ButtonHoverBackgroundColor = hover;
+            titleBar.ButtonHoverForegroundColor = foreground;
+            titleBar.ButtonPressedBackgroundColor = hover;
+            titleBar.ButtonPressedForegroundColor = foreground;
+        }
+        catch
+        {
+        }
+    }
+
     private async void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
     {
         if (bootStarted)
