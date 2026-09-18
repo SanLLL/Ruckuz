@@ -1,680 +1,523 @@
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using RuckuZ_Windows.Models;
 using RuckuZ_Windows.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 
 namespace RuckuZ_Windows;
 
-public sealed partial class MainWindow :
-    Window
+public sealed partial class MainWindow : Window
 {
-    private bool registerMode =
-        false;
-
-    private bool authBusy =
-        false;
+    private bool registerMode;
+    private bool authBusy;
+    private bool bootStarted;
+    private bool appStarted;
+    private string currentChannel = "general";
+    private string currentUserId = "";
+    private JsonObject? myProfile;
+    private readonly Dictionary<string, JsonObject> profiles = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, JsonObject> memberProfiles = new(StringComparer.Ordinal);
+    private readonly HashSet<string> onlineUsers = new(StringComparer.Ordinal);
 
     public MainWindow()
     {
-
         InitializeComponent();
-
-        Title =
-            "RuckuZ";
+        Title = "RuckuZ";
 
         UpdateAuthMode();
+        ResizeWindow(1280, 800);
 
+        Activated += MainWindow_Activated;
+        Closed += MainWindow_Closed;
     }
 
-    private void PasswordInput_PasswordChanged(
-        object sender,
-        RoutedEventArgs e
-    )
+    private void ResizeWindow(int width, int height)
     {
+        try
+        {
+            IntPtr hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hwnd);
+            Microsoft.UI.Windowing.AppWindow appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
+            appWindow.Resize(new Windows.Graphics.SizeInt32(width, height));
+        }
+        catch
+        {
 
-        PasswordPlaceholder.Visibility =
-            string.IsNullOrEmpty(
-                PasswordInput.Password
-            )
-                ? Visibility.Visible
-                : Visibility.Collapsed;
+        }
+    }
 
+    private async void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
+    {
+        if (bootStarted)
+        {
+            return;
+        }
+
+        bootStarted = true;
+        await BootAsync();
+    }
+
+    private async Task BootAsync()
+    {
+        LoadSavedTheme();
+        ApplyTheme();
+
+        LoadingOverlay.Visibility = Visibility.Visible;
+        LoadingText.Text = "Checking account...";
+
+        try
+        {
+            await SupabaseService.Instance.InitializeAsync();
+
+            var session = SupabaseService.Instance.Client.Auth.CurrentSession;
+            if (session?.User != null)
+            {
+                await EnterAppAsync();
+                return;
+            }
+        }
+        catch (Exception exception)
+        {
+            System.Diagnostics.Debug.WriteLine(exception);
+        }
+
+        LoadingOverlay.Visibility = Visibility.Collapsed;
+        AuthView.Visibility = Visibility.Visible;
+        AppView.Visibility = Visibility.Collapsed;
+    }
+
+    private async void MainWindow_Closed(object sender, WindowEventArgs args)
+    {
+        try
+        {
+            if (presenceTracker != null)
+            {
+                await presenceTracker.Untrack();
+            }
+        }
+        catch
+        {
+        }
+
+        try
+        {
+            SupabaseService.Instance.Client.Auth.Shutdown();
+        }
+        catch
+        {
+        }
+    }
+
+    private void PasswordInput_PasswordChanged(object sender, RoutedEventArgs e)
+    {
+        PasswordPlaceholder.Visibility = string.IsNullOrEmpty(PasswordInput.Password)
+            ? Visibility.Visible
+            : Visibility.Collapsed;
     }
 
     private void UpdateAuthMode()
     {
-
-        if (
-            registerMode
-        )
+        if (registerMode)
         {
-
-            UsernameShell.Visibility =
-                Visibility.Visible;
-
-            AuthHeading.Text =
-                "Join RuckuZ";
-
-            AuthIntro.Text =
-                "Create your RuckuZ account.";
-
-            AuthButtonLabel.Text =
-                "Create Account";
-
-            ModeHint.Text =
-                "Already have an account? Login";
-
-            ForgotPasswordButton.Visibility =
-                Visibility.Collapsed;
-
-            LoginTabArt.Opacity =
-                0.54;
-
-            RegisterTabArt.Opacity =
-                1;
-
+            UsernameShell.Visibility = Visibility.Visible;
+            AuthHeading.Text = "Join RuckuZ";
+            AuthIntro.Text = "Create your RuckuZ account.";
+            AuthButtonLabel.Text = "Create Account";
+            ModeHint.Text = "Already have an account? Login";
+            ForgotPasswordButton.Visibility = Visibility.Collapsed;
+            LoginTabArt.Opacity = 0.54;
+            RegisterTabArt.Opacity = 1;
+            LoginTabLabel.Opacity = 0.7;
+            RegisterTabLabel.Opacity = 1;
         }
         else
         {
-
-            UsernameShell.Visibility =
-                Visibility.Collapsed;
-
-            AuthHeading.Text =
-                "Welcome back";
-
-            AuthIntro.Text =
-                "Login to your RuckuZ account.";
-
-            AuthButtonLabel.Text =
-                "Login";
-
-            ModeHint.Text =
-                "Don't have an account? Register";
-
-            ForgotPasswordButton.Visibility =
-                Visibility.Visible;
-
-            LoginTabArt.Opacity =
-                1;
-
-            RegisterTabArt.Opacity =
-                0.54;
-
+            UsernameShell.Visibility = Visibility.Collapsed;
+            AuthHeading.Text = "Welcome back";
+            AuthIntro.Text = "Login to your RuckuZ account.";
+            AuthButtonLabel.Text = "Login";
+            ModeHint.Text = "Don't have an account? Register";
+            ForgotPasswordButton.Visibility = Visibility.Visible;
+            LoginTabArt.Opacity = 1;
+            RegisterTabArt.Opacity = 0.54;
+            LoginTabLabel.Opacity = 1;
+            RegisterTabLabel.Opacity = 0.7;
         }
 
-        if (
-            !authBusy
-        )
+        if (!authBusy)
         {
-
-            StatusText.Text =
-                "";
-
+            StatusText.Text = "";
         }
-
     }
 
-    private void LoginTab_Click(
-        object sender,
-        RoutedEventArgs e
-    )
+    private void LoginTab_Click(object sender, RoutedEventArgs e)
     {
-
-        if (
-            authBusy
-        )
+        if (authBusy)
         {
             return;
         }
 
-        registerMode =
-            false;
-
+        registerMode = false;
         UpdateAuthMode();
-
     }
 
-    private void RegisterTab_Click(
-        object sender,
-        RoutedEventArgs e
-    )
+    private void RegisterTab_Click(object sender, RoutedEventArgs e)
     {
-
-        if (
-            authBusy
-        )
+        if (authBusy)
         {
             return;
         }
 
-        registerMode =
-            true;
-
+        registerMode = true;
         UpdateAuthMode();
-
     }
 
-    private void SetAuthBusy(
-        bool busy,
-        string? busyText = null
-    )
+    private void ModeHint_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
     {
-
-        authBusy =
-            busy;
-
-        EmailInput.IsEnabled =
-            !busy;
-
-        PasswordInput.IsEnabled =
-            !busy;
-
-        UsernameInput.IsEnabled =
-            !busy;
-
-        LoginButton.IsEnabled =
-            !busy;
-
-        LoginTabButton.IsEnabled =
-            !busy;
-
-        RegisterTabButton.IsEnabled =
-            !busy;
-
-        ForgotPasswordButton.IsEnabled =
-            !busy;
-
-        if (
-            busy &&
-            !string.IsNullOrWhiteSpace(
-                busyText
-            )
-        )
+        if (authBusy)
         {
-
-            AuthButtonLabel.Text =
-                busyText;
-
-        }
-        else
-        {
-
-            AuthButtonLabel.Text =
-                registerMode
-                    ? "Create Account"
-                    : "Login";
-
+            return;
         }
 
+        registerMode = !registerMode;
+        UpdateAuthMode();
     }
 
-    private async void LoginButton_Click(
-        object sender,
-        RoutedEventArgs e
-    )
+    private void SetAuthBusy(bool busy, string? busyText = null)
     {
+        authBusy = busy;
 
-        if (
-            authBusy
-        )
+        EmailInput.IsEnabled = !busy;
+        PasswordInput.IsEnabled = !busy;
+        UsernameInput.IsEnabled = !busy;
+        LoginButton.IsEnabled = !busy;
+        LoginTabButton.IsEnabled = !busy;
+        RegisterTabButton.IsEnabled = !busy;
+        ForgotPasswordButton.IsEnabled = !busy;
+
+        AuthButtonLabel.Text = busy && !string.IsNullOrWhiteSpace(busyText)
+            ? busyText
+            : registerMode ? "Create Account" : "Login";
+    }
+
+    private async void LoginButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (authBusy)
         {
             return;
         }
 
-        StatusText.Text =
-            "";
+        StatusText.Text = "";
 
-        string email =
-            EmailInput
-                .Text
-                .Trim();
+        string email = EmailInput.Text.Trim();
+        string password = PasswordInput.Password;
+        string username = UsernameInput.Text.Trim();
 
-
-        string password =
-            PasswordInput
-                .Password;
-
-
-        string username =
-            UsernameInput
-                .Text
-                .Trim();
-
-
-        if (
-            registerMode &&
-            string.IsNullOrWhiteSpace(
-                username
-            )
-        )
+        if (registerMode)
         {
+            if (username.Length < 2 || username.Length > 32)
+            {
+                StatusText.Text = "Username must be 2 to 32 characters.";
+                UsernameInput.Focus(FocusState.Programmatic);
+                return;
+            }
 
-            StatusText.Text =
-                "Enter a username.";
-
-            UsernameInput.Focus(
-                FocusState.Programmatic
-            );
-
-            return;
-
+            if (username.Contains('\n') || username.Contains('\r') || username.Contains('\t'))
+            {
+                StatusText.Text = "That username contains invalid characters.";
+                UsernameInput.Focus(FocusState.Programmatic);
+                return;
+            }
         }
 
-        if (
-            string.IsNullOrWhiteSpace(
-                email
-            )
-        )
+        if (string.IsNullOrWhiteSpace(email))
         {
-
-            StatusText.Text =
-                "Enter your email.";
-
-            EmailInput.Focus(
-                FocusState.Programmatic
-            );
-
+            StatusText.Text = "Enter your email.";
+            EmailInput.Focus(FocusState.Programmatic);
             return;
-
         }
 
-        if (
-            string.IsNullOrWhiteSpace(
-                password
-            )
-        )
+        if (string.IsNullOrWhiteSpace(password))
         {
-
-            StatusText.Text =
-                "Enter your password.";
-
-            PasswordInput.Focus(
-                FocusState.Programmatic
-            );
-
+            StatusText.Text = "Enter your password.";
+            PasswordInput.Focus(FocusState.Programmatic);
             return;
-
         }
 
         try
         {
+            await SupabaseService.Instance.InitializeAsync();
 
-            await SupabaseService
-                .Instance
-                .InitializeAsync();
-
-
-            if (
-                registerMode
-            )
+            if (registerMode)
             {
-
-                await RegisterAsync(
-                    email,
-                    password,
-                    username
-                );
-
+                await RegisterAsync(email, password, username);
             }
             else
             {
-
-                await LoginAsync(
-                    email,
-                    password
-                );
-
+                await LoginAsync(email, password);
             }
-
         }
-        catch (
-            Exception exception
-        )
+        catch (Exception exception)
         {
-
-            System.Diagnostics
-                .Debug
-                .WriteLine(
-                    exception
-                );
-
-
-            StatusText.Text =
-                GetFriendlyAuthError(
-                    exception
-                );
-
+            System.Diagnostics.Debug.WriteLine(exception);
+            StatusText.Text = GetFriendlyAuthError(exception);
         }
         finally
         {
-
-            SetAuthBusy(
-                false
-            );
-
+            SetAuthBusy(false);
         }
-
     }
 
-    private async System.Threading.Tasks.Task LoginAsync(
-        string email,
-        string password
-    )
+    private async Task LoginAsync(string email, string password)
     {
+        SetAuthBusy(true, "Logging in...");
 
-        SetAuthBusy(
-            true,
-            "Logging in..."
-        );
-
-        var session =
-            await SupabaseService
-                .Instance
-                .Client
-                .Auth
-                .SignIn(
-                    email,
-                    password
-                );
-
-        if (
-            session?.User == null
-        )
+        var session = await SupabaseService.Instance.Client.Auth.SignIn(email, password);
+        if (session?.User == null)
         {
-
-            throw new Exception(
-                "Login failed."
-            );
-
+            throw new InvalidOperationException("Login failed.");
         }
 
-        string signedInEmail =
-            session.User.Email ??
-            email;
-
-        AuthHeading.Text =
-            "You're in";
-
-        AuthIntro.Text =
-            "Signed in as " +
-            signedInEmail;
-
-        StatusText.Text =
-            "Login successful.";
-
-        PasswordInput.Password =
-            "";
-
+        PasswordInput.Password = "";
+        await EnterAppAsync();
     }
 
-    private async System.Threading.Tasks.Task RegisterAsync(
-        string email,
-        string password,
-        string username
-    )
+    private async Task RegisterAsync(string email, string password, string username)
     {
+        SetAuthBusy(true, "Creating account...");
 
-        SetAuthBusy(
-            true,
-            "Creating account..."
-        );
-
-        var options =
-            new Supabase.Gotrue.SignUpOptions
+        var options = new Supabase.Gotrue.SignUpOptions
+        {
+            RedirectTo = "https://ruckuz.org/",
+            Data = new Dictionary<string, object>
             {
+                ["username"] = username
+            }
+        };
 
-                RedirectTo =
-                    "https://ruckuz.org/",
+        await SupabaseService.Instance.Client.Auth.SignUp(email, password, options);
 
-                Data =
-                    new Dictionary<string, object>
-                    {
-                        {
-                            "username",
-                            username
-                        }
-                    }
-
-            };
-
-        await SupabaseService
-            .Instance
-            .Client
-            .Auth
-            .SignUp(
-                email,
-                password,
-                options
-            );
-
-        registerMode =
-            false;
-
+        registerMode = false;
         UpdateAuthMode();
 
-        EmailInput.Text =
-            email;
-
-        PasswordInput.Password =
-            "";
-
-        UsernameInput.Text =
-            "";
-
-        StatusText.Text =
-            "Check your email to verify your RuckuZ account, then log in.";
-
+        EmailInput.Text = email;
+        PasswordInput.Password = "";
+        UsernameInput.Text = "";
+        StatusText.Text = "Check your email to verify your RuckuZ account, then log in.";
     }
 
-    private async void ForgotPassword_Click(
-        object sender,
-        RoutedEventArgs e
-    )
+    private async void ForgotPassword_Click(object sender, RoutedEventArgs e)
     {
-
-        if (
-            authBusy
-        )
+        if (authBusy)
         {
             return;
         }
 
-        string email =
-            EmailInput
-                .Text
-                .Trim();
+        string email = EmailInput.Text.Trim();
+        StatusText.Text = "";
 
-        StatusText.Text =
-            "";
-
-        if (
-            string.IsNullOrWhiteSpace(
-                email
-            )
-        )
+        if (string.IsNullOrWhiteSpace(email))
         {
-
-            StatusText.Text =
-                "Enter your email address first.";
-
-            EmailInput.Focus(
-                FocusState.Programmatic
-            );
-
+            StatusText.Text = "Enter your email address first.";
+            EmailInput.Focus(FocusState.Programmatic);
             return;
-
         }
 
         try
         {
+            authBusy = true;
+            EmailInput.IsEnabled = false;
+            PasswordInput.IsEnabled = false;
+            LoginButton.IsEnabled = false;
+            LoginTabButton.IsEnabled = false;
+            RegisterTabButton.IsEnabled = false;
+            ForgotPasswordButton.IsEnabled = false;
+            ForgotPasswordButton.Content = "Sending...";
 
-            authBusy =
-                true;
+            await SupabaseService.Instance.InitializeAsync();
 
-            EmailInput.IsEnabled =
-                false;
+            var options = new Supabase.Gotrue.ResetPasswordForEmailOptions(email)
+            {
+                RedirectTo = "https://ruckuz.org/reset-password"
+            };
 
-            PasswordInput.IsEnabled =
-                false;
-
-            LoginButton.IsEnabled =
-                false;
-
-            LoginTabButton.IsEnabled =
-                false;
-
-            RegisterTabButton.IsEnabled =
-                false;
-
-            ForgotPasswordButton.IsEnabled =
-                false;
-
-            ForgotPasswordButton.Content =
-                "Sending...";
-
-            await SupabaseService
-                .Instance
-                .InitializeAsync();
-
-            var options =
-                new Supabase.Gotrue
-                    .ResetPasswordForEmailOptions(
-                        email
-                    )
-                {
-                    RedirectTo =
-                        "https://ruckuz.org/reset-password"
-                };
-
-            await SupabaseService
-                .Instance
-                .Client
-                .Auth
-                .ResetPasswordForEmail(
-                    options
-                );
-
-            StatusText.Text =
-                "If an account uses that email, a password reset link has been sent.";
-
+            await SupabaseService.Instance.Client.Auth.ResetPasswordForEmail(options);
+            StatusText.Text = "If an account uses that email, a password reset link has been sent.";
         }
-        catch (
-            Exception exception
-        )
+        catch (Exception exception)
         {
-
-            System.Diagnostics
-                .Debug
-                .WriteLine(
-                    exception
-                );
-
-            StatusText.Text =
-                "Couldn't send the reset email.";
-
+            System.Diagnostics.Debug.WriteLine(exception);
+            StatusText.Text = "Couldn't send the reset email.";
         }
         finally
         {
-
-            authBusy =
-                false;
-
-            EmailInput.IsEnabled =
-                true;
-
-            PasswordInput.IsEnabled =
-                true;
-
-            LoginButton.IsEnabled =
-                true;
-
-            LoginTabButton.IsEnabled =
-                true;
-
-            RegisterTabButton.IsEnabled =
-                true;
-
-            ForgotPasswordButton.IsEnabled =
-                true;
-
-            ForgotPasswordButton.Content =
-                "Forgot password?";
-
+            authBusy = false;
+            EmailInput.IsEnabled = true;
+            PasswordInput.IsEnabled = true;
+            LoginButton.IsEnabled = true;
+            LoginTabButton.IsEnabled = true;
+            RegisterTabButton.IsEnabled = true;
+            ForgotPasswordButton.IsEnabled = true;
+            ForgotPasswordButton.Content = "Forgot password?";
         }
-
     }
 
-    private static string GetFriendlyAuthError(
-        Exception exception
-    )
+    private async Task EnterAppAsync()
     {
-
-        string message =
-            exception.Message;
-
-        string lowerMessage =
-            message.ToLowerInvariant();
-
-        if (
-            lowerMessage.Contains(
-                "invalid login credentials"
-            )
-        )
+        if (appStarted)
         {
-
-            return
-                "Incorrect email or password.";
-
+            AuthView.Visibility = Visibility.Collapsed;
+            AppView.Visibility = Visibility.Visible;
+            LoadingOverlay.Visibility = Visibility.Collapsed;
+            return;
         }
 
-        if (
-            lowerMessage.Contains(
-                "email not confirmed"
-            )
-        )
+        var session = SupabaseService.Instance.Client.Auth.CurrentSession;
+        if (session?.User == null)
         {
-
-            return
-                "Verify your email before logging in.";
-
+            throw new InvalidOperationException("The RuckuZ session is missing.");
         }
 
-        if (
-            lowerMessage.Contains(
-                "user already registered"
-            )
-        )
+        appStarted = true;
+        currentUserId = session.User.Id ?? "";
+
+        AuthView.Visibility = Visibility.Collapsed;
+        AppView.Visibility = Visibility.Visible;
+        LoadingOverlay.Visibility = Visibility.Visible;
+
+        try
         {
+            LoadingText.Text = "Loading profile...";
+            await LoadProfilesAsync();
+            await LoadMemberProfilesAsync();
 
-            return
-                "An account already uses that email.";
+            LoadingText.Text = "Loading messages...";
+            await LoadMessagesAsync();
 
+            LoadingText.Text = "Loading friends...";
+            await RefreshSocialCountsAsync();
+
+            LoadingText.Text = "Connecting live updates...";
+            await StartRealtimeAsync();
+
+            StartTimestampTimer();
+            RefreshSelfPanel();
+            await RenderMemberListAsync();
+        }
+        catch (Exception exception)
+        {
+            System.Diagnostics.Debug.WriteLine(exception);
+            await ShowMessageAsync(
+                "RuckuZ couldn't finish loading",
+                exception.Message
+            );
+        }
+        finally
+        {
+            LoadingOverlay.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    private async Task ReturnToAuthAsync()
+    {
+        await StopRealtimeAsync();
+
+        appStarted = false;
+        currentUserId = "";
+        myProfile = null;
+        profiles.Clear();
+        memberProfiles.Clear();
+        onlineUsers.Clear();
+        MessagesPanel.Children.Clear();
+        MembersListPanel.Children.Clear();
+
+        AppView.Visibility = Visibility.Collapsed;
+        AuthView.Visibility = Visibility.Visible;
+        LoadingOverlay.Visibility = Visibility.Collapsed;
+
+        PasswordInput.Password = "";
+        StatusText.Text = "";
+        registerMode = false;
+        UpdateAuthMode();
+    }
+
+    private static string GetFriendlyAuthError(Exception exception)
+    {
+        string message = exception.Message;
+        string lowerMessage = message.ToLowerInvariant();
+
+        if (lowerMessage.Contains("invalid login credentials"))
+        {
+            return "Incorrect email or password.";
         }
 
-        if (
-            lowerMessage.Contains(
-                "password"
-            ) &&
-            lowerMessage.Contains(
-                "characters"
-            )
-        )
+        if (lowerMessage.Contains("email not confirmed"))
         {
-            return message;
-
+            return "Verify your email before logging in.";
         }
 
-        if (
-            lowerMessage.Contains(
-                "unable to validate email"
-            )
-        )
+        if (lowerMessage.Contains("user already registered"))
         {
-
-            return
-                "Enter a valid email address.";
+            return "An account already uses that email.";
         }
+
+        if (lowerMessage.Contains("unable to validate email"))
+        {
+            return "Enter a valid email address.";
+        }
+
         return message;
+    }
+
+    private async Task ShowMessageAsync(string title, string message)
+    {
+        var dialog = new ContentDialog
+        {
+            XamlRoot = RootGrid.XamlRoot,
+            Title = title,
+            Content = new TextBlock
+            {
+                Text = message,
+                TextWrapping = TextWrapping.Wrap,
+                FontFamily = RuckuZFont(),
+                FontSize = 16
+            },
+            CloseButtonText = "OK"
+        };
+
+        await dialog.ShowAsync();
+    }
+
+    private async Task<bool> ShowConfirmAsync(string title, string message, string confirmText)
+    {
+        var dialog = new ContentDialog
+        {
+            XamlRoot = RootGrid.XamlRoot,
+            Title = title,
+            Content = new TextBlock
+            {
+                Text = message,
+                TextWrapping = TextWrapping.Wrap,
+                FontFamily = RuckuZFont(),
+                FontSize = 16
+            },
+            PrimaryButtonText = confirmText,
+            CloseButtonText = "Cancel",
+            DefaultButton = ContentDialogButton.Close
+        };
+
+        ContentDialogResult result = await dialog.ShowAsync();
+        return result == ContentDialogResult.Primary;
+    }
+
+    private Microsoft.UI.Xaml.Media.FontFamily RuckuZFont()
+    {
+        return new Microsoft.UI.Xaml.Media.FontFamily(
+            "ms-appx:///Assets/AprilshandwritingRegular-mpGj.otf#Aprils Handwriting"
+        );
     }
 }
