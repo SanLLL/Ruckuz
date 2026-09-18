@@ -539,11 +539,10 @@ public sealed partial class MainWindow :
 
             var options =
                 new Supabase.Gotrue
-                    .ResetPasswordForEmailOptions
+                    .ResetPasswordForEmailOptions(
+                        email
+                    )
                 {
-                    Email =
-                        email,
-
                     RedirectTo =
                         "https://ruckuz.org/reset-password"
                 };
