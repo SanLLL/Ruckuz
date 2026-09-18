@@ -101,7 +101,7 @@
                     Spacing="16">
 
                     <Image
-                        Source="ms-appx:///Assets/avatars/ruckuz.png"
+                        Source="ms-appx:///Assets/logo/logo3.png"
                         Width="72"
                         Height="72"/>
 
