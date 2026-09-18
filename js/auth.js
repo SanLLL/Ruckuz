@@ -38,42 +38,140 @@ if (session) {
 }
 
 let registerMode = false;
-const username = document.getElementById("username");
-const email = document.getElementById("email");
-const password = document.getElementById("password");
-const button = document.getElementById("authButton");
-const statusText = document.getElementById("status");
-const switchMode = document.getElementById("switchMode");
-const switchText = document.getElementById("switchText");
-const loginTab = document.getElementById("loginTab");
-const registerTab = document.getElementById("registerTab");
-const forgotPassword = document.getElementById("forgotPassword");
+const username =
+    document.getElementById(
+        "username"
+    );
+
+const usernameShell =
+    document.getElementById(
+        "usernameShell"
+    );
+
+const email =
+    document.getElementById(
+        "email"
+    );
+
+const password =
+    document.getElementById(
+        "password"
+    );
+
+const button =
+    document.getElementById(
+        "authButton"
+    );
+
+const buttonLabel =
+    document.getElementById(
+        "authButtonLabel"
+    );
+
+const statusText =
+    document.getElementById(
+        "status"
+    );
+
+const switchMode =
+    document.getElementById(
+        "switchMode"
+    );
+
+const switchText =
+    document.getElementById(
+        "switchText"
+    );
+
+const loginTab =
+    document.getElementById(
+        "loginTab"
+    );
+
+const registerTab =
+    document.getElementById(
+        "registerTab"
+    );
+
+const forgotPassword =
+    document.getElementById(
+        "forgotPassword"
+    );
+
+const authHeading =
+    document.getElementById(
+        "authHeading"
+    );
+
+const authIntro =
+    document.getElementById(
+        "authIntro"
+    );
 
 function updateUI() {
-    if (registerMode) {
-        username.style.display = "block";
-        forgotPassword.style.display = "none";
-        button.textContent = "Create Account";
+
+    if (
+        registerMode
+    ) {
+
+        usernameShell.style.display =
+            "block";
+
+        forgotPassword.style.display =
+            "none";
+
+        buttonLabel.textContent =
+            "Create Account";
+
+        authHeading.textContent =
+            "Join RuckuZ";
+
+        authIntro.textContent =
+            "Create your RuckuZ account.";
+
         switchText.innerHTML =
             'Already have an account? <span id="switchMode">Login</span>';
 
-        loginTab.classList.remove("active");
-        registerTab.classList.add("active");
+        loginTab.classList.remove(
+            "active"
+        );
+
+        registerTab.classList.add(
+            "active"
+        );
 
     } else {
 
-        username.style.display = "none";
-        forgotPassword.style.display = "block";
-        button.textContent = "Login";
-        switchText.innerHTML =
-            'Don\'t have an account? <span id="switchMode">Register</span>';
+        usernameShell.style.display =
+            "none";
 
-        registerTab.classList.remove("active");
-        loginTab.classList.add("active");
+        forgotPassword.style.display =
+            "block";
+
+        buttonLabel.textContent =
+            "Login";
+
+        authHeading.textContent =
+            "Welcome back";
+
+        authIntro.textContent =
+            "Login to your RuckuZ account.";
+
+        registerTab.classList.remove(
+            "active"
+        );
+
+        loginTab.classList.add(
+            "active"
+        );
 
     }
 
-    document.querySelector("#switchMode").onclick = toggleMode;
+    document.querySelector(
+        "#switchMode"
+    ).onclick =
+        toggleMode;
+
 }
 
 function toggleMode() {

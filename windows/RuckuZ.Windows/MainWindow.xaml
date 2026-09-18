@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <Window
     x:Class="RuckuZ_Windows.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -9,108 +8,327 @@
     mc:Ignorable="d"
     Title="RuckuZ">
 
-    <Grid
-        Background="#17151C">
+    <Window.Resources>
+        <FontFamily
+            x:Key="RuckuZFont">
+            ms-appx:///Assets/AprilshandwritingRegular-mpGj.otf#Aprils Handwriting
+        </FontFamily>
+
+        <Style
+            x:Key="RuckuZImageButton"
+            TargetType="Button">
+
+            <Setter
+                Property="Background"
+                Value="Transparent"/>
+
+            <Setter
+                Property="BorderBrush"
+                Value="Transparent"/>
+
+            <Setter
+                Property="BorderThickness"
+                Value="0"/>
+
+            <Setter
+                Property="Padding"
+                Value="0"/>
+            <Setter
+                Property="FontFamily"
+                Value="{StaticResource RuckuZFont}"/>
+
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+
+        <Grid.Background>
+            <ImageBrush
+                ImageSource="ms-appx:///Assets/bg/paper.png"
+                Stretch="UniformToFill"/>
+
+        </Grid.Background>
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition
-                Width="1.15*"/>
+                Width="1.08*"/>
             <ColumnDefinition
-                Width="0.85*"/>
+                Width="0.92*"/>
         </Grid.ColumnDefinitions>
 
+        <Border
+            Grid.Column="0"
+            Background="#F72F244D"
+            BorderBrush="#6B58B8"
+            BorderThickness="0,0,4,0">
+            <Grid
+                Padding="48">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition
+                        Height="*"/>
+                    <RowDefinition
+                        Height="Auto"/>
+
+                </Grid.RowDefinitions>
+
+                <StackPanel
+                    Grid.Row="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Spacing="24">
+
+                    <Image
+                        Source="ms-appx:///Assets/logo/logo.png"
+                        Width="500"
+                        Stretch="Uniform"/>
+
+                    <TextBlock
+                        Text="Talk. Share. Cause a little RuckuZ."
+                        HorizontalAlignment="Center"
+                        TextAlignment="Center"
+                        TextWrapping="Wrap"
+                        FontFamily="{StaticResource RuckuZFont}"
+                        FontSize="25"
+                        Foreground="#FFFDF6"/>
+
+                </StackPanel>
+
+                <StackPanel
+                    Grid.Row="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Spacing="16">
+
+                    <Image
+                        Source="ms-appx:///Assets/avatars/ruckuz.png"
+                        Width="72"
+                        Height="72"/>
+
+                    <TextBlock
+                        Width="360"
+                        VerticalAlignment="Center"
+                        Text="A place to doodle, chat, share media and hang out."
+                        TextWrapping="Wrap"
+                        FontFamily="{StaticResource RuckuZFont}"
+                        FontSize="19"
+                        Foreground="#DED4F4"/>
+
+                </StackPanel>
+            </Grid>
+        </Border>
+
         <Grid
-            Grid.Column="0">
+            Grid.Column="1"
+            Padding="40">
 
             <StackPanel
                 Width="430"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Spacing="10">
+                Spacing="14">
 
                 <TextBlock
-                    Text="RuckuZ"
-                    FontSize="64"
-                    FontWeight="Bold"
-                    Foreground="#FFFFFF"/>
+                    x:Name="AuthHeading"
+                    Text="Welcome back"
+                    FontFamily="{StaticResource RuckuZFont}"
+                    FontSize="40"
+                    Foreground="#30254F"/>
 
                 <TextBlock
-                    Text="Talk. Share. Cause a little RuckuZ."
-                    FontSize="21"
-                    Foreground="#BEB8C8"
-                    TextWrapping="Wrap"/>
+                    x:Name="AuthIntro"
+                    Text="Login to your RuckuZ account."
+                    Margin="0,-6,0,8"
+                    FontFamily="{StaticResource RuckuZFont}"
+                    FontSize="18"
+                    Foreground="#655E72"/>
 
-            </StackPanel>
-        </Grid>
+                <Grid
+                    ColumnSpacing="12">
 
-        <Grid
-            Grid.Column="1"
-            Background="#201D26">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*"/>
+                        <ColumnDefinition
+                            Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-            <Border
-                Width="390"
-                Padding="34"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Background="#292530"
-                BorderBrush="#40394A"
-                BorderThickness="1"
-                CornerRadius="8">
+                    <Button
+                        x:Name="LoginTabButton"
+                        Grid.Column="0"
+                        Height="58"
+                        Style="{StaticResource RuckuZImageButton}"
+                        Click="LoginTab_Click">
 
-                <StackPanel
-                    Spacing="16">
-                    <TextBlock
-                        Text="Welcome back"
-                        FontSize="29"
-                        FontWeight="SemiBold"
-                        Foreground="#FFFFFF"/>
+                        <Grid>
+                            <Image
+                                x:Name="LoginTabArt"
+                                Source="ms-appx:///Assets/buttons/light/buttonlight.png"
+                                Stretch="Fill"/>
 
-                    <TextBlock
-                        Text="Login to your RuckuZ account."
-                        Margin="0,-8,0,10"
-                        FontSize="15"
-                        Foreground="#AAA4B2"/>
+                            <TextBlock
+                                Text="Login"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontFamily="{StaticResource RuckuZFont}"
+                                FontSize="20"
+                                FontWeight="Bold"
+                                Foreground="#4B347C"/>
 
-                    <TextBlock
-                        Text="Email"
-                        Foreground="#DDD8E2"/>
+                        </Grid>
+                    </Button>
+
+                    <Button
+                        x:Name="RegisterTabButton"
+                        Grid.Column="1"
+                        Height="58"
+                        Style="{StaticResource RuckuZImageButton}"
+                        Click="RegisterTab_Click">
+
+                        <Grid>
+                            <Image
+                                x:Name="RegisterTabArt"
+                                Source="ms-appx:///Assets/buttons/light/buttonlight.png"
+                                Stretch="Fill"
+                                Opacity="0.54"/>
+
+                            <TextBlock
+                                Text="Register"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontFamily="{StaticResource RuckuZFont}"
+                                FontSize="20"
+                                FontWeight="Bold"
+                                Foreground="#4B347C"
+                                Opacity="0.7"/>
+
+                        </Grid>
+                    </Button>
+                </Grid>
+
+                <Grid
+                    x:Name="UsernameShell"
+                    Height="60"
+                    Visibility="Collapsed">
+
+                    <Image
+                        Source="ms-appx:///Assets/buttons/light/inputlight.png"
+                        Stretch="Fill"/>
+
+                    <TextBox
+                        x:Name="UsernameInput"
+                        Margin="18,5"
+                        Padding="0"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        PlaceholderText="Username"
+                        FontFamily="{StaticResource RuckuZFont}"
+                        FontSize="18"
+                        Foreground="#30254F"
+                        VerticalContentAlignment="Center"/>
+
+                </Grid>
+
+                <Grid
+                    Height="60">
+
+                    <Image
+                        Source="ms-appx:///Assets/buttons/light/inputlight.png"
+                        Stretch="Fill"/>
 
                     <TextBox
                         x:Name="EmailInput"
-                        PlaceholderText="you@example.com"
-                        Height="44"
-                        FontSize="16"/>
+                        Margin="18,5"
+                        Padding="0"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        PlaceholderText="Email"
+                        FontFamily="{StaticResource RuckuZFont}"
+                        FontSize="18"
+                        Foreground="#30254F"
+                        VerticalContentAlignment="Center"/>
 
-                    <TextBlock
-                        Text="Password"
-                        Margin="0,4,0,0"
-                        Foreground="#DDD8E2"/>
+                </Grid>
 
+                <Grid
+                    Height="60">
+
+                    <Image
+                        Source="ms-appx:///Assets/buttons/light/inputlight.png"
+                        Stretch="Fill"/>
                     <PasswordBox
                         x:Name="PasswordInput"
+                        Margin="18,5"
+                        Padding="0"
+                        Background="Transparent"
+                        BorderThickness="0"
                         PlaceholderText="Password"
-                        Height="44"
-                        FontSize="16"/>
+                        FontFamily="Segoe UI"
+                        FontSize="18"
+                        Foreground="#30254F"
+                        VerticalContentAlignment="Center"/>
 
-                    <Button
-                        x:Name="LoginButton"
-                        Content="Login"
-                        Height="46"
-                        Margin="0,10,0,0"
-                        HorizontalAlignment="Stretch"
-                        HorizontalContentAlignment="Center"
-                        FontSize="16"
-                        Click="LoginButton_Click"/>
+                </Grid>
 
-                    <TextBlock
-                        x:Name="StatusText"
-                        MinHeight="20"
-                        Text=""
-                        TextAlignment="Center"
-                        TextWrapping="Wrap"
-                        Foreground="#FF8D8D"/>
+                <Button
+                    x:Name="ForgotPasswordButton"
+                    Content="Forgot password?"
+                    HorizontalAlignment="Right"
+                    Padding="0"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    FontFamily="{StaticResource RuckuZFont}"
+                    FontSize="15"
+                    Foreground="#6B58B8"
+                    Click="ForgotPassword_Click"/>
 
-                </StackPanel>
-            </Border>
+                <Button
+                    x:Name="LoginButton"
+                    Height="66"
+                    Margin="0,4,0,0"
+                    HorizontalAlignment="Stretch"
+                    Style="{StaticResource RuckuZImageButton}"
+                    Click="LoginButton_Click">
+
+                    <Grid>
+                        <Image
+                            Source="ms-appx:///Assets/buttons/light/buttonlight.png"
+                            Stretch="Fill"/>
+
+                        <TextBlock
+                            x:Name="AuthButtonLabel"
+                            Text="Login"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontFamily="{StaticResource RuckuZFont}"
+                            FontSize="21"
+                            FontWeight="Bold"
+                            Foreground="#4B347C"/>
+
+                    </Grid>
+                </Button>
+
+                <TextBlock
+                    x:Name="ModeHint"
+                    Text="Don't have an account? Register"
+                    HorizontalAlignment="Center"
+                    TextAlignment="Center"
+                    FontFamily="{StaticResource RuckuZFont}"
+                    FontSize="17"
+                    Foreground="#625B70"/>
+
+                <TextBlock
+                    x:Name="StatusText"
+                    MinHeight="22"
+                    Text=""
+                    HorizontalAlignment="Center"
+                    TextAlignment="Center"
+                    TextWrapping="Wrap"
+                    FontFamily="{StaticResource RuckuZFont}"
+                    FontSize="16"
+                    Foreground="#8B3F63"/>
+
+            </StackPanel>
         </Grid>
     </Grid>
 </Window>

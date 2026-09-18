@@ -65,59 +65,192 @@
         </div>
     </div>
 </div>
+
 <div id="app">
-<div class="authCard">
-<h1>RuckuZ</h1>
+<main id="authShell">
+    <section id="authBrandPanel">
+        <div id="authBrandTop">
 
-<p class="subtitle">
-A place to doodle.
-</p>
+            <img
+                id="authLogo"
+                src="logo/logo.png"
+                alt="RuckuZ">
 
-<div class="tabs">
+            <p id="authBrandTagline">
+                Talk. Share. Cause a little RuckuZ.
+            </p>
 
-<button class="tab active" id="loginTab">
-Login
-</button>
+        </div>
 
-<button class="tab" id="registerTab">
-Register
-</button>
+        <div id="authMascotArea">
 
-</div>
+            <img
+                id="authMascot"
+                src="assets/avatars/ruckuz.png"
+                alt="">
 
-<input
-    id="username"
-    placeholder="Username"
-    style="display:none;">
+            <p>
+                A place to doodle, chat,
+                share media and hang out.
+            </p>
 
-<input
-    id="email"
-    type="email"
-    placeholder="Email">
+        </div>
 
-<input
-    id="password"
-    type="password"
-    placeholder="Password">
+    </section>
 
-<button
-    id="forgotPassword"
-    type="button">
-    Forgot password?
-</button>
-    
-<button id="authButton">
-    Login
-</button>
-    
-<p id="switchText">
-Don't have an account?
-<span id="switchMode">
-Register
-</span>
-</p>
-<p id="status"></p>
-</div>
+    <section id="authFormPanel">
+        <div id="authFormContent">
+            <h1 id="authHeading">
+                Welcome back
+            </h1>
+
+            <p id="authIntro">
+                Login to your RuckuZ account.
+            </p>
+
+            <div class="tabs">
+
+                <button
+                    class="tab active"
+                    id="loginTab"
+                    type="button">
+
+                    <img
+                        class="authButtonArt authLightArt"
+                        src="assets/buttons/light/buttonlight.png"
+                        alt="">
+
+                    <img
+                        class="authButtonArt authDarkArt"
+                        src="assets/buttons/dark/buttondark.png"
+                        alt="">
+
+                    <span class="authButtonText">
+                        Login
+                    </span>
+
+                </button>
+
+                <button
+                    class="tab"
+                    id="registerTab"
+                    type="button">
+
+                    <img
+                        class="authButtonArt authLightArt"
+                        src="assets/buttons/light/buttonlight.png"
+                        alt="">
+
+                    <img
+                        class="authButtonArt authDarkArt"
+                        src="assets/buttons/dark/buttondark.png"
+                        alt="">
+
+                    <span class="authButtonText">
+                        Register
+                    </span>
+                </button>
+            </div>
+
+            <div
+                id="usernameShell"
+                class="authInputShell"
+                style="display:none;">
+
+                <img
+                    class="authInputArt authLightArt"
+                    src="assets/buttons/light/inputlight.png"
+                    alt="">
+
+                <img
+                    class="authInputArt authDarkArt"
+                    src="assets/buttons/dark/inputdark.png"
+                    alt="">
+
+                <input
+                    id="username"
+                    placeholder="Username">
+
+            </div>
+
+            <div class="authInputShell">
+
+                <img
+                    class="authInputArt authLightArt"
+                    src="assets/buttons/light/inputlight.png"
+                    alt="">
+
+                <img
+                    class="authInputArt authDarkArt"
+                    src="assets/buttons/dark/inputdark.png"
+                    alt="">
+
+                <input
+                    id="email"
+                    type="email"
+                    placeholder="Email">
+
+            </div>
+
+            <div class="authInputShell">
+
+                <img
+                    class="authInputArt authLightArt"
+                    src="assets/buttons/light/inputlight.png"
+                    alt="">
+
+                <img
+                    class="authInputArt authDarkArt"
+                    src="assets/buttons/dark/inputdark.png"
+                    alt="">
+
+                <input
+                    id="password"
+                    type="password"
+                    placeholder="Password">
+
+            </div>
+
+            <button
+                id="forgotPassword"
+                type="button">
+                Forgot password?
+            </button>
+
+            <button
+                id="authButton"
+                type="button">
+
+                <img
+                    class="authButtonArt authLightArt"
+                    src="assets/buttons/light/buttonlight.png"
+                    alt="">
+
+                <img
+                    class="authButtonArt authDarkArt"
+                    src="assets/buttons/dark/buttondark.png"
+                    alt="">
+
+                <span
+                    id="authButtonLabel"
+                    class="authButtonText">
+                    Login
+                </span>
+
+            </button>
+            <p id="switchText">
+                Don't have an account?
+                <span id="switchMode">
+                    Register
+                </span>
+            </p>
+
+            <p id="status"></p>
+
+        </div>
+    </section>
+</main>
+
 </div>
 <script type="module" src="js/app.js"></script>
 </body>
