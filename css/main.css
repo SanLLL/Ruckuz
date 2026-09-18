@@ -46,3 +46,12 @@ input[type="password"] {
     letter-spacing: 2px;
     caret-color: currentColor;
 }
+
+input[type="password"]::placeholder {
+    font-family:
+        "RuckuZDoodle",
+        Arial,
+        sans-serif
+        !important;
+    letter-spacing: normal;
+}
