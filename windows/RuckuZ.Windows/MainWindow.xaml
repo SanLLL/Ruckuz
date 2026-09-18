@@ -257,17 +257,28 @@
                     <Image
                         Source="ms-appx:///Assets/buttons/light/inputlight.png"
                         Stretch="Fill"/>
+
+                    <TextBlock
+                        x:Name="PasswordPlaceholder"
+                        Text="Password"
+                        Margin="18,0"
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource RuckuZFont}"
+                        FontSize="18"
+                        Foreground="#746C82"
+                        IsHitTestVisible="False"/>
+
                     <PasswordBox
                         x:Name="PasswordInput"
                         Margin="18,5"
                         Padding="0"
                         Background="Transparent"
                         BorderThickness="0"
-                        PlaceholderText="Password"
                         FontFamily="Segoe UI"
                         FontSize="18"
                         Foreground="#30254F"
-                        VerticalContentAlignment="Center"/>
+                        VerticalContentAlignment="Center"
+                        PasswordChanged="PasswordInput_PasswordChanged"/>
 
                 </Grid>
 

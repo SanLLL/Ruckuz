@@ -20,6 +20,33 @@ public sealed partial class MainWindow :
 
     }
 
+    private void PasswordInput_PasswordChanged(
+        object sender,
+        RoutedEventArgs e
+    )
+    {
+
+        if (
+            string.IsNullOrEmpty(
+                PasswordInput.Password
+            )
+        )
+        {
+
+            PasswordPlaceholder.Visibility =
+                Visibility.Visible;
+
+        }
+        else
+        {
+
+            PasswordPlaceholder.Visibility =
+                Visibility.Collapsed;
+
+        }
+
+    }
+
     private void UpdateAuthMode()
     {
 
