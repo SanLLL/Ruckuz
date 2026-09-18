@@ -78,6 +78,11 @@ const switchMode =
         "switchMode"
     );
 
+const switchPrompt =
+    document.getElementById(
+        "switchPrompt"
+    );
+
 const switchText =
     document.getElementById(
         "switchText"
@@ -109,7 +114,6 @@ const authIntro =
     );
 
 function updateUI() {
-
     if (
         registerMode
     ) {
@@ -129,8 +133,11 @@ function updateUI() {
         authIntro.textContent =
             "Create your RuckuZ account.";
 
-        switchText.innerHTML =
-            'Already have an account? <span id="switchMode">Login</span>';
+        switchPrompt.textContent =
+            "Already have an account?";
+
+        switchMode.textContent =
+            "Login";
 
         loginTab.classList.remove(
             "active"
@@ -157,6 +164,12 @@ function updateUI() {
         authIntro.textContent =
             "Login to your RuckuZ account.";
 
+        switchPrompt.textContent =
+            "Don't have an account?";
+
+        switchMode.textContent =
+            "Register";
+
         registerTab.classList.remove(
             "active"
         );
@@ -164,14 +177,7 @@ function updateUI() {
         loginTab.classList.add(
             "active"
         );
-
     }
-
-    document.querySelector(
-        "#switchMode"
-    ).onclick =
-        toggleMode;
-
 }
 
 function toggleMode() {

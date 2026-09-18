@@ -8,39 +8,40 @@
     mc:Ignorable="d"
     Title="RuckuZ">
 
-    <Window.Resources>
-        <FontFamily
-            x:Key="RuckuZFont">
-            ms-appx:///Assets/AprilshandwritingRegular-mpGj.otf#Aprils Handwriting
-        </FontFamily>
-
-        <Style
-            x:Key="RuckuZImageButton"
-            TargetType="Button">
-
-            <Setter
-                Property="Background"
-                Value="Transparent"/>
-
-            <Setter
-                Property="BorderBrush"
-                Value="Transparent"/>
-
-            <Setter
-                Property="BorderThickness"
-                Value="0"/>
-
-            <Setter
-                Property="Padding"
-                Value="0"/>
-            <Setter
-                Property="FontFamily"
-                Value="{StaticResource RuckuZFont}"/>
-
-        </Style>
-    </Window.Resources>
-
     <Grid>
+        <Grid.Resources>
+        
+            <FontFamily
+                x:Key="RuckuZFont">
+                ms-appx:///Assets/AprilshandwritingRegular-mpGj.otf#Aprils Handwriting
+            </FontFamily>
+
+            <Style
+                x:Key="RuckuZImageButton"
+                TargetType="Button">
+
+                <Setter
+                    Property="Background"
+                    Value="Transparent"/>
+
+                <Setter
+                    Property="BorderBrush"
+                    Value="Transparent"/>
+
+                <Setter
+                    Property="BorderThickness"
+                    Value="0"/>
+
+                <Setter
+                    Property="Padding"
+                    Value="0"/>
+
+                <Setter
+                    Property="FontFamily"
+                    Value="{StaticResource RuckuZFont}"/>
+
+            </Style>
+        </Grid.Resources>
 
         <Grid.Background>
             <ImageBrush
