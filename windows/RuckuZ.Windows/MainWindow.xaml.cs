@@ -1,6 +1,6 @@
 using Microsoft.UI.Xaml;
 using System;
-namespace RuckuZ.Windows;
+namespace RuckuZ_Windows;
 public sealed partial class MainWindow : Window
 {
 
